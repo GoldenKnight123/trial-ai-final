@@ -83,6 +83,7 @@ public class RoomController extends Controller {
   @FXML private Rectangle rectWitnessAi;
   @FXML private Rectangle rectDefendant;
   @FXML private Rectangle rectWitnessHuman;
+  @FXML private Rectangle rectFade;
   @FXML private TextArea txtaDialogue;
   @FXML private Label lblContinue;
   @FXML private Label lblWhoSpeaking;
@@ -126,15 +127,20 @@ public class RoomController extends Controller {
   }
 
   public void fadeIn() {
+    isFading = true; // Set flag to prevent interactions during fade
+    rectFade.setVisible(true);
+    rectFade.setOpacity(1.0); // Ensure it starts fully opaque
+
     FadeTransition fadeTransition = new FadeTransition();
-    fadeTransition.setDuration(Duration.millis(1000));
-    fadeTransition.setNode(room);
-    fadeTransition.setFromValue(0.0);
-    fadeTransition.setToValue(1.0);
+    fadeTransition.setDuration(Duration.millis(500));
+    fadeTransition.setNode(rectFade);
+    fadeTransition.setFromValue(1.0);
+    fadeTransition.setToValue(0.0);
 
     fadeTransition.setOnFinished(
         e -> {
           isFading = false; // Reset flag when fade completes
+          rectFade.setVisible(false); // Hide the fade rectangle when done
           if (GameTimer.getInstance().getTimeLeft() <= 0) {
             context.setState(context.getGuessingState());
           }
@@ -180,7 +186,7 @@ public class RoomController extends Controller {
    */
   @FXML
   public void initialize() {
-    fadeIn();
+    // fadeIn();
     context.setRoomController(this); // Set reference to this controller
 
     lblTimer.setAlignment(Pos.CENTER);

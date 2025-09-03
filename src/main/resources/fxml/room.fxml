@@ -86,5 +86,6 @@
             <Font size="24.0" />
          </font>
       </Label>
+      <Rectangle fx:id="rectFade" arcHeight="5.0" arcWidth="5.0" fill="BLACK" height="795.0" layoutX="-28.0" layoutY="-44.0" opacity="0.0" stroke="BLACK" strokeType="INSIDE" visible="false" width="1341.0" />
    </children>
 </Pane>

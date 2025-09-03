@@ -9,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import nz.ac.auckland.se206.controllers.ChatController;
 import nz.ac.auckland.se206.controllers.DebriefController;
@@ -71,6 +72,7 @@ public class App extends Application {
       Parent root = loader.load();
       Object controller = loader.getController();
       Scene newScene = new Scene(root);
+      newScene.setFill(Color.BLACK);
 
       sceneCache.put(cacheKey, newScene);
       controllerCache.put(cacheKey, controller);
@@ -122,13 +124,14 @@ public class App extends Application {
   public static void openRoom(ActionEvent event) throws IOException {
     SceneControllerPair pair = loadAndCacheScene("room");
 
-    // Ensure the room is visible when returning to it
+    // Prepare the room for smooth transition
     RoomController roomController = (RoomController) pair.getController();
-    roomController.fadeIn();
 
     scene = pair.getScene();
     primaryStage.setScene(scene);
     primaryStage.show();
+
+    roomController.fadeIn();
   }
 
   public static void openDebrief(ActionEvent event, boolean correct) throws IOException {
