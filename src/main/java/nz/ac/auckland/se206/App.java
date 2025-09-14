@@ -127,11 +127,12 @@ public class App extends Application {
     // Prepare the room for smooth transition
     RoomController roomController = (RoomController) pair.getController();
 
+    // Start fade in first, then set scene
+    roomController.fadeIn();
+
     scene = pair.getScene();
     primaryStage.setScene(scene);
     primaryStage.show();
-
-    roomController.fadeIn();
   }
 
   public static void openDebrief(ActionEvent event, boolean correct) throws IOException {

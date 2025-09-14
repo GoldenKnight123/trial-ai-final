@@ -127,12 +127,17 @@ public class RoomController extends Controller {
   }
 
   public void fadeIn() {
+    System.out.println("Fading in room");
     isFading = true; // Set flag to prevent interactions during fade
+
+    // Ensure the room itself is fully visible first
+    room.setOpacity(1.0);
+
     rectFade.setVisible(true);
     rectFade.setOpacity(1.0); // Ensure it starts fully opaque
 
     FadeTransition fadeTransition = new FadeTransition();
-    fadeTransition.setDuration(Duration.millis(500));
+    fadeTransition.setDuration(Duration.millis(1000));
     fadeTransition.setNode(rectFade);
     fadeTransition.setFromValue(1.0);
     fadeTransition.setToValue(0.0);
@@ -147,11 +152,6 @@ public class RoomController extends Controller {
         });
 
     fadeTransition.play();
-  }
-
-  /** Ensures the room is visible when returning to it. */
-  public void ensureVisible() {
-    room.setOpacity(1.0);
   }
 
   public void fadeOut(MouseEvent event, String target) {
@@ -186,7 +186,6 @@ public class RoomController extends Controller {
    */
   @FXML
   public void initialize() {
-    // fadeIn();
     context.setRoomController(this); // Set reference to this controller
 
     lblTimer.setAlignment(Pos.CENTER);
