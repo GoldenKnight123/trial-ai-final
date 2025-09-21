@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Arc?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane fx:id="flashbackRoom" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleClick" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.controllers.FlashbackController">
+   <children>
+      <Label fx:id="lblTimer" alignment="CENTER" layoutX="24.0" layoutY="24.0" text="120" textFill="#000000">
+         <font>
+            <Font name="System Bold" size="24.0" />
+         </font>
+      </Label>
+      <Arc fx:id="arcTimer" layoutX="45.0" layoutY="45.0" length="360.0" opacity="0.25" radiusX="30.0" radiusY="30.0" startAngle="90.0" stroke="BLACK" strokeType="INSIDE" type="ROUND" />
+      <Label fx:id="lblSceneName" layoutX="14.0" layoutY="660.0" text="Flashback">
+         <font>
+            <Font size="36.0" />
+         </font>
+      </Label>
+      <ImageView fx:id="imgScene1" fitHeight="523.0" fitWidth="1050.0" layoutX="291.0" layoutY="75.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/placeholder.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="imgScene2" fitHeight="523.0" fitWidth="1050.0" layoutX="291.0" layoutY="75.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/placeholder.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="imgScene3" fitHeight="523.0" fitWidth="1050.0" layoutX="291.0" layoutY="75.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/placeholder.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>

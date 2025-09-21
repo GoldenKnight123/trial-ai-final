@@ -172,7 +172,7 @@ public class RoomController extends Controller {
         e -> {
           isFading = false; // Reset flag when fade completes
           try {
-            App.openChat(event, target);
+            App.openFlashback(event, target);
           } catch (IOException ex) {
             ex.printStackTrace();
           }
