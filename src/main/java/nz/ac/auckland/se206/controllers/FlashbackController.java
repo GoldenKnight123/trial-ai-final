@@ -3,6 +3,8 @@ package nz.ac.auckland.se206.controllers;
 import java.io.IOException;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -23,10 +25,13 @@ public class FlashbackController extends Controller {
   @FXML private ImageView imgScene3;
   @FXML private Label lblSceneName;
   @FXML private Label lblTimer;
+  @FXML private Label lblInstruction;
   @FXML private Arc arcTimer;
 
   private boolean isFading = false; // Flag to track if a fade operation is in progress
   private int slideProgress = 0;
+  private boolean canSlide = false;
+  private boolean canExit = false;
   private String currentTarget = "";
 
   // Custom tangent interpolator - fast start, slow end
@@ -43,12 +48,33 @@ public class FlashbackController extends Controller {
   public void setTarget(String target) {
     currentTarget = target;
 
-    // Move scene 2 and 3 off screen
+    canExit = false;
+
+    // Reset image positions
+    imgScene1.setTranslateX(0);
     imgScene2.setTranslateX(1280);
     imgScene3.setTranslateX(2560);
 
     // Set the scene name based on target
-    lblSceneName.setText("Flashback " + target);
+    lblSceneName.setText("Flashback - " + target);
+    lblInstruction.setText("Click anywhere to continue.");
+
+    // Reset slide progress
+    slideProgress = 0;
+    lblInstruction.setVisible(false);
+    lblInstruction.setLayoutX(1049);
+
+    // Set 500ms cooldown before allowing first slide
+    canSlide = false;
+    Timeline cooldownTimer =
+        new Timeline(
+            new KeyFrame(
+                Duration.millis(2000),
+                e -> {
+                  canSlide = true;
+                  lblInstruction.setVisible(true);
+                }));
+    cooldownTimer.play();
   }
 
   public void fadeIn() {
@@ -101,7 +127,15 @@ public class FlashbackController extends Controller {
    */
   @FXML
   private void handleClick(MouseEvent event) throws IOException {
-    if (slideProgress < 2) {
+    if (canExit) {
+      fadeOut(null);
+    }
+
+    if (slideProgress < 2 && canSlide) {
+      // Disable sliding until current slide is done
+      canSlide = false;
+      lblInstruction.setVisible(false);
+
       // slide image scenes to left with animation
       slideProgress++;
 
@@ -148,6 +182,24 @@ public class FlashbackController extends Controller {
 
       sceneSlide3.setOnFinished(e -> sceneSlideBack3.play());
       sceneSlide3.play();
+
+      // Restrict sliding to once every 500ms
+      Timeline cooldownTimer =
+          new Timeline(
+              new KeyFrame(
+                  Duration.millis(2000),
+                  e -> {
+                    if (slideProgress < 2) {
+                      canSlide = true;
+                      lblInstruction.setVisible(true);
+                    } else {
+                      canExit = true;
+                      lblInstruction.setText("Click anywhere to return to courtroom.");
+                      lblInstruction.setLayoutX(964);
+                      lblInstruction.setVisible(true);
+                    }
+                  }));
+      cooldownTimer.play();
     }
   }
 }

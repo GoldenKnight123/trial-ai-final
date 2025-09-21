@@ -36,5 +36,10 @@
             <Image url="@../images/placeholder.png" />
          </image>
       </ImageView>
+      <Label fx:id="lblInstruction" layoutX="1097.0" layoutY="687.0" text="Click any to continue. " textAlignment="RIGHT">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>
