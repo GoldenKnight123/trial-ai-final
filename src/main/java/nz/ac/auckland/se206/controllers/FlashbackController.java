@@ -9,6 +9,7 @@ import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -61,6 +62,8 @@ public class FlashbackController extends Controller {
     lblSceneName.setText("Flashback - " + target);
     lblInstruction.setText("Click anywhere to continue.");
 
+    setSlideshow(currentTarget);
+
     // Reset slide progress
     slideProgress = 0;
     lblInstruction.setVisible(false);
@@ -77,6 +80,13 @@ public class FlashbackController extends Controller {
                   lblInstruction.setVisible(true);
                 }));
     cooldownTimer.play();
+  }
+
+  public void setSlideshow(String target) {
+    // Set the images for the slideshow based on the target
+    imgScene1.setImage(new Image(getClass().getResourceAsStream("/images/" + target + "(1).png")));
+    imgScene2.setImage(new Image(getClass().getResourceAsStream("/images/" + target + "(3).png")));
+    imgScene3.setImage(new Image(getClass().getResourceAsStream("/images/" + target + "(3).png")));
   }
 
   public void fadeIn() {
