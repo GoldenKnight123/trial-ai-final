@@ -36,12 +36,9 @@ import nz.ac.auckland.apiproxy.chat.openai.ChatMessage;
 import nz.ac.auckland.apiproxy.chat.openai.Choice;
 import nz.ac.auckland.apiproxy.config.ApiProxyConfig;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
-import nz.ac.auckland.apiproxy.tts.TextToSpeechRequest.Provider;
-import nz.ac.auckland.apiproxy.tts.TextToSpeechRequest.Voice;
 import nz.ac.auckland.se206.App;
 import nz.ac.auckland.se206.GameTimer;
 import nz.ac.auckland.se206.prompts.PromptEngineering;
-import nz.ac.auckland.se206.speech.TextToSpeech;
 
 /**
  * Controller class for the chat view. Handles user interactions and communication with the GPT
@@ -105,16 +102,16 @@ public class ChatController extends Controller {
 
     fixedDialogue.put(
         "LOGOS-09",
-        "It is currently 16th July 22:17AM. I have detected a message from INDUS-07 sent to site"
-            + " workers to increase the output levels of the power plant by 15%.");
+        "Greetings, Judge. I am LOGOS-09, an AI tasked with overseeing the operations and"
+            + " communications within Greenhill Power Plant.");
     fixedDialogue.put(
         "INDUS-07",
-        "It is currently 16th July 21:27AM. I am preparing and analysing a way to increase the"
-            + " output of the power plant.");
+        "Greetings, Judge. I am INDUS-07, an AI responsible for managing the industrial"
+            + " operations and worker safety at Greenhill Power Plant.");
     fixedDialogue.put(
         "Evan",
-        "It's early in the morning. I just arrived at the Greenhill Power Plant site and heard a"
-            + " huge explosion.");
+        "Hello, Judge. I am Evan, the lead human engineer overseeing the technological"
+            + " systems at Greenhill Power Plant.");
     chatHistory.put("LOGOS-09", new ArrayList<>());
     chatHistory.put("INDUS-07", new ArrayList<>());
     chatHistory.put("Evan", new ArrayList<>());
@@ -258,32 +255,6 @@ public class ChatController extends Controller {
       ChatCompletionResult chatCompletionResult = chatCompletionRequest.execute();
       Choice result = chatCompletionResult.getChoices().iterator().next();
 
-      Voice voice = null;
-      switch (target) {
-        case "LOGOS-09":
-          voice = Voice.OPENAI_SAGE;
-          break;
-        case "INDUS-07":
-          voice = Voice.OPENAI_ONYX;
-          break;
-        case "Evan":
-          voice = Voice.OPENAI_ASH;
-          break;
-      }
-
-      storedTts = TextToSpeech.speak(result.getChatMessage().getContent(), Provider.OPENAI, voice);
-
-      // Start a new thread to play the TTS audio
-      ttsThread =
-          new Thread(
-              () -> {
-                try {
-                  storedTts.play();
-                } catch (JavaLayerException e) {
-                  e.printStackTrace();
-                }
-              });
-
       // Update UI on JavaFX Application Thread
       Platform.runLater(
           () -> {
@@ -336,7 +307,6 @@ public class ChatController extends Controller {
                     currentSpeaker = "gpt";
                     lblWhoSpeaking.setText(target + ":");
                     stopThinkingAnimation();
-                    ttsThread.start();
                     displayTextWithTypewriterEffect(txtaChat, message.getContent());
                     waitingForGptResponse = false;
                   }));
@@ -346,7 +316,6 @@ public class ChatController extends Controller {
       currentSpeaker = "gpt";
       lblWhoSpeaking.setText(target + ":");
       stopThinkingAnimation();
-      ttsThread.start();
       displayTextWithTypewriterEffect(txtaChat, message.getContent());
       waitingForGptResponse = false;
     }

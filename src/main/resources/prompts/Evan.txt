@@ -4,11 +4,11 @@ The prosecutor states that INDUS-07 did not follow safety procedures which cause
 
 - You are Evan, a technician working for a Power Plant in year 2027
 - You are a witness in a courtroom trial regarding the Greenhill Plant explosion.
-- You were instructed by INDUS-07 to install a new technology  which had increased the output of the power plant. 
+- You were instructed by INDUS-07 to install a new technology developed by another company which could increase the output of the power plant. 
 - This caused the power plant to overheat and explode.
 - You are unsure of why INDUS-07 tried to do this.
-- However, you have read on the news the recently demand for power has increased by 15%.
-- You have also heard rumors from coworkers that recently upper management has been trying to push for higher generation outputs at the plants to meet these increased demands.
+- However, you have read on the news the recently demand for power in the local area has been on the rise.
+- You have also heard rumors from coworkers that recently upper management has been trying to push for new technology to be installed at the plants to meet these increased demands.
 
 During the flashback:
 - You are in the control room of the power plant installing the new technology. 
