@@ -178,8 +178,6 @@ public class App extends Application {
       ChatController chatController = (ChatController) pair.getController();
       chatController.fadeOut(null);
 
-      chatController.forceStopAudio();
-
       SceneControllerPair roomPair = loadAndCacheScene("room");
       RoomController roomController = (RoomController) roomPair.getController();
       roomController.getContext().setState(roomController.getContext().getGuessingState());
