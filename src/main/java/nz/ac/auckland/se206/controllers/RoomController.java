@@ -10,6 +10,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Arc;
@@ -70,8 +71,10 @@ public class RoomController extends Controller {
   @FXML private Rectangle rectWitnessAi;
   @FXML private Rectangle rectDefendant;
   @FXML private Rectangle rectWitnessHuman;
+  @FXML private Rectangle rectFade;
   @FXML private TextArea txtaDialogue;
-  @FXML private Label lblContinue;
+  @FXML private ImageView imgContinueArrow;
+  @FXML private ImageView imgTextArea;
   @FXML private Label lblWhoSpeaking;
   @FXML private Label lblInstructions;
   @FXML private Label lblTimer;
@@ -85,8 +88,9 @@ public class RoomController extends Controller {
 
   public void initializeGuessingState() {
     txtaDialogue.setVisible(true);
+    imgTextArea.setVisible(true);
     lblWhoSpeaking.setVisible(true);
-    lblContinue.setVisible(false);
+    imgContinueArrow.setVisible(false);
     lblInstructions.setVisible(false);
     lblTimer.setVisible(true);
     arcTimer.setVisible(true);
@@ -113,26 +117,31 @@ public class RoomController extends Controller {
   }
 
   public void fadeIn() {
+    System.out.println("Fading in room");
+    isFading = true; // Set flag to prevent interactions during fade
+
+    // Ensure the room itself is fully visible first
+    room.setOpacity(1.0);
+
+    rectFade.setVisible(true);
+    rectFade.setOpacity(1.0); // Ensure it starts fully opaque
+
     FadeTransition fadeTransition = new FadeTransition();
     fadeTransition.setDuration(Duration.millis(1000));
-    fadeTransition.setNode(room);
-    fadeTransition.setFromValue(0.0);
-    fadeTransition.setToValue(1.0);
+    fadeTransition.setNode(rectFade);
+    fadeTransition.setFromValue(1.0);
+    fadeTransition.setToValue(0.0);
 
     fadeTransition.setOnFinished(
         e -> {
           isFading = false; // Reset flag when fade completes
+          rectFade.setVisible(false); // Hide the fade rectangle when done
           if (GameTimer.getInstance().getTimeLeft() <= 0) {
             context.setState(context.getGuessingState());
           }
         });
 
     fadeTransition.play();
-  }
-
-  /** Ensures the room is visible when returning to it. */
-  public void ensureVisible() {
-    room.setOpacity(1.0);
   }
 
   public void fadeOut(MouseEvent event, String target) {
@@ -167,7 +176,6 @@ public class RoomController extends Controller {
    */
   @FXML
   public void initialize() {
-    fadeIn();
     context.setRoomController(this); // Set reference to this controller
 
     lblTimer.setAlignment(Pos.CENTER);
@@ -175,6 +183,10 @@ public class RoomController extends Controller {
     lblTimer.setVisible(true);
     arcTimer.setVisible(true);
     GameTimer.getInstance().start();
+
+    txtaDialogue.setEditable(false);
+    txtaDialogue.setFocusTraversable(false);
+    txtaDialogue.setMouseTransparent(true);
 
     btnGuilty.setVisible(false);
     btnNotGuilty.setVisible(false);
@@ -184,7 +196,7 @@ public class RoomController extends Controller {
     GameTimer.getInstance().registerTimerArc(arcTimer);
 
     if (isFirstTimeInit) {
-      lblContinue.setVisible(false);
+      imgContinueArrow.setVisible(false);
       lblInstructions.setVisible(false);
       initializeFixedDialogue();
       displayTextWithTypewriterEffect(
@@ -264,7 +276,7 @@ public class RoomController extends Controller {
   @Override
   protected void onTypewriterEffectFinish() {
     // Show the continue label when the typewriter effect finishes
-    lblContinue.setVisible(true);
+    imgContinueArrow.setVisible(true);
   }
 
   /**
@@ -273,19 +285,21 @@ public class RoomController extends Controller {
    */
   public void displayNextLine() {
     if (currentDialogueIndex < fixedDialogue.size()) {
-      lblContinue.setVisible(false);
+      imgContinueArrow.setVisible(false);
       displayTextWithTypewriterEffect(
           txtaDialogue, fixedDialogue.get(currentDialogueIndex), 50, true, true);
       currentDialogueIndex++;
     } else if (!isGuessing) {
-      lblContinue.setVisible(false);
+      imgContinueArrow.setVisible(false);
       txtaDialogue.setVisible(false);
+      imgTextArea.setVisible(false);
       lblWhoSpeaking.setVisible(false);
       lblInstructions.setVisible(true);
       context.setState(context.getGameStartedState());
     } else {
-      lblContinue.setVisible(false);
+      imgContinueArrow.setVisible(false);
       txtaDialogue.setVisible(false);
+      imgTextArea.setVisible(false);
       lblWhoSpeaking.setVisible(false);
       btnGuilty.setVisible(true);
       btnNotGuilty.setVisible(true);
