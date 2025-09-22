@@ -207,7 +207,7 @@ public class App extends Application {
               forceReturnToRoom();
             });
 
-    SceneControllerPair pair = loadAndCacheScene("startMenu");
+    SceneControllerPair pair = loadAndCacheScene("startScreen");
     scene = pair.getScene();
     stage.setScene(scene);
     stage.show();
