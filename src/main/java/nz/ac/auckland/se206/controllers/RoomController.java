@@ -35,44 +35,31 @@ public class RoomController extends Controller {
    * will be displayed one by one and is handled by the displayNextLine method
    */
   private static void initializeFixedDialogue() {
-    // Introduction
+    // Introduction - Introducing defendant - Explaining the incident
     fixedDialogue.add(
-        "Members of the jury - human and artificial. We shall now commence the trial of INDUS-07.");
+        "Members of the jury - human and artificial. We shall now commence the trial of"
+            + " INDUS-07.\n\n"
+            + "The defendant is an industrial supervision AI, which the prosecution claims failed"
+            + " to prevent the Greenhill Power Plant disaster.");
 
-    // Introducing defendant
+    // Explaining the incident - Incident consequences
     fixedDialogue.add(
-        "The defendant is an industrial supervision AI, which the prosecution claims failed to"
-            + " prevent the Greenhill Power Plant disaster.");
-
-    // Explaining the incident
-    fixedDialogue.add(
-        "On the morning of June 17th 2027, an explosion occurred at the Greenhill Power Plant.");
-
-    // Incident consequences
-    fixedDialogue.add(
-        "Fortunately, no one was killed in the incident. But two human workers who were on duty at"
-            + " the time suffered injuries.");
-
-    // Incident consequences
-    fixedDialogue.add(
-        "Furthermore, the site suffered severe damage to its infrastructure and technology"
-            + " systems.");
+        "On the morning of June 17th 2027, an explosion occurred at the Greenhill Power Plant."
+            + " Fortunately, no one was killed in the incident. But two human workers who were on"
+            + " duty at the time suffered injuries. Furthermore, the site suffered severe damage to"
+            + " its infrastructure and technology systems.");
 
     // What the defendant is accused of in regards to the incident
     fixedDialogue.add(
         "INDUS-07, the defendant, is accused of negligence, as it decided to increase the power"
             + " plant's output level to unsafe levels, causing the explosion.");
 
-    // Introducing witnesses
-    fixedDialogue.add("We have two witnesses with us today.");
-
-    // Introducing LOGOS-09
+    // Introducing witnesses - Introducing LOGOS-09 - Introducing Evan
     fixedDialogue.add(
-        "LOGOS-09, the AI responsible for managing the plant system message and operation logs.");
-
-    // Introducing Evan
-    fixedDialogue.add(
-        "And Evan, one of the human workers who were present at the time of the incident.");
+        "We have two witnesses with us today.\n\n"
+            + "LOGOS-09, the AI responsible for managing the plant system message and operation"
+            + " logs. And Evan, one of the human workers who were present at the time of the"
+            + " incident.");
 
     // Explaining how we will analyse the memories
     fixedDialogue.add(
