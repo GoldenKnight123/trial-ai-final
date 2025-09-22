@@ -27,6 +27,8 @@ public class FlashbackController extends Controller {
   @FXML private Label lblTimer;
   @FXML private Label lblInstruction;
   @FXML private Arc arcTimer;
+  @FXML private ImageView backClouds;
+  @FXML private ImageView frontClouds;
 
   private boolean isFading = false; // Flag to track if a fade operation is in progress
   private int slideProgress = 0;
@@ -117,6 +119,26 @@ public class FlashbackController extends Controller {
     // Register timer label with GameTimer
     GameTimer.getInstance().registerTimerLabel(lblTimer);
     GameTimer.getInstance().registerTimerArc(arcTimer);
+
+    // Initialize cloud animations
+    initializeCloudAnimations();
+  }
+
+  /** Initializes the cloud animations. */
+  public void initializeCloudAnimations() {
+    // --- Animate the Back Layer ---
+    TranslateTransition backAnimation = new TranslateTransition(Duration.seconds(4), backClouds);
+    backAnimation.setByY(20); // Height doubled
+    backAnimation.setCycleCount(TranslateTransition.INDEFINITE);
+    backAnimation.setAutoReverse(true);
+    backAnimation.play();
+
+    // --- Animate the Front Layer ---
+    TranslateTransition frontAnimation = new TranslateTransition(Duration.seconds(3), frontClouds);
+    frontAnimation.setByY(40); // Height doubled
+    frontAnimation.setCycleCount(TranslateTransition.INDEFINITE);
+    frontAnimation.setAutoReverse(true);
+    frontAnimation.play();
   }
 
   /**
