@@ -85,7 +85,7 @@ public class FlashbackController extends Controller {
   public void setSlideshow(String target) {
     // Set the images for the slideshow based on the target
     imgScene1.setImage(new Image(getClass().getResourceAsStream("/images/" + target + "(1).png")));
-    imgScene2.setImage(new Image(getClass().getResourceAsStream("/images/" + target + "(3).png")));
+    imgScene2.setImage(new Image(getClass().getResourceAsStream("/images/" + target + "(2).png")));
     imgScene3.setImage(new Image(getClass().getResourceAsStream("/images/" + target + "(3).png")));
   }
 
@@ -173,13 +173,14 @@ public class FlashbackController extends Controller {
 
       // Scene 1: slide from 0 to -1000 with overshoot
       TranslateTransition sceneSlide = new TranslateTransition(Duration.millis(500), imgScene1);
-      sceneSlide.setFromX(0);
-      sceneSlide.setToX(-1330); // Overshoot by 100px
+      sceneSlide.setFromX(imgScene1.getTranslateX());
+      System.out.println(imgScene1.getTranslateX());
+      sceneSlide.setToX(imgScene1.getTranslateX() - 1330); // Overshoot by 100px
       sceneSlide.setInterpolator(TANGENT_INTERPOLATOR); // Add easing
 
       TranslateTransition sceneSlideBack = new TranslateTransition(Duration.millis(150), imgScene1);
-      sceneSlideBack.setFromX(-1330);
-      sceneSlideBack.setToX(-1280); // Snap back to target
+      sceneSlideBack.setFromX(imgScene1.getTranslateX() - 1330);
+      sceneSlideBack.setToX(imgScene1.getTranslateX() - 1280); // Snap back to target
       sceneSlideBack.setInterpolator(Interpolator.EASE_BOTH); // Add easing
 
       sceneSlide.setOnFinished(e -> sceneSlideBack.play());
@@ -187,14 +188,14 @@ public class FlashbackController extends Controller {
 
       // Scene 2: slide from 1280 to 0 with overshoot
       TranslateTransition sceneSlide2 = new TranslateTransition(Duration.millis(500), imgScene2);
-      sceneSlide2.setFromX(1280);
-      sceneSlide2.setToX(-50); // Overshoot by 100px
+      sceneSlide2.setFromX(imgScene2.getTranslateX());
+      sceneSlide2.setToX(imgScene2.getTranslateX() - 1330); // Overshoot by 100px
       sceneSlide2.setInterpolator(TANGENT_INTERPOLATOR); // Add easing
 
       TranslateTransition sceneSlideBack2 =
           new TranslateTransition(Duration.millis(150), imgScene2);
-      sceneSlideBack2.setFromX(-50);
-      sceneSlideBack2.setToX(0); // Snap back to target
+      sceneSlideBack2.setFromX(imgScene2.getTranslateX() - 1330);
+      sceneSlideBack2.setToX(imgScene2.getTranslateX() - 1280); // Snap back to target
       sceneSlideBack2.setInterpolator(Interpolator.EASE_BOTH); // Add easing
 
       sceneSlide2.setOnFinished(e -> sceneSlideBack2.play());
@@ -202,14 +203,14 @@ public class FlashbackController extends Controller {
 
       // Scene 3: slide from 2560 to 1000 with overshoot
       TranslateTransition sceneSlide3 = new TranslateTransition(Duration.millis(500), imgScene3);
-      sceneSlide3.setFromX(2560);
-      sceneSlide3.setToX(1210); // Overshoot by 100px
+      sceneSlide3.setFromX(imgScene3.getTranslateX());
+      sceneSlide3.setToX(imgScene3.getTranslateX() - 1330); // Overshoot by 100px
       sceneSlide3.setInterpolator(TANGENT_INTERPOLATOR); // Add easing
 
       TranslateTransition sceneSlideBack3 =
           new TranslateTransition(Duration.millis(150), imgScene3);
-      sceneSlideBack3.setFromX(1210);
-      sceneSlideBack3.setToX(1280); // Snap back to target
+      sceneSlideBack3.setFromX(imgScene3.getTranslateX() - 1330);
+      sceneSlideBack3.setToX(imgScene3.getTranslateX() - 1280); // Snap back to target
       sceneSlideBack3.setInterpolator(Interpolator.EASE_BOTH); // Add easing
 
       sceneSlide3.setOnFinished(e -> sceneSlideBack3.play());
