@@ -9,9 +9,9 @@
    <children>
       <ImageView fitHeight="720.0" fitWidth="1280.0">
          <image>
-            <Image url="@../images/title-screen.png" />
+            <Image url="@../images/title-screen2.png" />
          </image>
       </ImageView>
-      <Button fx:id="btnStartGame" layoutX="242.0" layoutY="408.0" mnemonicParsing="false" onAction="#onStart" opacity="0.0" prefHeight="26.0" prefWidth="212.0" text="Button" />
+      <Button fx:id="btnStartGame" layoutX="280.0" layoutY="372.0" mnemonicParsing="false" onAction="#onStart" opacity="0.0" prefHeight="33.0" prefWidth="263.0" text="Button" />
    </children>
 </Pane>
