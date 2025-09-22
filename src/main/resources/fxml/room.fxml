@@ -10,57 +10,51 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="room" focusTraversable="true" onMouseClicked="#handleGeneralClick" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #A9A9A9;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.controllers.RoomController">
+<Pane fx:id="room" focusTraversable="true" onMouseClicked="#handleGeneralClick" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #FFF8E3;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.controllers.RoomController">
    <children>
-      <ImageView fitHeight="243.0" fitWidth="120.0" layoutX="608.0" layoutY="145.0" preserveRatio="true">
+      <ImageView fitHeight="359.0" fitWidth="445.0" layoutX="469.0" layoutY="41.0" preserveRatio="true">
          <image>
-            <Image url="@../images/Ai.png" />
+            <Image url="@../images/indus-07.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="223.0" fitWidth="99.0" layoutX="211.0" layoutY="205.0" preserveRatio="true">
+      <ImageView fitHeight="388.0" fitWidth="354.0" layoutX="173.0" layoutY="51.0" preserveRatio="true">
          <image>
-            <Image url="@../images/Ai.png" />
+            <Image url="@../images/logos-09.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="200.0" fitWidth="99.0" layoutX="1046.0" layoutY="190.0" preserveRatio="true">
+      <ImageView fitHeight="388.0" fitWidth="271.0" layoutX="861.0" layoutY="51.0" preserveRatio="true">
          <image>
-            <Image url="@../images/person.png" />
+            <Image url="@../images/evan.png" />
          </image>
       </ImageView>
-      <Rectangle fx:id="rectWitnessAi" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="216.0" layoutX="198.0" layoutY="163.0" onMouseClicked="#handleRectangleClick" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="99.0" />
-      <Rectangle fx:id="rectDefendant" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="240.0" layoutX="588.0" layoutY="105.0" onMouseClicked="#handleRectangleClick" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="120.0" />
-      <Rectangle fx:id="rectWitnessHuman" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="222.0" layoutX="1039.0" layoutY="142.0" onMouseClicked="#handleRectangleClick" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="99.0" />
-      <Label layoutX="14.0" layoutY="656.0" text="Courtroom">
+      <ImageView fx:id="imgTextArea" fitHeight="720.0" fitWidth="1537.0" layoutX="-2.0" layoutY="5.0" preserveRatio="true">
+         <image>
+            <Image url="@../images/textArea.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="70.0" fitWidth="233.0" layoutX="-23.0" layoutY="65.0" preserveRatio="true">
+         <image>
+            <Image url="@../images/locationIndicator.png" />
+         </image>
+      </ImageView>
+      <Rectangle fx:id="rectWitnessAi" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="334.0" layoutX="173.0" layoutY="67.0" onMouseClicked="#handleRectangleClick" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="259.0" />
+      <Rectangle fx:id="rectDefendant" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="334.0" layoutX="499.0" layoutY="57.0" onMouseClicked="#handleRectangleClick" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="278.0" />
+      <Rectangle fx:id="rectWitnessHuman" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="334.0" layoutX="839.0" layoutY="78.0" onMouseClicked="#handleRectangleClick" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="303.0" />
+      <Label fx:id="lblLocation" layoutX="14.0" layoutY="86.0" stylesheets="@../css/room.css" text="Courtroom">
          <font>
             <Font size="38.0" />
          </font>
       </Label>
-      <Label layoutX="602.0" layoutY="114.0" text="INDUS-07">
+      <Label fx:id="lblProfession" layoutX="508.0" layoutY="48.0" prefHeight="37.0" prefWidth="289.0" wrapText="true">
          <font>
             <Font size="21.0" />
          </font>
       </Label>
-      <Label fx:id="lblProfession" layoutX="503.0" layoutY="56.0" prefHeight="37.0" prefWidth="289.0" wrapText="true">
-         <font>
-            <Font size="21.0" />
-         </font>
-      </Label>
-      <Label layoutX="198.0" layoutY="174.0" text="LOGOS-09">
-         <font>
-            <Font size="21.0" />
-         </font>
-      </Label>
-      <Label layoutX="1060.0" layoutY="163.0" text="Evan">
-         <font>
-            <Font size="21.0" />
-         </font>
-      </Label>
-      <TextArea fx:id="txtaDialogue" editable="false" layoutX="27.0" layoutY="421.0" onMouseClicked="#handleGeneralClick" prefHeight="222.0" prefWidth="1226.0" text="Text Here" wrapText="true">
+      <TextArea fx:id="txtaDialogue" editable="false" layoutX="52.0" layoutY="436.0" onMouseClicked="#handleGeneralClick" prefHeight="245.0" prefWidth="1177.0" stylesheets="@../css/room.css" text="Text Here" wrapText="true">
          <font>
             <Font size="24.0" />
          </font>
       </TextArea>
-      <Label fx:id="lblContinue" layoutX="1152.0" layoutY="620.0" prefHeight="17.0" prefWidth="99.0" text="Click to continue." />
       <Label fx:id="lblInstructions" layoutX="168.0" layoutY="497.0" text="Click on an individual to view their memories." visible="false">
          <font>
             <Font size="48.0" />
@@ -81,11 +75,16 @@
             <Font size="18.0" />
          </font>
       </Button>
-      <Label fx:id="lblWhoSpeaking" layoutX="27.0" layoutY="384.0" text="You:">
+      <Label fx:id="lblWhoSpeaking" layoutX="99.0" layoutY="398.0" stylesheets="@../css/room.css" text="You:">
          <font>
             <Font size="24.0" />
          </font>
       </Label>
-      <Rectangle fx:id="rectFade" arcHeight="5.0" arcWidth="5.0" fill="BLACK" height="795.0" layoutX="-28.0" layoutY="-44.0" opacity="0.0" stroke="BLACK" strokeType="INSIDE" visible="false" width="1341.0" />
+      <Rectangle fx:id="rectFade" arcHeight="5.0" arcWidth="5.0" fill="BLACK" height="795.0" layoutX="-23.0" layoutY="-52.0" opacity="0.0" stroke="BLACK" strokeType="INSIDE" visible="false" width="1341.0" />
+      <ImageView fx:id="imgContinueArrow" fitHeight="37.0" fitWidth="153.0" layoutX="1142.0" layoutY="644.0" preserveRatio="true">
+         <image>
+            <Image url="@../images/continueArrow.png" />
+         </image>
+      </ImageView>
    </children>
 </Pane>
