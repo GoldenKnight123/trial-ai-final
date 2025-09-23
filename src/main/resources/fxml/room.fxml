@@ -17,17 +17,17 @@
             <Image url="@../images/background.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="359.0" fitWidth="445.0" layoutX="477.0" layoutY="145.0" preserveRatio="true">
+      <ImageView fx:id="imgDefendant" fitHeight="359.0" fitWidth="445.0" layoutX="477.0" layoutY="145.0" onMouseClicked="#handleDefendantClick" preserveRatio="true">
          <image>
             <Image url="@../images/indus-07.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="388.0" fitWidth="354.0" layoutX="133.0" layoutY="166.0" preserveRatio="true">
+      <ImageView fx:id="imgWitnessAi" fitHeight="388.0" fitWidth="354.0" layoutX="133.0" layoutY="166.0" onMouseClicked="#handleWitnessAiClick" preserveRatio="true">
          <image>
             <Image url="@../images/logos-09.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="388.0" fitWidth="271.0" layoutX="930.0" layoutY="160.0" preserveRatio="true">
+      <ImageView fx:id="imgWitnessHuman" fitHeight="388.0" fitWidth="271.0" layoutX="930.0" layoutY="160.0" onMouseClicked="#handleWitnessHumanClick" preserveRatio="true">
          <image>
             <Image url="@../images/evan.png" />
          </image>
@@ -42,9 +42,6 @@
             <Image url="@../images/locationIndicator.png" />
          </image>
       </ImageView>
-      <Rectangle fx:id="rectWitnessAi" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="334.0" layoutX="133.0" layoutY="187.0" onMouseClicked="#handleRectangleClick" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="259.0" />
-      <Rectangle fx:id="rectDefendant" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="334.0" layoutX="509.0" layoutY="158.0" onMouseClicked="#handleRectangleClick" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="278.0" />
-      <Rectangle fx:id="rectWitnessHuman" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="334.0" layoutX="913.0" layoutY="179.0" onMouseClicked="#handleRectangleClick" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="303.0" />
       <Label fx:id="lblLocation" layoutX="14.0" layoutY="112.0" stylesheets="@../css/room.css" text="Courtroom">
          <font>
             <Font size="38.0" />
@@ -75,7 +72,7 @@
             <Image url="@../images/clock.png" />
          </image>
       </ImageView>
-      <Label fx:id="lblTimer" alignment="CENTER" layoutX="22.0" layoutY="33.0" prefWidth="60.0" stylesheets="@../css/room.css" text="120" textFill="#000000">
+      <Label fx:id="lblTimer" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="22.0" layoutY="33.0" prefWidth="60.0" stylesheets="@../css/room.css" text="99" textAlignment="CENTER" textFill="#000000" textOverrun="CLIP">
          <font>
             <Font name="System Bold" size="24.0" />
          </font>
