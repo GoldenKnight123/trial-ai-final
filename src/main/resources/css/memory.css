@@ -1,0 +1,20 @@
+.text-area {
+  font-family: "Consolas";
+  -fx-font-family: "Consolas";
+  font-size: 24px;
+  -fx-font-size: 24px;
+  -fx-text-fill: black;
+  background-color: transparent;
+  -fx-background-color: transparent;
+  cursor: default;
+  -fx-cursor: default;
+}
+
+#lblLocation {
+  font-family: "Consolas";
+  -fx-font-family: "Consolas";
+  font-size: 12px;
+  -fx-font-size: 12px;
+  -fx-text-fill: black;
+  align-items: flex-start;
+}

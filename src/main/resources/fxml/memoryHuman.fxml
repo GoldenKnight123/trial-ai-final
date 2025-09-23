@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ImageView fitHeight="400.0" fitWidth="600.0">
+         <image>
+            <Image url="@../images/memoryHuman.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="56.0" fitWidth="211.0" layoutX="-9.0" layoutY="1.0" pickOnBounds="true">
+         <image>
+            <Image url="@../images/locationIndicator.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="lblLocation" layoutX="13.0" layoutY="21.0" prefHeight="17.0" prefWidth="145.0" stylesheets="@../css/memory.css" text="Memory:  Human Witness" />
+   </children>
+</Pane>
