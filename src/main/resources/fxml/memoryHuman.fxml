@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
@@ -13,11 +15,13 @@
             <Image url="@../images/memoryHuman.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="56.0" fitWidth="211.0" layoutX="-9.0" layoutY="1.0" pickOnBounds="true">
+      <ImageView fitHeight="47.0" fitWidth="149.0" layoutX="-9.0" layoutY="1.0" pickOnBounds="true">
          <image>
             <Image url="@../images/locationIndicator.png" />
          </image>
       </ImageView>
-      <Label fx:id="lblLocation" layoutX="13.0" layoutY="21.0" prefHeight="17.0" prefWidth="145.0" stylesheets="@../css/memory.css" text="Memory:  Human Witness" />
+      <Label fx:id="lblLocation" layoutX="4.0" layoutY="16.0" prefHeight="17.0" prefWidth="124.0" stylesheets="@../css/memory.css" text="Memory:  Human Witness" />
+      <TextField fx:id="txtFieldSend" layoutX="24.0" layoutY="362.0" prefHeight="8.0" prefWidth="505.0" stylesheets="@../css/memory.css" text="Send Message" />
+      <TextArea fx:id="txtaDialogue" layoutX="24.0" layoutY="231.0" prefHeight="119.0" prefWidth="556.0" stylesheets="@../css/memory.css" text="Text Here" wrapText="true" />
    </children>
 </Pane>
