@@ -10,23 +10,46 @@
   -fx-cursor: default;
 }
 
-.text-area {
+/* .text-area {
   font-family: "Consolas";
   -fx-font-family: "Consolas";
   font-size: 12px;
   -fx-font-size: 12px;
   -fx-text-fill: black;
-  background-color: transparent;
   -fx-background-color: transparent;
   cursor: default;
   -fx-cursor: default;
+} */
+
+.text-area {
+  font-family: "Consolas";
+  -fx-font-family: "Consolas";
+  font-size: 12px;
+  -fx-font-size: 12px;
+  -fx-background-color: transparent;
+  -fx-control-inner-background: transparent;
+  -fx-text-fill: black;
+}
+
+.text-area .scroll-pane .viewport {
+  -fx-background-color: transparent;
 }
 
 #lblLocation {
   font-family: "Consolas";
   -fx-font-family: "Consolas";
-  font-size: 10px;
-  -fx-font-size: 10px;
+  font-size: 12px;
+  -fx-font-size: 12px;
   -fx-text-fill: black;
   align-items: flex-start;
+}
+
+.transparent-button {
+  font-family: "Consolas";
+  -fx-font-family: "Consolas";
+  -fx-background-color: transparent;
+  -fx-border-color: transparent;
+  -fx-text-fill: black;
+  /* or black depending on background */
+  -fx-font-size: 12px;
 }
