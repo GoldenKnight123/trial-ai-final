@@ -1,8 +1,8 @@
-.text-field {
+.text-area {
   font-family: "Consolas";
   -fx-font-family: "Consolas";
-  font-size: 12px;
-  -fx-font-size: 12px;
+  font-size: 24px;
+  -fx-font-size: 24px;
   -fx-text-fill: black;
   background-color: transparent;
   -fx-background-color: transparent;
@@ -10,28 +10,24 @@
   -fx-cursor: default;
 }
 
-/* .text-area {
-  font-family: "Consolas";
-  -fx-font-family: "Consolas";
-  font-size: 12px;
-  -fx-font-size: 12px;
-  -fx-text-fill: black;
+.text-area .content {
+  background-color: transparent;
   -fx-background-color: transparent;
-  cursor: default;
-  -fx-cursor: default;
-} */
-
-.text-area {
-  font-family: "Consolas";
-  -fx-font-family: "Consolas";
-  font-size: 12px;
-  -fx-font-size: 12px;
-  -fx-background-color: transparent;
-  -fx-control-inner-background: transparent;
-  -fx-text-fill: black;
+  border-color: transparent;
+  -fx-border-color: transparent;
+  border-width: 1px;
+  -fx-border-width: 1px;
+  padding: 5px;
+  -fx-padding: 5px;
 }
 
-.text-area .scroll-pane .viewport {
+.text-area .viewport {
+  background-color: transparent;
+  -fx-background-color: transparent;
+}
+
+.text-area .scroll-pane {
+  background-color: transparent;
   -fx-background-color: transparent;
 }
 

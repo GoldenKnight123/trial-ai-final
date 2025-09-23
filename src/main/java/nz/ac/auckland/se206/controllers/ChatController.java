@@ -18,11 +18,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
@@ -35,7 +34,6 @@ import nz.ac.auckland.apiproxy.chat.openai.Choice;
 import nz.ac.auckland.apiproxy.config.ApiProxyConfig;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
 import nz.ac.auckland.se206.App;
-import nz.ac.auckland.se206.GameTimer;
 import nz.ac.auckland.se206.prompts.PromptEngineering;
 
 /**
@@ -51,9 +49,7 @@ public class ChatController extends Controller {
   @FXML private Label lblSceneName;
   @FXML private Label lblWhoSpeaking;
   @FXML private Label lblThinking;
-  @FXML private Label lblComputer;
-  @FXML private ImageView imgComputer;
-  @FXML private AnchorPane chatRoom;
+  @FXML private Pane chatRoom;
   @FXML private Button btnHistory;
   @FXML private TextArea txtaHistory;
   @FXML private Rectangle rectHistory;
@@ -83,8 +79,8 @@ public class ChatController extends Controller {
   @FXML
   public void initialize() throws ApiProxyException {
     // Register timer label with GameTimer
-    GameTimer.getInstance().registerTimerLabel(lblTimer);
-    GameTimer.getInstance().registerTimerArc(arcTimer);
+    // GameTimer.getInstance().registerTimerLabel(lblTimer);
+    // GameTimer.getInstance().registerTimerArc(arcTimer);
 
     txtInput.setVisible(false);
     btnSend.setVisible(false);
@@ -92,9 +88,6 @@ public class ChatController extends Controller {
     rectHistory.setVisible(false);
     rectHistory.setOpacity(0);
     rectHistory.setDisable(true);
-
-    imgComputer.setVisible(false);
-    lblComputer.setVisible(false);
 
     fixedDialogue.put(
         "LOGOS-09",
@@ -179,16 +172,7 @@ public class ChatController extends Controller {
    * @param target the target to set
    */
   public void setTarget(String target) {
-    this.target = target;
-    lblSceneName.setText("Flashback - " + target);
-
-    if (target.equals("LOGOS-09")) {
-      imgComputer.setVisible(true);
-      lblComputer.setVisible(true);
-    } else {
-      imgComputer.setVisible(false);
-      lblComputer.setVisible(false);
-    }
+    this.target = target; // Assign the parameter to the instance field
     chatHistoryTextSnapShot = chatHistoryText; // Store a snapshot of the chat history
     try {
       ApiProxyConfig config = ApiProxyConfig.readConfig();
@@ -363,8 +347,13 @@ public class ChatController extends Controller {
     ChatMessage msg = new ChatMessage("user", message);
 
     // Add message to history
-    chatHistory.get(target).add(msg);
-    chatHistoryText += "You: " + msg.getContent() + "\n"; // Update chat history text
+    if (target != null && chatHistory.containsKey(target)) {
+      chatHistory.get(target).add(msg);
+      chatHistoryText += "You: " + msg.getContent() + "\n"; // Update chat history text
+    } else {
+      System.err.println("Error: target is null or not found in chatHistory: " + target);
+      return;
+    }
 
     chatCompletionRequest.addMessage(msg);
 
@@ -510,9 +499,6 @@ public class ChatController extends Controller {
       txtInput.setText(
           "Did INDUS-07 receive any messages before sending the command to the workers?");
       onSendMessage(null);
-      imgComputer.setDisable(true);
-      imgComputer.setOpacity(0.3);
-      lblComputer.setVisible(false);
       return;
     }
   }

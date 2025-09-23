@@ -13,6 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import nz.ac.auckland.se206.controllers.ChatController;
 import nz.ac.auckland.se206.controllers.DebriefController;
+import nz.ac.auckland.se206.controllers.HumanController;
 import nz.ac.auckland.se206.controllers.RoomController;
 
 /**
@@ -111,14 +112,26 @@ public class App extends Application {
    * @throws IOException if the FXML file is not found
    */
   public static void openChat(MouseEvent event, String target) throws IOException {
-    SceneControllerPair pair = loadAndCacheScene("chat");
-    ChatController chatController = (ChatController) pair.getController();
-    chatController.setTarget(target);
-    chatController.fadeIn();
+    switch (target) {
+      case "LOGOS-09":
+        // Defendant selected
+        break;
+      case "INDUS-07":
+        // AI witness selected
+        break;
+      case "Evan":
+        SceneControllerPair pair = loadAndCacheScene("memoryHuman");
+        HumanController humanController = (HumanController) pair.getController();
+        humanController.setTarget(target);
+        humanController.fadeIn();
 
-    scene = pair.getScene();
-    primaryStage.setScene(scene);
-    primaryStage.show();
+        scene = pair.getScene();
+        primaryStage.setScene(scene);
+        primaryStage.show();
+        break;
+      default:
+        throw new IllegalArgumentException("Unknown target: " + target);
+    }
   }
 
   public static void openRoom(ActionEvent event) throws IOException {
