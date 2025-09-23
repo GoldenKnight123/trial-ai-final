@@ -4,6 +4,7 @@ import java.io.IOException;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
@@ -28,8 +29,8 @@ public class FlashbackController extends Controller {
   @FXML private Label lblTimer;
   @FXML private Label lblInstruction;
   @FXML private Arc arcTimer;
-  @FXML private ImageView backClouds;
-  @FXML private ImageView frontClouds;
+  @FXML private ImageView topClouds;
+  @FXML private ImageView botClouds;
 
   private boolean isFading = false; // Flag to track if a fade operation is in progress
   private int slideProgress = 0;
@@ -135,21 +136,37 @@ public class FlashbackController extends Controller {
     initializeCloudAnimations();
   }
 
-  /** Initializes the cloud animations. */
+  /**
+   * Initializes the cloud animations for the top and bottom cloud layers. Uses two independent
+   * Timelines to animate translateX and translateY for a more natural, parallax-like motion
+   * (different speeds and amplitudes).
+   */
   public void initializeCloudAnimations() {
-    // --- Animate the Back Layer ---
-    TranslateTransition backAnimation = new TranslateTransition(Duration.seconds(4), backClouds);
-    backAnimation.setByY(20); // Height doubled
-    backAnimation.setCycleCount(TranslateTransition.INDEFINITE);
-    backAnimation.setAutoReverse(true);
-    backAnimation.play();
+    // Top clouds: gentle vertical bobbing only
+    Timeline topTimeline =
+        new Timeline(
+            new KeyFrame(
+                Duration.ZERO,
+                new KeyValue(topClouds.translateYProperty(), 0, Interpolator.EASE_BOTH)),
+            new KeyFrame(
+                Duration.seconds(2),
+                new KeyValue(topClouds.translateYProperty(), 3, Interpolator.EASE_BOTH)));
+    topTimeline.setCycleCount(Timeline.INDEFINITE);
+    topTimeline.setAutoReverse(true);
+    topTimeline.play();
 
-    // --- Animate the Front Layer ---
-    TranslateTransition frontAnimation = new TranslateTransition(Duration.seconds(3), frontClouds);
-    frontAnimation.setByY(40); // Height doubled
-    frontAnimation.setCycleCount(TranslateTransition.INDEFINITE);
-    frontAnimation.setAutoReverse(true);
-    frontAnimation.play();
+    // Bottom clouds: slightly faster vertical bobbing
+    Timeline botTimeline =
+        new Timeline(
+            new KeyFrame(
+                Duration.ZERO,
+                new KeyValue(botClouds.translateYProperty(), 0, Interpolator.EASE_BOTH)),
+            new KeyFrame(
+                Duration.seconds(3),
+                new KeyValue(botClouds.translateYProperty(), 6, Interpolator.EASE_BOTH)));
+    botTimeline.setCycleCount(Timeline.INDEFINITE);
+    botTimeline.setAutoReverse(true);
+    botTimeline.play();
   }
 
   /**
