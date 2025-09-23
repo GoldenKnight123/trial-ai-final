@@ -75,6 +75,7 @@ public class RoomController extends Controller {
   @FXML private TextArea txtaDialogue;
   @FXML private ImageView imgContinueArrow;
   @FXML private ImageView imgTextArea;
+  @FXML private ImageView imgInstructionBox;
   @FXML private Label lblWhoSpeaking;
   @FXML private Label lblInstructions;
   @FXML private Label lblTimer;
@@ -181,12 +182,16 @@ public class RoomController extends Controller {
     lblTimer.setAlignment(Pos.CENTER);
 
     lblTimer.setVisible(true);
-    arcTimer.setVisible(true);
+    // arcTimer.setVisible(true);
     GameTimer.getInstance().start();
 
+    txtaDialogue.setVisible(true);
     txtaDialogue.setEditable(false);
     txtaDialogue.setFocusTraversable(false);
     txtaDialogue.setMouseTransparent(true);
+
+    imgTextArea.setVisible(true);
+    lblWhoSpeaking.setVisible(true);
 
     btnGuilty.setVisible(false);
     btnNotGuilty.setVisible(false);
@@ -198,6 +203,7 @@ public class RoomController extends Controller {
     if (isFirstTimeInit) {
       imgContinueArrow.setVisible(false);
       lblInstructions.setVisible(false);
+      imgInstructionBox.setVisible(false);
       initializeFixedDialogue();
       displayTextWithTypewriterEffect(
           txtaDialogue, fixedDialogue.get(currentDialogueIndex), 50, true, true);
@@ -295,6 +301,7 @@ public class RoomController extends Controller {
       imgTextArea.setVisible(false);
       lblWhoSpeaking.setVisible(false);
       lblInstructions.setVisible(true);
+      imgInstructionBox.setVisible(true);
       context.setState(context.getGameStartedState());
     } else {
       imgContinueArrow.setVisible(false);

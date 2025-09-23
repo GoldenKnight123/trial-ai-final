@@ -12,35 +12,40 @@
 
 <Pane fx:id="room" focusTraversable="true" onMouseClicked="#handleGeneralClick" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #FFF8E3;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.controllers.RoomController">
    <children>
-      <ImageView fitHeight="359.0" fitWidth="445.0" layoutX="469.0" layoutY="41.0" preserveRatio="true">
+      <ImageView fx:id="imgTextArea1" fitHeight="720.0" fitWidth="1537.0" preserveRatio="true">
+         <image>
+            <Image url="@../images/background.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="359.0" fitWidth="445.0" layoutX="477.0" layoutY="145.0" preserveRatio="true">
          <image>
             <Image url="@../images/indus-07.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="388.0" fitWidth="354.0" layoutX="173.0" layoutY="51.0" preserveRatio="true">
+      <ImageView fitHeight="388.0" fitWidth="354.0" layoutX="133.0" layoutY="166.0" preserveRatio="true">
          <image>
             <Image url="@../images/logos-09.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="388.0" fitWidth="271.0" layoutX="861.0" layoutY="51.0" preserveRatio="true">
+      <ImageView fitHeight="388.0" fitWidth="271.0" layoutX="930.0" layoutY="160.0" preserveRatio="true">
          <image>
             <Image url="@../images/evan.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="imgTextArea" fitHeight="720.0" fitWidth="1537.0" layoutX="-2.0" layoutY="5.0" preserveRatio="true">
+      <ImageView fx:id="imgTextArea" fitHeight="720.0" fitWidth="1537.0" layoutX="-2.0" layoutY="5.0" preserveRatio="true" visible="false">
          <image>
             <Image url="@../images/textArea.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="70.0" fitWidth="233.0" layoutX="-23.0" layoutY="65.0" preserveRatio="true">
+      <ImageView fitHeight="70.0" fitWidth="233.0" layoutX="-23.0" layoutY="91.0" preserveRatio="true">
          <image>
             <Image url="@../images/locationIndicator.png" />
          </image>
       </ImageView>
-      <Rectangle fx:id="rectWitnessAi" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="334.0" layoutX="173.0" layoutY="67.0" onMouseClicked="#handleRectangleClick" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="259.0" />
-      <Rectangle fx:id="rectDefendant" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="334.0" layoutX="499.0" layoutY="57.0" onMouseClicked="#handleRectangleClick" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="278.0" />
-      <Rectangle fx:id="rectWitnessHuman" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="334.0" layoutX="839.0" layoutY="78.0" onMouseClicked="#handleRectangleClick" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="303.0" />
-      <Label fx:id="lblLocation" layoutX="14.0" layoutY="86.0" stylesheets="@../css/room.css" text="Courtroom">
+      <Rectangle fx:id="rectWitnessAi" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="334.0" layoutX="133.0" layoutY="187.0" onMouseClicked="#handleRectangleClick" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="259.0" />
+      <Rectangle fx:id="rectDefendant" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="334.0" layoutX="509.0" layoutY="158.0" onMouseClicked="#handleRectangleClick" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="278.0" />
+      <Rectangle fx:id="rectWitnessHuman" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="334.0" layoutX="913.0" layoutY="179.0" onMouseClicked="#handleRectangleClick" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="303.0" />
+      <Label fx:id="lblLocation" layoutX="14.0" layoutY="112.0" stylesheets="@../css/room.css" text="Courtroom">
          <font>
             <Font size="38.0" />
          </font>
@@ -50,38 +55,48 @@
             <Font size="21.0" />
          </font>
       </Label>
-      <TextArea fx:id="txtaDialogue" editable="false" layoutX="52.0" layoutY="436.0" onMouseClicked="#handleGeneralClick" prefHeight="245.0" prefWidth="1177.0" stylesheets="@../css/room.css" text="Text Here" wrapText="true">
+      <TextArea fx:id="txtaDialogue" editable="false" layoutX="52.0" layoutY="436.0" onMouseClicked="#handleGeneralClick" prefHeight="245.0" prefWidth="1177.0" stylesheets="@../css/room.css" text="Text Here" visible="false" wrapText="true">
          <font>
             <Font size="24.0" />
          </font>
       </TextArea>
-      <Label fx:id="lblInstructions" layoutX="168.0" layoutY="497.0" text="Click on an individual to view their memories." visible="false">
+      <ImageView fx:id="imgInstructionBox" fitHeight="137.0" fitWidth="951.0" layoutX="172.0" layoutY="456.0" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@../images/instructionBox.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="lblInstructions" layoutX="197.0" layoutY="500.0" stylesheets="@../css/room.css" text="Click on an individual to view their memories." visible="false">
          <font>
             <Font size="48.0" />
          </font>
       </Label>
-      <Label fx:id="lblTimer" alignment="CENTER" layoutX="5.0" layoutY="14.0" prefWidth="60.0" text="120" textFill="#000000">
+      <ImageView fitHeight="85.0" fitWidth="135.0" layoutX="9.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/clock.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="lblTimer" alignment="CENTER" layoutX="22.0" layoutY="33.0" prefWidth="60.0" stylesheets="@../css/room.css" text="120" textFill="#000000">
          <font>
             <Font name="System Bold" size="24.0" />
          </font>
       </Label>
-      <Arc fx:id="arcTimer" layoutX="35.0" layoutY="35.0" length="360.0" opacity="0.25" radiusX="30.0" radiusY="30.0" startAngle="90.0" stroke="BLACK" strokeType="INSIDE" type="ROUND" />
-      <Button fx:id="btnGuilty" layoutX="367.0" layoutY="504.0" mnemonicParsing="false" onAction="#onChooseGuilty" prefHeight="70.0" prefWidth="165.0" text="GUILTY">
+      <Arc fx:id="arcTimer" layoutX="35.0" layoutY="35.0" length="360.0" opacity="0.25" radiusX="30.0" radiusY="30.0" startAngle="90.0" stroke="BLACK" strokeType="INSIDE" type="ROUND" visible="false" />
+      <Button fx:id="btnGuilty" layoutX="367.0" layoutY="504.0" mnemonicParsing="false" onAction="#onChooseGuilty" prefHeight="70.0" prefWidth="165.0" text="GUILTY" visible="false">
          <font>
             <Font size="18.0" />
          </font></Button>
-      <Button fx:id="btnNotGuilty" layoutX="748.0" layoutY="504.0" mnemonicParsing="false" onAction="#onChooseNotGuilty" prefHeight="70.0" prefWidth="165.0" text="NOT GUILTY">
+      <Button fx:id="btnNotGuilty" layoutX="748.0" layoutY="504.0" mnemonicParsing="false" onAction="#onChooseNotGuilty" prefHeight="70.0" prefWidth="165.0" text="NOT GUILTY" visible="false">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
-      <Label fx:id="lblWhoSpeaking" layoutX="99.0" layoutY="398.0" stylesheets="@../css/room.css" text="You:">
+      <Label fx:id="lblWhoSpeaking" layoutX="99.0" layoutY="398.0" stylesheets="@../css/room.css" text="You:" visible="false">
          <font>
             <Font size="24.0" />
          </font>
       </Label>
       <Rectangle fx:id="rectFade" arcHeight="5.0" arcWidth="5.0" fill="BLACK" height="795.0" layoutX="-23.0" layoutY="-52.0" opacity="0.0" stroke="BLACK" strokeType="INSIDE" visible="false" width="1341.0" />
-      <ImageView fx:id="imgContinueArrow" fitHeight="37.0" fitWidth="153.0" layoutX="1142.0" layoutY="644.0" preserveRatio="true">
+      <ImageView fx:id="imgContinueArrow" fitHeight="37.0" fitWidth="153.0" layoutX="1142.0" layoutY="644.0" preserveRatio="true" visible="false">
          <image>
             <Image url="@../images/continueArrow.png" />
          </image>
