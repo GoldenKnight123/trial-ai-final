@@ -4,6 +4,7 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.shape.Arc?>
 <?import javafx.scene.text.Font?>
 
@@ -15,26 +16,28 @@
          </font>
       </Label>
       <Arc fx:id="arcTimer" layoutX="45.0" layoutY="45.0" length="360.0" opacity="0.25" radiusX="30.0" radiusY="30.0" startAngle="90.0" stroke="BLACK" strokeType="INSIDE" type="ROUND" />
+        <StackPane fx:id="imgScene3" layoutX="248.0" layoutY="99.0" prefHeight="523.0" prefWidth="785.0">
+         <children>
+            <ImageView fx:id="imgView3" fitHeight="523.0" fitWidth="785.0" pickOnBounds="true" preserveRatio="true" />
+         </children>
+      </StackPane>
+
+      <StackPane fx:id="imgScene2" layoutX="248.0" layoutY="99.0" prefHeight="523.0" prefWidth="785.0">
+         <children>
+            <ImageView fx:id="imgView2" fitHeight="523.0" fitWidth="785.0" pickOnBounds="true" preserveRatio="true" />
+         </children>
+      </StackPane>
+
+      <StackPane fx:id="imgScene1" layoutX="248.0" layoutY="99.0" prefHeight="523.0" prefWidth="785.0">
+         <children>
+            <ImageView fx:id="imgView1" fitHeight="523.0" fitWidth="785.0" pickOnBounds="true" preserveRatio="true" />
+         </children>
+      </StackPane>
       <Label fx:id="lblSceneName" layoutX="14.0" layoutY="660.0" text="Flashback">
          <font>
             <Font size="36.0" />
          </font>
       </Label>
-      <ImageView fx:id="imgScene1" fitHeight="523.0" fitWidth="1050.0" layoutX="291.0" layoutY="75.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../images/placeholder.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="imgScene2" fitHeight="523.0" fitWidth="1050.0" layoutX="291.0" layoutY="75.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../images/placeholder.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="imgScene3" fitHeight="523.0" fitWidth="1050.0" layoutX="291.0" layoutY="75.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../images/placeholder.png" />
-         </image>
-      </ImageView>
       <Label fx:id="lblInstruction" layoutX="1097.0" layoutY="687.0" text="Click any to continue. " textAlignment="RIGHT">
          <font>
             <Font size="18.0" />

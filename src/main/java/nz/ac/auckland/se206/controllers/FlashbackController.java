@@ -14,6 +14,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Arc;
 import javafx.util.Duration;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
@@ -22,9 +23,12 @@ import nz.ac.auckland.se206.GameTimer;
 
 public class FlashbackController extends Controller {
   @FXML private AnchorPane flashbackRoom;
-  @FXML private ImageView imgScene1;
-  @FXML private ImageView imgScene2;
-  @FXML private ImageView imgScene3;
+  @FXML private StackPane imgScene1;
+  @FXML private StackPane imgScene2;
+  @FXML private StackPane imgScene3;
+  @FXML private ImageView imgView1;
+  @FXML private ImageView imgView2;
+  @FXML private ImageView imgView3;
   @FXML private Label lblSceneName;
   @FXML private Label lblTimer;
   @FXML private Label lblInstruction;
@@ -54,7 +58,7 @@ public class FlashbackController extends Controller {
 
     canExit = false;
 
-    // Reset image positions
+    // Dynamically set slide positions
     imgScene1.setTranslateX(0);
     imgScene2.setTranslateX(1280);
     imgScene3.setTranslateX(2560);
@@ -85,10 +89,9 @@ public class FlashbackController extends Controller {
 
   public void setSlideshow(String target) {
     // Set the images for the slideshow based on the target
-    imgScene1.setImage(
-        new Image(getClass().getResourceAsStream(("/images/" + target + "(1).png"))));
-    imgScene2.setImage(new Image(getClass().getResourceAsStream("/images/" + target + "(2).png")));
-    imgScene3.setImage(new Image(getClass().getResourceAsStream("/images/" + target + "(3).png")));
+    imgView1.setImage(new Image(getClass().getResourceAsStream(("/images/" + target + "(1).png"))));
+    imgView2.setImage(new Image(getClass().getResourceAsStream(("/images/" + target + "(2).png"))));
+    imgView3.setImage(new Image(getClass().getResourceAsStream(("/images/" + target + "(3).png"))));
   }
 
   public void fadeIn() {
@@ -134,6 +137,11 @@ public class FlashbackController extends Controller {
 
     // Initialize cloud animations
     initializeCloudAnimations();
+
+    String borderStyle = "-fx-border-color: black; -fx-border-width: 6px; -fx-border-style: solid;";
+    imgScene1.setStyle(borderStyle);
+    imgScene2.setStyle(borderStyle);
+    imgScene3.setStyle(borderStyle);
   }
 
   /**
@@ -192,7 +200,6 @@ public class FlashbackController extends Controller {
       // Scene 1: slide from 0 to -1000 with overshoot
       TranslateTransition sceneSlide = new TranslateTransition(Duration.millis(500), imgScene1);
       sceneSlide.setFromX(imgScene1.getTranslateX());
-      System.out.println(imgScene1.getTranslateX());
       sceneSlide.setToX(imgScene1.getTranslateX() - 1330); // Overshoot by 100px
       sceneSlide.setInterpolator(TANGENT_INTERPOLATOR); // Add easing
 
