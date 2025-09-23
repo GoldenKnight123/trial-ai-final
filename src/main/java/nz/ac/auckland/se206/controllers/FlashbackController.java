@@ -84,7 +84,8 @@ public class FlashbackController extends Controller {
 
   public void setSlideshow(String target) {
     // Set the images for the slideshow based on the target
-    imgScene1.setImage(new Image(getClass().getResourceAsStream("/images/" + target + "(1).png")));
+    imgScene1.setImage(
+        new Image(getClass().getResourceAsStream(("/images/" + target + "(1).png"))));
     imgScene2.setImage(new Image(getClass().getResourceAsStream("/images/" + target + "(2).png")));
     imgScene3.setImage(new Image(getClass().getResourceAsStream("/images/" + target + "(3).png")));
   }
