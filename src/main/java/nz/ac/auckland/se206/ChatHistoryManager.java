@@ -24,6 +24,9 @@ public class ChatHistoryManager {
   // Store fixed dialogue for each character
   private Map<String, String> fixedDialogue;
 
+  // Store interaction dialogue for each character
+  private Map<String, String> interactionDialogue;
+
   /** Private constructor to enforce singleton pattern. */
   private ChatHistoryManager() {
     initialize();
@@ -46,6 +49,7 @@ public class ChatHistoryManager {
     chatHistory = new HashMap<>();
     chatHistoryText = "";
     fixedDialogue = new HashMap<>();
+    interactionDialogue = new HashMap<>();
 
     // Initialize chat history for each character
     chatHistory.put("LOGOS-09", new ArrayList<>());
@@ -65,6 +69,19 @@ public class ChatHistoryManager {
         "Evan",
         "It's early in the morning. I just arrived at the Greenhill Power Plant site and heard a"
             + " huge explosion.");
+
+    // Initialize interaction dialogue for each character
+    interactionDialogue.put(
+        "LOGOS-09",
+        "I see you managed to decrypt the message. It seems INDUS-07 was contacted by their manager"
+            + " before they decided to install the new Helios system.");
+    interactionDialogue.put(
+        "INDUS-07",
+        "INDUS-07: \"I was preparing and analysing a way to increase the output of the power"
+            + " plant.\"");
+    interactionDialogue.put(
+        "Evan",
+        "Evan: \"I just arrived at the Greenhill Power Plant site and heard a huge explosion.\"");
   }
 
   /**
@@ -133,6 +150,16 @@ public class ChatHistoryManager {
    */
   public String getFixedDialogue(String target) {
     return fixedDialogue.get(target);
+  }
+
+  /**
+   * Gets the interaction dialogue for a specific character.
+   *
+   * @param target the character to get interaction dialogue for
+   * @return the interaction dialogue string, or null if not found
+   */
+  public String getInteractionDialogue(String target) {
+    return interactionDialogue.get(target);
   }
 
   /**

@@ -92,7 +92,7 @@ public class RoomController extends Controller {
   private HashMap<String, Boolean> flashbackMap =
       new HashMap<>() {
         {
-          put("LOGOS-09", false);
+          put("LOGOS-09", true);
           put("Evan", false);
           put("INDUS-07", false);
         }

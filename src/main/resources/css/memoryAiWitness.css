@@ -1,0 +1,72 @@
+.text-area {
+  font-family: "VT323";
+  -fx-font-family: "VT323";
+  font-size: 48px;
+  -fx-font-size: 48px;
+  -fx-text-fill: rgb(136, 255, 0);
+  background-color: transparent;
+  -fx-background-color: transparent;
+  cursor: default;
+  -fx-cursor: default;
+}
+
+.text-area .content {
+  background-color: transparent;
+  -fx-background-color: transparent;
+  border-color: transparent;
+  -fx-border-color: transparent;
+  border-width: 1px;
+  -fx-border-width: 1px;
+  padding: 5px;
+  -fx-padding: 5px;
+}
+
+.text-area .viewport {
+  background-color: transparent;
+  -fx-background-color: transparent;
+}
+
+.text-area .scroll-pane {
+  background-color: transparent;
+  -fx-background-color: transparent;
+}
+
+.text-field {
+  font-family: "VT323";
+  -fx-font-family: "VT323";
+  font-size: 48px;
+  -fx-font-size: 48px;
+  -fx-text-fill: rgb(136, 255, 0);
+  background-color: transparent;
+  -fx-background-color: transparent;
+}
+
+.text-field .content {
+  background-color: transparent;
+  -fx-background-color: transparent;
+  border-color: transparent;
+  -fx-border-color: transparent;
+  border-width: 1px;
+  -fx-border-width: 1px;
+  padding: 5px;
+  -fx-padding: 5px;
+}
+
+.text-field .viewport {
+  background-color: transparent;
+  -fx-background-color: transparent;
+}
+
+.text-field .scroll-pane {
+  background-color: transparent;
+  -fx-background-color: transparent;
+}
+
+#lblTerminalError {
+  font-family: "VT323";
+  -fx-font-family: "VT323";
+  font-size: 12px;
+  -fx-font-size: 12px;
+  -fx-text-fill: red;
+  align-items: center;
+}
