@@ -73,16 +73,6 @@
   align-items: flex-start;
 }
 
-.transparent-button {
-  font-family: "Consolas";
-  -fx-font-family: "Consolas";
-  -fx-background-color: transparent;
-  -fx-border-color: transparent;
-  -fx-text-fill: black;
-  /* or black depending on background */
-  -fx-font-size: 12px;
-}
-
 #lblWhoSpeaking {
   font-family: "Consolas";
   -fx-font-family: "Consolas";

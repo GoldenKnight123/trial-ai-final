@@ -11,6 +11,8 @@ import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import nz.ac.auckland.se206.controllers.AiDefendantController;
+import nz.ac.auckland.se206.controllers.AiWitnessController;
 import nz.ac.auckland.se206.controllers.ChatController;
 import nz.ac.auckland.se206.controllers.DebriefController;
 import nz.ac.auckland.se206.controllers.HumanController;
@@ -114,20 +116,47 @@ public class App extends Application {
   public static void openChat(MouseEvent event, String target) throws IOException {
     switch (target) {
       case "LOGOS-09":
-        // Defendant selected
+        // AI witness selected
+        SceneControllerPair witnessPair = loadAndCacheScene("memoryAiWitness");
+        AiWitnessController aiWitnessController = (AiWitnessController) witnessPair.getController();
+        aiWitnessController.setTarget(target);
+
+        aiWitnessController.setInitialOpacity();
+
+        scene = witnessPair.getScene();
+        primaryStage.setScene(scene);
+        primaryStage.show();
+
+        aiWitnessController.fadeIn();
         break;
       case "INDUS-07":
-        // AI witness selected
+        // AI defendant selected
+        SceneControllerPair defendantPair = loadAndCacheScene("memoryAiDefendant");
+        AiDefendantController aiDefendantController =
+            (AiDefendantController) defendantPair.getController();
+        aiDefendantController.setTarget(target);
+
+        aiDefendantController.setInitialOpacity();
+
+        scene = defendantPair.getScene();
+        primaryStage.setScene(scene);
+        primaryStage.show();
+
+        aiDefendantController.fadeIn();
         break;
       case "Evan":
+        // Human witness selected
         SceneControllerPair pair = loadAndCacheScene("memoryHuman");
         HumanController humanController = (HumanController) pair.getController();
         humanController.setTarget(target);
-        humanController.fadeIn();
+
+        humanController.setInitialOpacity();
 
         scene = pair.getScene();
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        humanController.fadeIn();
         break;
       default:
         throw new IllegalArgumentException("Unknown target: " + target);
@@ -160,12 +189,8 @@ public class App extends Application {
       debriefController.setCorrectLabel("You were INCORRECT!");
     }
 
-    // Get chat history from ChatController if available
-    String chatHistory = "";
-    if (controllerCache.containsKey("chat")) {
-      ChatController chatController = (ChatController) controllerCache.get("chat");
-      chatHistory = chatController.getChatHistoryText();
-    }
+    // Get chat history from ChatHistoryManager
+    String chatHistory = ChatHistoryManager.getInstance().getChatHistoryText();
 
     // Start GPT analysis with chat history and decision correctness
     debriefController.runGptDebrief(chatHistory, correct);
