@@ -34,6 +34,11 @@
          </image>
       </ImageView>
       <Label fx:id="lblLocation" layoutX="8.0" layoutY="34.0" prefHeight="17.0" prefWidth="149.0" stylesheets="@../css/memory.css" text="Memory:  Evan" />
+      <ImageView fx:id="imgInput" fitHeight="707.0" fitWidth="1263.0" layoutX="-80.0" layoutY="336.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../../../../../../text-field.png" />
+         </image>
+      </ImageView>
       <TextField fx:id="txtInput" layoutX="29.0" layoutY="664.0" onKeyPressed="#onKeyPressed" prefHeight="45.0" prefWidth="1072.0" styleClass="text-field" stylesheets="@../css/memory.css" text="Send Message" />
       <TextArea fx:id="txtaChat" editable="false" focusTraversable="false" layoutX="37.0" layoutY="392.0" prefHeight="248.0" prefWidth="1197.0" style="-fx-background-color: transparent;" styleClass="text-area" stylesheets="@../css/memory.css" text="Text Here" wrapText="true" />
       <TextArea fx:id="txtaHistory" editable="false" layoutX="818.0" layoutY="82.0" prefHeight="620.0" prefWidth="444.0" visible="false" wrapText="true" />

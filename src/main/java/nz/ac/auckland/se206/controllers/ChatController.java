@@ -16,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -43,6 +44,7 @@ public class ChatController extends Controller {
 
   @FXML private TextArea txtaChat;
   @FXML private TextField txtInput;
+  @FXML private ImageView imgInput;
   @FXML private Button btnSend;
   @FXML private Button btnReturn;
   @FXML private Label lblSceneName;
@@ -79,6 +81,7 @@ public class ChatController extends Controller {
     // GameTimer.getInstance().registerTimerArc(arcTimer);
 
     txtInput.setVisible(false);
+    imgInput.setVisible(false);
     btnSend.setVisible(false);
     txtaHistory.setVisible(false);
     rectHistory.setVisible(false);
@@ -183,6 +186,7 @@ public class ChatController extends Controller {
       String fixedDialogue = ChatHistoryManager.getInstance().getFixedDialogue(target);
       if (!ChatHistoryManager.getInstance().containsDialogue(target, fixedDialogue)) {
         txtInput.setVisible(false);
+        imgInput.setVisible(false);
         btnSend.setVisible(false);
         ChatHistoryManager.getInstance()
             .addMessage(target, new ChatMessage("assistant", fixedDialogue));
@@ -291,6 +295,7 @@ public class ChatController extends Controller {
       // GPT message typewriter finished - show input controls
       btnSend.setVisible(true);
       txtInput.setVisible(true);
+      imgInput.setVisible(true);
       btnReturn.setDisable(false);
       currentSpeaker = ""; // Reset speaker
     }
@@ -314,6 +319,7 @@ public class ChatController extends Controller {
     txtInput.clear();
     btnSend.setVisible(false);
     txtInput.setVisible(false);
+    imgInput.setVisible(false);
     btnReturn.setDisable(true);
 
     // Reset timing variables
@@ -355,6 +361,7 @@ public class ChatController extends Controller {
                 // Re-enable controls even if the task failed
                 btnSend.setVisible(true);
                 txtInput.setVisible(true);
+                imgInput.setVisible(true);
                 txtInput.requestFocus();
                 waitingForGptResponse = false;
 
