@@ -62,7 +62,7 @@ public class ChatController extends Controller {
   private long userMessageFinishTime = 0;
   private boolean waitingForGptResponse = false;
   private ChatMessage pendingGptResponse = null;
-  public String currentSpeaker = ""; // Track who is currently displaying text ("user" or "gpt")
+  private String currentSpeaker = ""; // Track who is currently displaying text ("user" or "gpt")
   private String chatHistoryTextSnapShot = ""; // Store chat history text snapshot
   private boolean historyView = false;
   private boolean isAnimating = false; // Track if history animation is playing
@@ -276,6 +276,21 @@ public class ChatController extends Controller {
       stopThinkingAnimation();
       displayTextWithTypewriterEffect(txtaChat, message.getContent());
       waitingForGptResponse = false;
+    }
+  }
+
+  public void displayInteractionDialogue() {
+    currentSpeaker = "gpt";
+    String interactionDialogue = ChatHistoryManager.getInstance().getInteractionDialogue(target);
+    if (!interactionDialogue.isEmpty()) {
+      txtInput.setVisible(false);
+      imgInput.setVisible(false);
+      btnSend.setVisible(false);
+      ChatHistoryManager.getInstance()
+          .addMessage(target, new ChatMessage("assistant", interactionDialogue));
+      chatCompletionRequest.addMessage(new ChatMessage("assistant", interactionDialogue));
+      btnReturn.setDisable(true);
+      displayTextWithTypewriterEffect(txtaChat, interactionDialogue);
     }
   }
 
@@ -525,5 +540,17 @@ public class ChatController extends Controller {
    */
   public String getChatHistoryText() {
     return ChatHistoryManager.getInstance().getChatHistoryText();
+  }
+
+  public ChatCompletionRequest getChatCompletionRequest() {
+    return chatCompletionRequest;
+  }
+
+  public String getTarget() {
+    return target;
+  }
+
+  public String getCurrentSpeaker() {
+    return currentSpeaker;
   }
 }
