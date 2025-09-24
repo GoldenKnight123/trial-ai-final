@@ -98,16 +98,16 @@ public class ChatController extends Controller {
 
     fixedDialogue.put(
         "LOGOS-09",
-        "It is currently 16th July 22:17AM. I have detected a message from INDUS-07 sent to site"
-            + " workers to increase the output levels of the power plant by 15%.");
+        "Greetings, Judge. I am LOGOS-09, an AI tasked with overseeing the operations and"
+            + " communications within Greenhill Power Plant.");
     fixedDialogue.put(
         "INDUS-07",
-        "It is currently 16th July 21:27AM. I am preparing and analysing a way to increase the"
-            + " output of the power plant.");
+        "Greetings, Judge. I am INDUS-07, an AI responsible for managing the industrial"
+            + " operations and worker safety at Greenhill Power Plant.");
     fixedDialogue.put(
         "Evan",
-        "It's early in the morning. I just arrived at the Greenhill Power Plant site and heard a"
-            + " huge explosion.");
+        "Hello, Judge. I am Evan, the lead human engineer overseeing the technological"
+            + " systems at Greenhill Power Plant.");
     chatHistory.put("LOGOS-09", new ArrayList<>());
     chatHistory.put("INDUS-07", new ArrayList<>());
     chatHistory.put("Evan", new ArrayList<>());
