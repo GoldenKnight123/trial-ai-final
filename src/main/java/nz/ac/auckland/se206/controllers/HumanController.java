@@ -1,7 +1,11 @@
 package nz.ac.auckland.se206.controllers;
 
+import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Slider;
+import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
 
@@ -13,21 +17,61 @@ public class HumanController extends ChatController {
   @FXML private Text flowTxt;
   @FXML private Text stressTxt;
 
-  // The real values you want to reveal
-  private final String tempValue = "72°C";
-  private final String pressureValue = "1.2 bar";
-  private final String flowValue = "15 L/s";
-  private final String stressValue = "Critical";
+  @FXML private Canvas sinGraphCanvas;
+  @FXML private ImageView errorImage;
 
-  // Where the slider "sweet spot" is
-  private final double sweetSpot = 50; // midpoint of slider (adjust as needed)
-  private final double tolerance = 5; // how close the player must get
+  private GraphicsContext gc;
+
+  private AnimationTimer waveTimer;
+
+  private double amplitude = 20;
+  private double frequency = 0.05;
+  private double x = 0;
+
+  private boolean waveStarted = false;
+
+  // Real values
+  private final String tempValue = "512";
+  private final String pressureValue = "2870";
+  private final String flowValue = "15.3";
+  private final String stressValue = "92.4";
+
+  // Slider sweet spot
+  private final double sweetSpot = 50;
+  private final double tolerance = 2;
 
   @FXML
   @Override
   public void initialize() throws ApiProxyException {
-    // TODO Auto-generated method stub
     super.initialize();
+    gc = sinGraphCanvas.getGraphicsContext2D();
+
+    // AnimationTimer for sine wave
+    waveTimer =
+        new AnimationTimer() {
+          @Override
+          public void handle(long now) {
+            double width = sinGraphCanvas.getWidth();
+            double height = sinGraphCanvas.getHeight();
+
+            gc.setStroke(javafx.scene.paint.Color.LIME);
+            gc.setLineWidth(2);
+
+            double y = height / 2 + amplitude * Math.sin(x * frequency);
+
+            if (x > 0) {
+              double prevY = height / 2 + amplitude * Math.sin((x - 1) * frequency);
+              gc.strokeLine(x - 1, prevY, x, y);
+            }
+
+            x += 1;
+
+            if (x >= width) {
+              stop(); // Stop animation when the wave finishes
+              waveStarted = false;
+            }
+          }
+        };
 
     slider
         .valueProperty()
@@ -36,31 +80,66 @@ public class HumanController extends ChatController {
               double distance = Math.abs(newVal.doubleValue() - sweetSpot);
 
               if (distance <= tolerance) {
-                // Show the correct values
+                // Fully reveal values
+                errorImage.setVisible(true);
                 tempTxt.setText(tempValue);
                 pressureTxt.setText(pressureValue);
                 flowTxt.setText(flowValue);
                 stressTxt.setText(stressValue);
+
+                if (!waveStarted) {
+                  resetWave();
+                  waveTimer.start();
+                  waveStarted = true;
+                }
               } else {
-                // Scramble them based on slider distance
-                tempTxt.setText(scramble(tempValue));
-                pressureTxt.setText(scramble(pressureValue));
-                flowTxt.setText(scramble(flowValue));
-                stressTxt.setText(scramble(stressValue));
+                // Gradually scramble values
+                double scrambleFactor = Math.min(distance / (slider.getMax() / 2), 1.0);
+                tempTxt.setText(scramble(tempValue, scrambleFactor));
+                pressureTxt.setText(scramble(pressureValue, scrambleFactor));
+                flowTxt.setText(scramble(flowValue, scrambleFactor));
+                stressTxt.setText(scramble(stressValue, scrambleFactor));
+                errorImage.setVisible(false);
+                if (waveStarted) {
+                  resetWave();
+                  waveTimer.stop();
+                  waveStarted = false;
+                }
               }
             });
   }
 
-  private String scramble(String input) {
+  private void resetWave() {
+    gc.clearRect(0, 0, sinGraphCanvas.getWidth(), sinGraphCanvas.getHeight());
+    x = 0;
+  }
+
+  private String scramble(String input, double scrambleFactor) {
     StringBuilder sb = new StringBuilder();
     for (char c : input.toCharArray()) {
-      if (Character.isWhitespace(c)) {
-        sb.append(" "); // keep spaces
+      if (Character.isWhitespace(c)
+          || Character.isDigit(c)
+          || c == '.'
+          || c == '°'
+          || c == '/'
+          || c == 'k'
+          || c == 'P'
+          || c == 'a'
+          || c == 'm') {
+        if (Math.random() < scrambleFactor) {
+          sb.append(randomChar());
+        } else {
+          sb.append(c);
+        }
       } else {
-        // Replace with a random symbol
-        sb.append("#$%&*?".charAt((int) (Math.random() * 6)));
+        sb.append(randomChar());
       }
     }
     return sb.toString();
+  }
+
+  private char randomChar() {
+    String symbols = "#$%&*@?";
+    return symbols.charAt((int) (Math.random() * symbols.length()));
   }
 }
