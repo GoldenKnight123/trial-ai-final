@@ -111,7 +111,7 @@ public class GameTimer {
     if (!timerLabels.contains(label)) {
       timerLabels.add(label);
       // Update the label immediately with current time (formatted with fixed width)
-      Platform.runLater(() -> label.setText(String.format("%3d", secondsLeft)));
+      Platform.runLater(() -> label.setText(String.valueOf(secondsLeft)));
     }
   }
 
@@ -131,11 +131,10 @@ public class GameTimer {
 
   /** Updates all registered timer labels with the current time. */
   public void updateTimerDisplay() {
-    String timeString = String.format("%3d", secondsLeft);
     Platform.runLater(
         () -> {
           for (Label label : timerLabels) {
-            label.setText(timeString);
+            label.setText(String.valueOf(secondsLeft));
           }
           for (Arc arc : timerArcs) {
             arc.setLength(360.0 * secondsLeft / maxTime);
