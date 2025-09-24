@@ -180,7 +180,7 @@ public class ChatController extends Controller {
    */
   public void setTarget(String target) {
     this.target = target;
-    lblSceneName.setText("Flashback - " + target);
+    lblSceneName.setText("Memory - " + target);
 
     if (target.equals("LOGOS-09")) {
       imgComputer.setVisible(true);
