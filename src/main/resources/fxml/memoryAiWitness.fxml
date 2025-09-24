@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
@@ -18,6 +19,11 @@
          </image>
       </ImageView>
       <Rectangle fx:id="rectHistory" arcHeight="5.0" arcWidth="5.0" height="720.0" layoutX="10.0" layoutY="10.0" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="1280.0" />
+      <ImageView fitHeight="629.0" fitWidth="1066.0" layoutX="98.0" layoutY="-83.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/logos09-memory.png" />
+         </image>
+      </ImageView>
       <ImageView fx:id="lblLocation" fitHeight="47.0" fitWidth="175.0" layoutX="-7.0" layoutY="19.0" pickOnBounds="true">
          <image>
             <Image url="@../images/locationIndicator.png" />
@@ -55,15 +61,22 @@
          </font>
       </Label>
       <Button fx:id="btnSend" layoutX="1114.0" layoutY="662.0" mnemonicParsing="false" onAction="#onSendMessage" prefHeight="42.0" prefWidth="131.0" stylesheets="@../css/memory.css" text="Send" />
-      <ImageView fitHeight="340.0" fitWidth="446.0" layoutX="139.0" layoutY="-13.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="imgInteractable" fitHeight="171.0" fitWidth="328.0" layoutX="212.0" layoutY="101.0" onMouseClicked="#onInteractableClick" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/computer2.png" />
          </image>
+         <effect>
+            <ColorAdjust />
+         </effect>
       </ImageView>
-      <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="943.0" layoutY="169.0" pickOnBounds="true" preserveRatio="true">
+      <Rectangle fx:id="rectOverlay" arcHeight="5.0" arcWidth="5.0" height="792.0" layoutX="-10.0" layoutY="-45.0" onMouseClicked="#onCloseInteraction" opacity="0.5" stroke="BLACK" strokeType="INSIDE" visible="false" width="1325.0" />
+      <ImageView fx:id="imgOverlay" fitHeight="796.0" fitWidth="1285.0" layoutX="1.0" layoutY="-8.0" onMouseClicked="#onCloseInteraction" pickOnBounds="true" preserveRatio="true" visible="false">
          <image>
-            <Image url="@../images/logos09-memory.png" />
+            <Image url="@../images/computer2.png" />
          </image>
+         <effect>
+            <ColorAdjust />
+         </effect>
       </ImageView>
    </children>
 </Pane>

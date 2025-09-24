@@ -62,7 +62,7 @@ public class ChatController extends Controller {
   private long userMessageFinishTime = 0;
   private boolean waitingForGptResponse = false;
   private ChatMessage pendingGptResponse = null;
-  private String currentSpeaker = ""; // Track who is currently displaying text ("user" or "gpt")
+  public String currentSpeaker = ""; // Track who is currently displaying text ("user" or "gpt")
   private String chatHistoryTextSnapShot = ""; // Store chat history text snapshot
   private boolean historyView = false;
   private boolean isAnimating = false; // Track if history animation is playing
