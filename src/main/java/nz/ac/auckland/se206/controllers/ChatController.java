@@ -279,6 +279,21 @@ public class ChatController extends Controller {
     }
   }
 
+  public void displayInteractionDialogue() {
+    currentSpeaker = "gpt";
+    String interactionDialogue = ChatHistoryManager.getInstance().getInteractionDialogue(target);
+    if (!interactionDialogue.isEmpty()) {
+      txtInput.setVisible(false);
+      imgInput.setVisible(false);
+      btnSend.setVisible(false);
+      ChatHistoryManager.getInstance()
+          .addMessage(target, new ChatMessage("assistant", interactionDialogue));
+      chatCompletionRequest.addMessage(new ChatMessage("assistant", interactionDialogue));
+      btnReturn.setDisable(true);
+      displayTextWithTypewriterEffect(txtaChat, interactionDialogue);
+    }
+  }
+
   @Override
   protected void onTypewriterEffectFinish() {
     if (waitingForGptResponse && currentSpeaker.equals("user")) {
@@ -525,5 +540,17 @@ public class ChatController extends Controller {
    */
   public String getChatHistoryText() {
     return ChatHistoryManager.getInstance().getChatHistoryText();
+  }
+
+  public ChatCompletionRequest getChatCompletionRequest() {
+    return chatCompletionRequest;
+  }
+
+  public String getTarget() {
+    return target;
+  }
+
+  public String getCurrentSpeaker() {
+    return currentSpeaker;
   }
 }
