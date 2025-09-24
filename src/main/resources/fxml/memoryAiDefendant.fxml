@@ -31,7 +31,7 @@
       <Label fx:id="lblLocation" layoutX="8.0" layoutY="34.0" prefHeight="17.0" prefWidth="149.0" stylesheets="@../css/memory.css" text="Memory:  INDUS-07" />
       <ImageView fx:id="imgInput" fitHeight="707.0" fitWidth="1263.0" layoutX="-80.0" layoutY="336.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../../../../../../../../../text-field.png" />
+            <Image url="@../images/text-field.png" />
          </image>
       </ImageView>
       <TextField fx:id="txtInput" layoutX="29.0" layoutY="664.0" onKeyPressed="#onKeyPressed" prefHeight="45.0" prefWidth="1072.0" styleClass="text-field" stylesheets="@../css/memory.css" text="Send Message" />
