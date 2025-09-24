@@ -23,12 +23,10 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.media.AudioClip;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import javazoom.jl.decoder.JavaLayerException;
-import javazoom.jl.player.Player;
 import nz.ac.auckland.apiproxy.chat.openai.ChatCompletionRequest;
 import nz.ac.auckland.apiproxy.chat.openai.ChatCompletionRequest.Model;
 import nz.ac.auckland.apiproxy.chat.openai.ChatCompletionResult;
@@ -36,12 +34,9 @@ import nz.ac.auckland.apiproxy.chat.openai.ChatMessage;
 import nz.ac.auckland.apiproxy.chat.openai.Choice;
 import nz.ac.auckland.apiproxy.config.ApiProxyConfig;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
-import nz.ac.auckland.apiproxy.tts.TextToSpeechRequest.Provider;
-import nz.ac.auckland.apiproxy.tts.TextToSpeechRequest.Voice;
 import nz.ac.auckland.se206.App;
 import nz.ac.auckland.se206.GameTimer;
 import nz.ac.auckland.se206.prompts.PromptEngineering;
-import nz.ac.auckland.se206.speech.TextToSpeech;
 
 /**
  * Controller class for the chat view. Handles user interactions and communication with the GPT
@@ -71,8 +66,6 @@ public class ChatController extends Controller {
   private long userMessageFinishTime = 0;
   private boolean waitingForGptResponse = false;
   private ChatMessage pendingGptResponse = null;
-  private Player storedTts = null;
-  private Thread ttsThread = null;
   private String currentSpeaker = ""; // Track who is currently displaying text ("user" or "gpt")
   private HashMap<String, List<ChatMessage>> chatHistory = new HashMap<>();
   private String chatHistoryText = ""; // Store chat history text
@@ -187,7 +180,7 @@ public class ChatController extends Controller {
    */
   public void setTarget(String target) {
     this.target = target;
-    lblSceneName.setText("Flashback - " + target);
+    lblSceneName.setText("Memory - " + target);
 
     if (target.equals("LOGOS-09")) {
       imgComputer.setVisible(true);
@@ -205,7 +198,7 @@ public class ChatController extends Controller {
               .setTemperature(0.8)
               .setTopP(0.5)
               .setModel(Model.GPT_4o_MINI)
-              .setMaxTokens(200);
+              .setMaxTokens(500);
 
       // Add the system prompt and chat history snapshot with all "You" replaced with "Judge"
       chatCompletionRequest.addMessage(
@@ -220,11 +213,6 @@ public class ChatController extends Controller {
         txtInput.setVisible(false);
         btnSend.setVisible(false);
         String message = fixedDialogue.get(target);
-        // get the audio file and play it using the target name in sounds folder
-        AudioClip voiceLine =
-            new AudioClip(
-                App.class.getResource("/sounds/" + target + "_flashback.mp3").toExternalForm());
-        voiceLine.play();
         chatHistory.get(target).add(new ChatMessage("assistant", message));
         chatHistoryText += target + ": " + message + "\n\n"; // Update chat history text
         btnReturn.setDisable(true);
@@ -257,32 +245,6 @@ public class ChatController extends Controller {
     try {
       ChatCompletionResult chatCompletionResult = chatCompletionRequest.execute();
       Choice result = chatCompletionResult.getChoices().iterator().next();
-
-      Voice voice = null;
-      switch (target) {
-        case "LOGOS-09":
-          voice = Voice.OPENAI_SAGE;
-          break;
-        case "INDUS-07":
-          voice = Voice.OPENAI_ONYX;
-          break;
-        case "Evan":
-          voice = Voice.OPENAI_ASH;
-          break;
-      }
-
-      storedTts = TextToSpeech.speak(result.getChatMessage().getContent(), Provider.OPENAI, voice);
-
-      // Start a new thread to play the TTS audio
-      ttsThread =
-          new Thread(
-              () -> {
-                try {
-                  storedTts.play();
-                } catch (JavaLayerException e) {
-                  e.printStackTrace();
-                }
-              });
 
       // Update UI on JavaFX Application Thread
       Platform.runLater(
@@ -336,7 +298,6 @@ public class ChatController extends Controller {
                     currentSpeaker = "gpt";
                     lblWhoSpeaking.setText(target + ":");
                     stopThinkingAnimation();
-                    ttsThread.start();
                     displayTextWithTypewriterEffect(txtaChat, message.getContent());
                     waitingForGptResponse = false;
                   }));
@@ -346,7 +307,6 @@ public class ChatController extends Controller {
       currentSpeaker = "gpt";
       lblWhoSpeaking.setText(target + ":");
       stopThinkingAnimation();
-      ttsThread.start();
       displayTextWithTypewriterEffect(txtaChat, message.getContent());
       waitingForGptResponse = false;
     }
@@ -386,8 +346,6 @@ public class ChatController extends Controller {
     if (message.isEmpty()) {
       return;
     }
-
-    forceStopAudio();
 
     // Clear input and disable controls to prevent multiple requests
     txtInput.clear();
@@ -463,22 +421,7 @@ public class ChatController extends Controller {
       return;
     }
 
-    forceStopAudio();
     fadeOut(event);
-  }
-
-  public void forceStopAudio() {
-    // Stop any ongoing TTS audio before leaving
-    if (storedTts != null) {
-      storedTts.close();
-      storedTts = null;
-    }
-
-    // Stop the TTS thread if it's still running
-    if (ttsThread != null && ttsThread.isAlive()) {
-      ttsThread.interrupt();
-      ttsThread = null;
-    }
   }
 
   /**

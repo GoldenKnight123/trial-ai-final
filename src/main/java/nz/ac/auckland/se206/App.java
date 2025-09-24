@@ -13,6 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import nz.ac.auckland.se206.controllers.ChatController;
 import nz.ac.auckland.se206.controllers.DebriefController;
+import nz.ac.auckland.se206.controllers.FlashbackController;
 import nz.ac.auckland.se206.controllers.RoomController;
 
 /**
@@ -108,6 +109,24 @@ public class App extends Application {
    *
    * @param event the mouse event that triggered the method
    * @param profession the profession to set in the chat controller
+   * @throws IOException if the FXMflashbackRoomL file is not found
+   */
+  public static void openFlashback(MouseEvent event, String target) throws IOException {
+    SceneControllerPair pair = loadAndCacheScene("flashback");
+    FlashbackController flashbackController = (FlashbackController) pair.getController();
+    flashbackController.setTarget(target);
+    flashbackController.fadeIn();
+
+    scene = pair.getScene();
+    primaryStage.setScene(scene);
+    primaryStage.show();
+  }
+
+  /**
+   * Opens the chat view and sets the profession in the chat controller using cached scenes.
+   *
+   * @param event the mouse event that triggered the method
+   * @param profession the profession to set in the chat controller
    * @throws IOException if the FXML file is not found
    */
   public static void openChat(MouseEvent event, String target) throws IOException {
@@ -177,8 +196,6 @@ public class App extends Application {
 
       ChatController chatController = (ChatController) pair.getController();
       chatController.fadeOut(null);
-
-      chatController.forceStopAudio();
 
       SceneControllerPair roomPair = loadAndCacheScene("room");
       RoomController roomController = (RoomController) roomPair.getController();

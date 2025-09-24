@@ -2,6 +2,7 @@ package nz.ac.auckland.se206.controllers;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
@@ -86,6 +87,15 @@ public class RoomController extends Controller {
   private boolean isFading = false;
   private boolean isGuessing = false;
 
+  private HashMap<String, Boolean> flashbackMap =
+      new HashMap<>() {
+        {
+          put("LOGOS-09", false);
+          put("Evan", false);
+          put("INDUS-07", false);
+        }
+      };
+
   public void initializeGuessingState() {
     txtaDialogue.setVisible(true);
     imgTextArea.setVisible(true);
@@ -162,7 +172,17 @@ public class RoomController extends Controller {
         e -> {
           isFading = false; // Reset flag when fade completes
           try {
-            App.openChat(event, target);
+            if (flashbackMap.get(target)) {
+              // If the flashback for this target has already been viewed, send them to their memory
+              App.openChat(event, target);
+              return;
+            } else {
+              // If not, mark it as viewed and open the flashback
+              flashbackMap.put(target, true);
+              App.openFlashback(event, target);
+              return;
+            }
+
           } catch (IOException ex) {
             ex.printStackTrace();
           }
