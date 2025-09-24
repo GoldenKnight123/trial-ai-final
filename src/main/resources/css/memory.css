@@ -31,6 +31,39 @@
   -fx-background-color: transparent;
 }
 
+.text-input {
+  font-family: "Consolas";
+  -fx-font-family: "Consolas";
+  font-size: 24px;
+  -fx-font-size: 24px;
+  -fx-text-fill: black;
+  background-color: transparent;
+  -fx-background-color: transparent;
+  cursor: default;
+  -fx-cursor: default;
+}
+
+.text-input .content {
+  background-color: transparent;
+  -fx-background-color: transparent;
+  border-color: transparent;
+  -fx-border-color: transparent;
+  border-width: 1px;
+  -fx-border-width: 1px;
+  padding: 5px;
+  -fx-padding: 5px;
+}
+
+.text-input .viewport {
+  background-color: transparent;
+  -fx-background-color: transparent;
+}
+
+.text-input .scroll-pane {
+  background-color: transparent;
+  -fx-background-color: transparent;
+}
+
 #lblLocation {
   font-family: "Consolas";
   -fx-font-family: "Consolas";
@@ -48,4 +81,59 @@
   -fx-text-fill: black;
   /* or black depending on background */
   -fx-font-size: 12px;
+}
+
+#lblWhoSpeaking {
+  font-family: "Consolas";
+  -fx-font-family: "Consolas";
+  font-size: 24px;
+  -fx-font-size: 24px;
+  -fx-text-fill: black;
+  align-items: center;
+}
+
+#btnSend {
+  font-family: "Consolas";
+  -fx-font-family: "Consolas";
+  background-color: #FFF8E3;
+  -fx-background-color: #FFF8E3;
+  -fx-background-radius: 10px;
+  -fx-background-insets: 0;
+  border-color: black;
+  -fx-border-color: black;
+  border-radius: 10px;
+  -fx-border-radius: 10px;
+  -fx-border-insets: 0;
+  border-width: 3px;
+  -fx-border-width: 3px;
+  -fx-text-fill: black;
+  font-size: 24px;
+  -fx-font-size: 24px;
+}
+
+#btnReturn,
+#btnHistory {
+  font-family: "Consolas";
+  -fx-font-family: "Consolas";
+  background-color: #FFF8E3;
+  -fx-background-color: #FFF8E3;
+  -fx-background-radius: 10px;
+  -fx-background-insets: 0;
+  border-color: black;
+  -fx-border-color: black;
+  border-radius: 10px;
+  -fx-border-radius: 10px;
+  -fx-border-insets: 0;
+  border-width: 3px;
+  -fx-border-width: 3px;
+  -fx-text-fill: black;
+  font-size: 12px;
+  -fx-font-size: 12px;
+}
+
+#btnSend:hover,
+#btnReturn:hover,
+#btnHistory:hover {
+  background-color: #b48700;
+  -fx-background-color: #b48700;
 }
