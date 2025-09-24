@@ -25,7 +25,7 @@
             <Font size="36.0" />
          </font>
       </Label>
-      <Label fx:id="lblWhoSpeaking" layoutX="33.0" layoutY="309.0" text="You:">
+      <Label fx:id="lblWhoSpeaking" alignment="CENTER" layoutX="33.0" layoutY="309.0" prefWidth="200.0" text="You:">
          <font>
             <Font size="24.0" />
          </font>

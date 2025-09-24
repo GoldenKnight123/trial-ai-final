@@ -11,6 +11,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -69,13 +70,14 @@ public class RoomController extends Controller {
             + " come to a conclusion of whether or not the defendant is guilty or innocent.");
   }
 
-  @FXML private Rectangle rectWitnessAi;
-  @FXML private Rectangle rectDefendant;
-  @FXML private Rectangle rectWitnessHuman;
+  @FXML private ImageView imgWitnessAi;
+  @FXML private ImageView imgDefendant;
+  @FXML private ImageView imgWitnessHuman;
   @FXML private Rectangle rectFade;
   @FXML private TextArea txtaDialogue;
   @FXML private ImageView imgContinueArrow;
   @FXML private ImageView imgTextArea;
+  @FXML private ImageView imgInstructionBox;
   @FXML private Label lblWhoSpeaking;
   @FXML private Label lblInstructions;
   @FXML private Label lblTimer;
@@ -198,15 +200,63 @@ public class RoomController extends Controller {
   public void initialize() {
     context.setRoomController(this); // Set reference to this controller
 
-    lblTimer.setAlignment(Pos.CENTER);
-
     lblTimer.setVisible(true);
-    arcTimer.setVisible(true);
+    lblTimer.setAlignment(Pos.CENTER);
     GameTimer.getInstance().start();
 
+    // Setup hover effects of images
+    Image logos09 = imgWitnessAi.getImage();
+    Image logos09Hover = new Image("images/logos-09-hover.png");
+
+    imgWitnessAi.setOnMouseEntered(
+        event -> {
+          if (currentDialogueIndex >= fixedDialogue.size()) {
+            imgWitnessAi.setImage(logos09Hover);
+          }
+        });
+
+    imgWitnessAi.setOnMouseExited(
+        event -> {
+          imgWitnessAi.setImage(logos09);
+        });
+
+    Image indus07 = imgDefendant.getImage();
+    Image indus07Hover = new Image("images/indus-07-hover.png");
+
+    imgDefendant.setOnMouseEntered(
+        event -> {
+          if (currentDialogueIndex >= fixedDialogue.size()) {
+            imgDefendant.setImage(indus07Hover);
+          }
+        });
+
+    imgDefendant.setOnMouseExited(
+        event -> {
+          imgDefendant.setImage(indus07);
+        });
+
+    Image evan = imgWitnessHuman.getImage();
+    Image evanHover = new Image("images/evan-hover.png");
+
+    imgWitnessHuman.setOnMouseEntered(
+        event -> {
+          if (currentDialogueIndex >= fixedDialogue.size()) {
+            imgWitnessHuman.setImage(evanHover);
+          }
+        });
+
+    imgWitnessHuman.setOnMouseExited(
+        event -> {
+          imgWitnessHuman.setImage(evan);
+        });
+
+    txtaDialogue.setVisible(true);
     txtaDialogue.setEditable(false);
     txtaDialogue.setFocusTraversable(false);
     txtaDialogue.setMouseTransparent(true);
+
+    imgTextArea.setVisible(true);
+    lblWhoSpeaking.setVisible(true);
 
     btnGuilty.setVisible(false);
     btnNotGuilty.setVisible(false);
@@ -218,6 +268,7 @@ public class RoomController extends Controller {
     if (isFirstTimeInit) {
       imgContinueArrow.setVisible(false);
       lblInstructions.setVisible(false);
+      imgInstructionBox.setVisible(false);
       initializeFixedDialogue();
       displayTextWithTypewriterEffect(
           txtaDialogue, fixedDialogue.get(currentDialogueIndex), 50, true, true);
@@ -245,6 +296,69 @@ public class RoomController extends Controller {
     if (currentDialogueIndex >= fixedDialogue.size()) {
       context.handleRectangleClick(event, ((Rectangle) event.getSource()).getId());
     }
+  }
+
+  @FXML
+  public void handleWitnessAiClick(MouseEvent event) throws IOException {
+    if (isFading) {
+      System.out.println("Cannot click rectangle: Fade animation is in progress");
+      return;
+    }
+
+    if (currentDialogueIndex < fixedDialogue.size()) {
+      System.out.println("Cannot click rectangle: Fixed dialogue is still playing");
+      return;
+    }
+
+    if (GameTimer.getInstance().getTimeLeft() <= 2) {
+      return;
+    }
+
+    // Take the user to the chat scene with the clicked individual as the flashback focus
+    RoomController roomController = context.getRoomController();
+    roomController.fadeOut(event, "LOGOS-09");
+  }
+
+  @FXML
+  public void handleDefendantClick(MouseEvent event) throws IOException {
+    if (isFading) {
+      System.out.println("Cannot click rectangle: Fade animation is in progress");
+      return;
+    }
+
+    if (currentDialogueIndex < fixedDialogue.size()) {
+      System.out.println("Cannot click rectangle: Fixed dialogue is still playing");
+      return;
+    }
+
+    if (GameTimer.getInstance().getTimeLeft() <= 2) {
+      return;
+    }
+
+    // Take the user to the chat scene with the clicked individual as the flashback focus
+    RoomController roomController = context.getRoomController();
+    roomController.fadeOut(event, "INDUS-07");
+  }
+
+  @FXML
+  public void handleWitnessHumanClick(MouseEvent event) throws IOException {
+    if (isFading) {
+      System.out.println("Cannot click rectangle: Fade animation is in progress");
+      return;
+    }
+
+    if (currentDialogueIndex < fixedDialogue.size()) {
+      System.out.println("Cannot click rectangle: Fixed dialogue is still playing");
+      return;
+    }
+
+    if (GameTimer.getInstance().getTimeLeft() <= 2) {
+      return;
+    }
+
+    // Take the user to the chat scene with the clicked individual as the flashback focus
+    RoomController roomController = context.getRoomController();
+    roomController.fadeOut(event, "Evan");
   }
 
   /**
@@ -315,6 +429,7 @@ public class RoomController extends Controller {
       imgTextArea.setVisible(false);
       lblWhoSpeaking.setVisible(false);
       lblInstructions.setVisible(true);
+      imgInstructionBox.setVisible(true);
       context.setState(context.getGameStartedState());
     } else {
       imgContinueArrow.setVisible(false);

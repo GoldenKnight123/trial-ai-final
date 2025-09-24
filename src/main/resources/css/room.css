@@ -48,3 +48,21 @@
   -fx-text-fill: black;
   align-items: center;
 }
+
+#lblInstructions {
+  font-family: "Consolas";
+  -fx-font-family: "Consolas";
+  font-size: 36px;
+  -fx-font-size: 36px;
+  -fx-text-fill: black;
+  align-items: center;
+}
+
+#lblTimer {
+  font-family: "Consolas";
+  -fx-font-family: "Consolas";
+  font-size: 24px;
+  -fx-font-size: 24px;
+  -fx-text-fill: black;
+  align-items: center;
+}
