@@ -4,11 +4,13 @@ import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
@@ -25,6 +27,8 @@ public class AiDefendantController extends ChatController {
   @FXML private Text txtTablet2;
   @FXML private Text txtTablet3;
   @FXML private Text txtTablet4;
+  @FXML private Pane paneInteractable;
+  @FXML private ImageView imgOverride;
 
   // @FXML private AnchorPane paneInteract;
 
@@ -35,29 +39,28 @@ public class AiDefendantController extends ChatController {
 
   @FXML
   private void onCompClick(MouseEvent event) {
-    // paneInteract.setVisible(true);
-    rectComputer.setVisible(false);
-    rectInteractable.setVisible(true);
-    txtTablet1.setVisible(true);
-    txtTablet2.setVisible(true);
-    txtTablet3.setVisible(true);
-    txtTablet4.setVisible(true);
-    imgTablet.setVisible(true);
-    btnConfirm.setVisible(true);
-    sldrProtocol.setVisible(true);
+    System.out.println("Computer Clicked");
+    paneInteractable.setVisible(true);
   }
 
   @FXML
-  protected void onConfirm() {
+  private void onConfirm(ActionEvent event) {
+    System.out.println("Confirm button clicked!");
     double start = sldrProtocol.getValue();
     double end = 100; // move to "Efficiency" side
 
-    Timeline timeline =
-        new Timeline(
-            new KeyFrame(Duration.ZERO, new KeyValue(sldrProtocol.valueProperty(), start)),
-            new KeyFrame(
-                Duration.seconds(2),
-                new KeyValue(sldrProtocol.valueProperty(), end, Interpolator.EASE_BOTH)));
-    timeline.play();
+    // Move slider to max
+    if (start < 100) {
+      imgOverride.setVisible(true);
+      Timeline timeline =
+          new Timeline(
+              new KeyFrame(Duration.ZERO, new KeyValue(sldrProtocol.valueProperty(), start)),
+              new KeyFrame(
+                  Duration.seconds(2),
+                  new KeyValue(sldrProtocol.valueProperty(), end, Interpolator.EASE_BOTH)));
+      timeline.play();
+    } else if (start == 100) {
+      //
+    }
   }
 }
