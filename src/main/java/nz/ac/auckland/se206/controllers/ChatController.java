@@ -188,10 +188,8 @@ public class ChatController extends Controller {
         txtInput.setVisible(false);
         imgInput.setVisible(false);
         btnSend.setVisible(false);
-        String message = fixedDialogue.get(target);
         ChatHistoryManager.getInstance()
-            .addMessage(target, new ChatMessage("assistant", message));
-        chatHistoryText += target + ": " + message + "\n\n"; // Update chat history text
+            .addMessage(target, new ChatMessage("assistant", fixedDialogue));
         btnReturn.setDisable(true);
         displayTextWithTypewriterEffect(txtaChat, fixedDialogue);
       } else {
