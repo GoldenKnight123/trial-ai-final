@@ -2,9 +2,7 @@ package nz.ac.auckland.se206.controllers;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
@@ -34,6 +32,7 @@ import nz.ac.auckland.apiproxy.chat.openai.Choice;
 import nz.ac.auckland.apiproxy.config.ApiProxyConfig;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
 import nz.ac.auckland.se206.App;
+import nz.ac.auckland.se206.ChatHistoryManager;
 import nz.ac.auckland.se206.prompts.PromptEngineering;
 
 /**
@@ -58,13 +57,10 @@ public class ChatController extends Controller {
 
   private ChatCompletionRequest chatCompletionRequest;
   private String target;
-  private HashMap<String, String> fixedDialogue = new HashMap<>();
   private long userMessageFinishTime = 0;
   private boolean waitingForGptResponse = false;
   private ChatMessage pendingGptResponse = null;
   private String currentSpeaker = ""; // Track who is currently displaying text ("user" or "gpt")
-  private HashMap<String, List<ChatMessage>> chatHistory = new HashMap<>();
-  private String chatHistoryText = ""; // Store chat history text
   private String chatHistoryTextSnapShot = ""; // Store chat history text snapshot
   private boolean historyView = false;
   private boolean isAnimating = false; // Track if history animation is playing
@@ -88,22 +84,6 @@ public class ChatController extends Controller {
     rectHistory.setVisible(false);
     rectHistory.setOpacity(0);
     rectHistory.setDisable(true);
-
-    fixedDialogue.put(
-        "LOGOS-09",
-        "It is currently 16th July 22:17AM. I have detected a message from INDUS-07 sent to site"
-            + " workers to increase the output levels of the power plant by 15%.");
-    fixedDialogue.put(
-        "INDUS-07",
-        "It is currently 16th July 21:27AM. I am preparing and analysing a way to increase the"
-            + " output of the power plant.");
-    fixedDialogue.put(
-        "Evan",
-        "It's early in the morning. I just arrived at the Greenhill Power Plant site and heard a"
-            + " huge explosion.");
-    chatHistory.put("LOGOS-09", new ArrayList<>());
-    chatHistory.put("INDUS-07", new ArrayList<>());
-    chatHistory.put("Evan", new ArrayList<>());
   }
 
   /**
@@ -127,6 +107,11 @@ public class ChatController extends Controller {
     fadeTransition.setFromValue(0.0);
     fadeTransition.setToValue(1.0);
     fadeTransition.play();
+  }
+
+  /** Sets the initial opacity of the chat room to prevent flash before fade-in animation. */
+  public void setInitialOpacity() {
+    chatRoom.setOpacity(0.0);
   }
 
   public void fadeOut(ActionEvent event) {
@@ -173,7 +158,9 @@ public class ChatController extends Controller {
    */
   public void setTarget(String target) {
     this.target = target; // Assign the parameter to the instance field
-    chatHistoryTextSnapShot = chatHistoryText; // Store a snapshot of the chat history
+    chatHistoryTextSnapShot =
+        ChatHistoryManager.getInstance()
+            .getChatHistorySnapshot(); // Store a snapshot of the chat history
     try {
       ApiProxyConfig config = ApiProxyConfig.readConfig();
       chatCompletionRequest =
@@ -193,20 +180,17 @@ public class ChatController extends Controller {
       lblWhoSpeaking.setText(target + ":");
 
       // If the chatHistorySnapshot does not contain the targets fixed dialogue display it
-      if (!chatHistoryTextSnapShot.contains(fixedDialogue.get(target))) {
+      String fixedDialogue = ChatHistoryManager.getInstance().getFixedDialogue(target);
+      if (!ChatHistoryManager.getInstance().containsDialogue(target, fixedDialogue)) {
         txtInput.setVisible(false);
         btnSend.setVisible(false);
-        String message = fixedDialogue.get(target);
-        chatHistory.get(target).add(new ChatMessage("assistant", message));
-        chatHistoryText += target + ": " + message + "\n\n"; // Update chat history text
+        ChatHistoryManager.getInstance()
+            .addMessage(target, new ChatMessage("assistant", fixedDialogue));
         btnReturn.setDisable(true);
-        displayTextWithTypewriterEffect(txtaChat, message);
+        displayTextWithTypewriterEffect(txtaChat, fixedDialogue);
       } else {
         // Find the last message sent by target in chatHistoryTextSnapShot
-        String lastMessage =
-            chatHistoryTextSnapShot.substring(
-                chatHistoryTextSnapShot.lastIndexOf(target + ": ") + (target + ": ").length());
-        lastMessage = lastMessage.substring(0, lastMessage.indexOf("\n\n"));
+        String lastMessage = ChatHistoryManager.getInstance().getLastMessage(target);
         txtaChat.setText(lastMessage);
       }
     } catch (ApiProxyException e) {
@@ -234,13 +218,8 @@ public class ChatController extends Controller {
       Platform.runLater(
           () -> {
             // Add message to history
-            chatHistory.get(target).add(result.getChatMessage());
+            ChatHistoryManager.getInstance().addMessage(target, result.getChatMessage());
             chatCompletionRequest.addMessage(result.getChatMessage());
-            chatHistoryText +=
-                target
-                    + ": "
-                    + result.getChatMessage().getContent()
-                    + "\n\n"; // Update chat history text
 
             if (userMessageFinishTime > 0) {
               System.out.println("User message has finished, displaying with delay");
@@ -347,9 +326,8 @@ public class ChatController extends Controller {
     ChatMessage msg = new ChatMessage("user", message);
 
     // Add message to history
-    if (target != null && chatHistory.containsKey(target)) {
-      chatHistory.get(target).add(msg);
-      chatHistoryText += "You: " + msg.getContent() + "\n"; // Update chat history text
+    if (target != null && ChatHistoryManager.getInstance().hasTarget(target)) {
+      ChatHistoryManager.getInstance().addMessage(target, msg);
     } else {
       System.err.println("Error: target is null or not found in chatHistory: " + target);
       return;
@@ -430,7 +408,8 @@ public class ChatController extends Controller {
     if (!historyView) {
       isAnimating = true; // Set flag to prevent further clicks
 
-      txtaHistory.setText(chatHistoryText); // Set chat history text
+      txtaHistory.setText(
+          ChatHistoryManager.getInstance().getChatHistoryText()); // Set chat history text
 
       rectHistory.setVisible(true);
       // Fade rectHistory to 0.5 opacity
@@ -538,6 +517,6 @@ public class ChatController extends Controller {
    * @return the complete chat history as a string
    */
   public String getChatHistoryText() {
-    return chatHistoryText;
+    return ChatHistoryManager.getInstance().getChatHistoryText();
   }
 }

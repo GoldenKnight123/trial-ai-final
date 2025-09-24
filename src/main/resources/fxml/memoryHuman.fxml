@@ -28,21 +28,16 @@
             <Image url="@../images/textArea.png" />
          </image>
       </ImageView>
-      <Label fx:id="lblLocation" layoutX="8.0" layoutY="34.0" prefHeight="17.0" prefWidth="149.0" stylesheets="@../css/memory.css" text="Memory:  Human Witness" />
+      <Label fx:id="lblLocation" layoutX="8.0" layoutY="34.0" prefHeight="17.0" prefWidth="149.0" stylesheets="@../css/memory.css" text="Memory:  Evan" />
       <TextField fx:id="txtInput" layoutX="29.0" layoutY="664.0" onKeyPressed="#onKeyPressed" prefHeight="45.0" prefWidth="1072.0" styleClass="text-field" stylesheets="@../css/memory.css" text="Send Message" />
-      <TextArea fx:id="txtaChat" editable="false" focusTraversable="false" layoutX="45.0" layoutY="400.0" prefHeight="240.0" prefWidth="1189.0" style="-fx-background-color: transparent;" styleClass="text-area" stylesheets="@../css/memory.css" text="Text Here" wrapText="true" />
-      <ImageView fitHeight="47.0" fitWidth="42.0" layoutX="884.0" layoutY="29.0" onMouseClicked="#onGoBack" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../images/btnReturn.png" />
-         </image>
-      </ImageView>
+      <TextArea fx:id="txtaChat" editable="false" focusTraversable="false" layoutX="37.0" layoutY="392.0" prefHeight="248.0" prefWidth="1197.0" style="-fx-background-color: transparent;" styleClass="text-area" stylesheets="@../css/memory.css" text="Text Here" wrapText="true" />
       <TextArea fx:id="txtaHistory" editable="false" layoutX="818.0" layoutY="82.0" prefHeight="620.0" prefWidth="444.0" visible="false" wrapText="true" />
-      <Button fx:id="btnHistory" layoutX="1126.0" layoutY="27.0" mnemonicParsing="false" onAction="#onToggleHistory" prefHeight="44.0" prefWidth="143.0" stylesheets="@../css/memory.css" text="Show History" />
-      <Label fx:id="lblWhoSpeaking" layoutX="96.0" layoutY="358.0" stylesheets="@../css/memory.css" text="You:">
+      <Label fx:id="lblWhoSpeaking" alignment="CENTER" contentDisplay="CENTER" layoutX="49.0" layoutY="352.0" prefHeight="29.0" prefWidth="131.0" stylesheets="@../css/memory.css" text="You:" textAlignment="CENTER">
          <font>
             <Font size="24.0" />
          </font>
       </Label>
+      <Button fx:id="btnHistory" layoutX="1126.0" layoutY="27.0" mnemonicParsing="false" onAction="#onToggleHistory" prefHeight="44.0" prefWidth="143.0" stylesheets="@../css/memory.css" text="Show History" />
       <Button fx:id="btnReturn" layoutX="971.0" layoutY="27.0" mnemonicParsing="false" onAction="#onGoBack" prefHeight="44.0" prefWidth="143.0" stylesheets="@../css/memory.css" text="Go Back to Courtroom" />
       <Label fx:id="lblThinking" layoutX="1144.0" layoutY="319.0" text="Thinking..." visible="false">
          <font>
