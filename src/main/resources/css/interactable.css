@@ -1,0 +1,51 @@
+/* .slider .track {
+  -fx-background-color: linear-gradient(to right, #CEFEE5, #0a7e40);
+  -fx-background-radius: 5;
+} */
+
+/* .slider .track {
+  -fx-background-color: #CEFEE5;
+  -fx-border-color: rgb(0, 0, 0);
+  -fx-border-radius: 10px;
+} */
+
+.slider .thumb {
+  -fx-background-color: #1f5338;
+  -fx-background-radius: 15px;
+  -fx-padding: 10px;
+}
+
+.slider .track {
+  -fx-background-color: linear-gradient(to right, lightgreen, green);
+  -fx-background-insets: 0;
+  -fx-background-radius: 5px;
+  -fx-padding: 2px;
+}
+
+.slider {
+  -fx-pref-width: 400px;
+}
+
+#btnConfirm {
+  font-family: "Consolas";
+  -fx-font-family: "Consolas";
+  background-color: #FFF8E3;
+  -fx-background-color: #FFF8E3;
+  -fx-background-radius: 10px;
+  -fx-background-insets: 0;
+  border-color: black;
+  -fx-border-color: black;
+  border-radius: 10px;
+  -fx-border-radius: 10px;
+  -fx-border-insets: 0;
+  border-width: 3px;
+  -fx-border-width: 3px;
+  -fx-text-fill: black;
+  font-size: 12px;
+  -fx-font-size: 15px;
+}
+
+#btnConfirm:hover {
+  background-color: #b48700;
+  -fx-background-color: #b48700;
+}
