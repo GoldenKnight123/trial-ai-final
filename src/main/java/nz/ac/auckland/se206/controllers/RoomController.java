@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -128,6 +127,12 @@ public class RoomController extends Controller {
         txtaDialogue, fixedDialogue.get(currentDialogueIndex), 50, true, true);
     currentDialogueIndex++;
     isGuessing = true;
+    // After initializing guessing, take the player to the verdict input scene
+    try {
+      App.setRoot("verdict");
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   public void fadeIn() {
