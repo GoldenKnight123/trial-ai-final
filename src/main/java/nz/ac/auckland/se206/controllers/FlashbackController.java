@@ -121,9 +121,17 @@ public class FlashbackController extends Controller {
         e -> {
           isFading = false; // Reset flag when fade completes
           try {
-            App.openRoom(event);
+            // When flashback ends, open the correlated memory scene for the current target
+            // Use App.openChat so the correct memory view (AI/Human/Defendant) is shown
+            App.openChat(null, currentTarget);
           } catch (IOException ex) {
             ex.printStackTrace();
+            try {
+              // Fallback to room if navigation to memory fails
+              App.openRoom(event);
+            } catch (IOException ex2) {
+              ex2.printStackTrace();
+            }
           }
         });
     fadeTransition.play();
