@@ -19,9 +19,10 @@ public class VerdictController extends Controller {
 
   @FXML
   private void onGuilty(ActionEvent event) throws IOException {
-    // Check if the player has asked each participant a question
-    if (!ChatHistoryManager.getInstance().haveSpokenToAll()) {
-      paneGameOver.setVisible(true);
+    // Check if the player has asked each participant a question and has completed all interactables
+    if (!ChatHistoryManager.getInstance().haveSpokenToAll()
+        && !ChatHistoryManager.getInstance().interactablesComplete()) {
+      paneGameOver.setVisible(true); // game over
     } else {
       String text = verdictTxt.getText() == null ? "" : verdictTxt.getText();
       boolean wasCorrect = false; // guilty means incorrect in current game wiring
@@ -41,8 +42,9 @@ public class VerdictController extends Controller {
   @FXML
   private void onNotGuilty(ActionEvent event) throws IOException {
     // Check if the player has asked each participant a question
-    if (!ChatHistoryManager.getInstance().haveSpokenToAll()) {
-      paneGameOver.setVisible(true);
+    if (!ChatHistoryManager.getInstance().haveSpokenToAll()
+        && !ChatHistoryManager.getInstance().interactablesComplete()) {
+      paneGameOver.setVisible(true); // game over
     } else {
       String text = verdictTxt.getText() == null ? "" : verdictTxt.getText();
       boolean wasCorrect = true; // not guilty means correct in current game wiring

@@ -134,6 +134,9 @@ public class AiWitnessController extends ChatController {
         txtTerminal.setVisible(false);
         lblTerminalError.setVisible(false);
         interactableComplete = true;
+
+        // Mark interactable as complete
+        ChatHistoryManager.getInstance().markInteractableComplete("INDUS-07");
       } else {
         lblTerminalError.setVisible(true);
       }

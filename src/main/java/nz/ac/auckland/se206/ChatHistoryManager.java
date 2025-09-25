@@ -27,6 +27,9 @@ public class ChatHistoryManager {
   // Store interaction dialogue for each character
   private Map<String, String> interactionDialogue;
 
+  // Store interactables that have been completed
+  private Map<String, Boolean> interactablesMap = new HashMap<>();
+
   /** Private constructor to enforce singleton pattern. */
   private ChatHistoryManager() {
     initialize();
@@ -271,6 +274,33 @@ public class ChatHistoryManager {
     //    return false;
     //  }
     // }
+    return true;
+  }
+
+  /**
+   * Adds the patiticpant to map once interactable has been completed.
+   *
+   * @return true if every target has at least one user-sent message
+   */
+  public void markInteractableComplete(String target) {
+    interactablesMap.put(target, true);
+  }
+
+  public boolean isInteractableComplete(String target) {
+    return interactablesMap.getOrDefault(target, false);
+  }
+
+  /**
+   * Checks whether the player has completed all interactables.
+   *
+   * @return true if every target has at least one user-sent message
+   */
+  public boolean interactablesComplete() {
+    for (String target : getTrackedTargets()) {
+      if (!isInteractableComplete(target)) {
+        return false;
+      }
+    }
     return true;
   }
 }
