@@ -79,7 +79,7 @@ public class HumanController extends ChatController {
               displayInteractionDialogue();
 
               // Mark interactable as completed
-              ChatHistoryManager.getInstance().markInteractableComplete("INDUS-07");
+              ChatHistoryManager.getInstance().markInteractableComplete("Evan");
             }
           }
         });

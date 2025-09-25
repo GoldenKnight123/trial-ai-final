@@ -136,7 +136,7 @@ public class AiWitnessController extends ChatController {
         interactableComplete = true;
 
         // Mark interactable as complete
-        ChatHistoryManager.getInstance().markInteractableComplete("INDUS-07");
+        ChatHistoryManager.getInstance().markInteractableComplete("LOGOS-09");
       } else {
         lblTerminalError.setVisible(true);
       }

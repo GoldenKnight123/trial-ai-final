@@ -278,15 +278,17 @@ public class ChatHistoryManager {
   }
 
   /**
-   * Adds the patiticpant to map once interactable has been completed.
+   * Stores that participant to map once interactable has been completed.
    *
    * @return true if every target has at least one user-sent message
    */
   public void markInteractableComplete(String target) {
+    // Set to true when interactable is completed
     interactablesMap.put(target, true);
   }
 
   public boolean isInteractableComplete(String target) {
+    // Return false if target is not found
     return interactablesMap.getOrDefault(target, false);
   }
 
@@ -296,6 +298,7 @@ public class ChatHistoryManager {
    * @return true if every target has at least one user-sent message
    */
   public boolean interactablesComplete() {
+    // Check if all interactable have been completed for all participants
     for (String target : getTrackedTargets()) {
       if (!isInteractableComplete(target)) {
         return false;
