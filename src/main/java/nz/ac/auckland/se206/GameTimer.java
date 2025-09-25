@@ -32,7 +32,7 @@ public class GameTimer {
   }
 
   private Timeline timeline;
-  private int secondsLeft = 3;
+  private int secondsLeft = 5;
   private int maxTime = 120;
   private boolean isRunning = false;
   private List<Label> timerLabels = new ArrayList<>();
@@ -140,5 +140,12 @@ public class GameTimer {
             arc.setLength(360.0 * secondsLeft / maxTime);
           }
         });
+  }
+
+  /** Resets the timer to the maximum time and updates displays. */
+  public void reset() {
+    stop();
+    secondsLeft = maxTime;
+    updateTimerDisplay();
   }
 }

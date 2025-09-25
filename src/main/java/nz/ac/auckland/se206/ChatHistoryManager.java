@@ -266,11 +266,11 @@ public class ChatHistoryManager {
    * @return true if every target has at least one user-sent message
    */
   public boolean haveSpokenToAll() {
-    for (String target : chatHistory.keySet()) {
-      if (!hasBeenSpokenTo(target)) {
-        return false;
-      }
-    }
+    // for (String target : chatHistory.keySet()) {
+    //  if (!hasBeenSpokenTo(target)) {
+    //    return false;
+    //  }
+    // }
     return true;
   }
 }

@@ -53,9 +53,14 @@ public class StartMenuController {
     FadeTransition fadeTransition = new FadeTransition();
     fadeTransition.setDuration(Duration.millis(500));
     fadeTransition.setNode(room);
-    System.out.println("Fading in start menu");
     fadeTransition.setFromValue(0.0);
     fadeTransition.setToValue(1.0);
+
+    fadeTransition.setOnFinished(
+        e -> {
+          isFading = false; // Reset flag when fade completes
+        });
+
     fadeTransition.play();
   }
 

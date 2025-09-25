@@ -22,6 +22,7 @@ public class DebriefController extends Controller {
   @FXML private Pane debrief;
 
   private ChatCompletionRequest chatCompletionRequest;
+  private String verdictText = "";
 
   public void fadeIn() {
     FadeTransition fadeTransition = new FadeTransition();
@@ -33,7 +34,7 @@ public class DebriefController extends Controller {
     fadeTransition.play();
   }
 
-  public void runGptDebrief(String chatHistory, boolean wasCorrect) {
+  public void runGptDebrief(String chatHistory, String verdictText, boolean wasCorrect) {
     // Create a background task for GPT analysis
     Task<String> gptTask =
         new Task<String>() {
@@ -43,7 +44,8 @@ public class DebriefController extends Controller {
             chatCompletionRequest.addMessage(
                 new ChatMessage(
                     "system",
-                    buildAnalysisPrompt(chatHistory.replace("You", "Judge"), wasCorrect)));
+                    buildAnalysisPrompt(
+                        chatHistory.replace("You", "Judge"), verdictText, wasCorrect)));
 
             try {
               ChatCompletionResult chatCompletionResult = chatCompletionRequest.execute();
@@ -88,8 +90,12 @@ public class DebriefController extends Controller {
    * correct verdict between guilty and not guilty. It's designed to use specific quotes and
    * evidence to give detailed feedback
    */
-  private String buildAnalysisPrompt(String verdictText, boolean wasCorrect) {
+  private String buildAnalysisPrompt(String chatHistory, String verdictText, boolean wasCorrect) {
     StringBuilder prompt = new StringBuilder();
+
+    System.out.println(chatHistory);
+    System.out.println(verdictText);
+    System.out.println(wasCorrect);
 
     prompt.append(
         "You are an expert trial analyst. The player has just submitted a verdict and an"
@@ -101,6 +107,16 @@ public class DebriefController extends Controller {
             + " supports it.\n\n");
 
     prompt.append("Player's submitted verdict and rationale:\n").append(verdictText).append("\n\n");
+
+    prompt.append(
+        "The correct rationale is that the defendant is innocent, because they were manipulated by"
+            + " higher ups to install the new Helios system into the power plant, but they did not"
+            + " know the risks. But ultimately it is not their fault.\n\n");
+
+    prompt
+        .append("Chat history between the player and trial participants:\n")
+        .append(chatHistory)
+        .append("\n\n");
 
     prompt.append(
         "Guidelines:\n"
@@ -145,6 +161,10 @@ public class DebriefController extends Controller {
 
   public void setDebriefText(String text) {
     txtaDebrief.setText(text);
+  }
+
+  public void setVerdictText(String text) {
+    verdictText = text;
   }
 
   public void setCorrectLabel(String text) {

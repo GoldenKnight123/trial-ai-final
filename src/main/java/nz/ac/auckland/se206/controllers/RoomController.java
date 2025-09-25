@@ -39,6 +39,7 @@ public class RoomController extends Controller {
    * will be displayed one by one and is handled by the displayNextLine method
    */
   private static void initializeFixedDialogue() {
+    fixedDialogue.clear();
     // Introduction - Introducing defendant - Explaining the incident
     fixedDialogue.add(
         "Members of the jury - human and artificial. We shall now commence the trial of"
@@ -226,9 +227,10 @@ public class RoomController extends Controller {
   public void initialize() {
     context.setRoomController(this); // Set reference to this controller
 
+    isGuessing = false;
+
     lblTimer.setVisible(true);
     lblTimer.setAlignment(Pos.CENTER);
-    GameTimer.getInstance().start();
 
     // Setup hover effects of images
     Image logos09 = imgWitnessAi.getImage();
@@ -292,9 +294,12 @@ public class RoomController extends Controller {
     GameTimer.getInstance().registerTimerArc(arcTimer);
 
     if (isFirstTimeInit) {
+      System.out.println("Initializing RoomController");
+      GameTimer.getInstance().start();
       imgContinueArrow.setVisible(false);
       lblInstructions.setVisible(false);
       imgInstructionBox.setVisible(false);
+      currentDialogueIndex = 0;
       initializeFixedDialogue();
       displayTextWithTypewriterEffect(
           txtaDialogue, fixedDialogue.get(currentDialogueIndex), 50, true, true);
@@ -464,13 +469,13 @@ public class RoomController extends Controller {
       lblWhoSpeaking.setVisible(false);
       if (ChatHistoryManager.getInstance().haveSpokenToAll()) {
         try {
-          App.openVerdict(null);
+          App.openVerdict(null, false);
         } catch (IOException e) {
           e.printStackTrace();
         }
       } else {
         try {
-          App.openVerdict(null);
+          App.openVerdict(null, true);
         } catch (IOException e) {
           e.printStackTrace();
         }
@@ -493,5 +498,9 @@ public class RoomController extends Controller {
 
   public Boolean isGuessing() {
     return isGuessing;
+  }
+
+  public void setFirstTimeInit(Boolean value) {
+    isFirstTimeInit = value;
   }
 }

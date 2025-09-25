@@ -15,7 +15,7 @@
    <Button fx:id="btnNotGuilty" layoutX="703.0" layoutY="157.0" mnemonicParsing="false" onAction="#onNotGuilty" prefHeight="70.0" prefWidth="140.0" text="Not Guilty" />
    <TextField fx:id="verdictTxt" alignment="TOP_LEFT" layoutX="325.0" layoutY="262.0" prefHeight="350.0" prefWidth="642.0" promptText="Type your reason for your choice above." />
    <Label fx:id="lblVerdict" layoutX="515.0" layoutY="82.0" text="What is your verdict?" textAlignment="CENTER" />
-      <Pane fx:id="paneGameOver" prefHeight="720.0" prefWidth="1280.0" stylesheets="@../css/verdict.css">
+      <Pane fx:id="paneGameOver" prefHeight="720.0" prefWidth="1280.0" stylesheets="@../css/verdict.css" visible="false">
          <children>
             <ImageView fitHeight="720.0" fitWidth="1280.0" pickOnBounds="true" preserveRatio="true">
                <image>

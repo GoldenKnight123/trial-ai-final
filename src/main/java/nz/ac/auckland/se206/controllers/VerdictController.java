@@ -29,12 +29,7 @@ public class VerdictController extends Controller {
         wasCorrect = false;
       }
 
-      // Switch to debrief scene and call controller directly with verdict text
-      App.setRoot("debrief");
-      nz.ac.auckland.se206.controllers.DebriefController debriefController =
-          (nz.ac.auckland.se206.controllers.DebriefController) App.getController("debrief");
-      debriefController.setCorrectLabel(wasCorrect ? "You were CORRECT!" : "You were INCORRECT!");
-      debriefController.runGptDebrief(text, wasCorrect);
+      App.openDebrief(event, wasCorrect);
     }
   }
 
@@ -50,11 +45,24 @@ public class VerdictController extends Controller {
         // default to incorrect if no rationale provided
         wasCorrect = false;
       }
+
+      App.openDebrief(event, wasCorrect);
     }
+  }
+
+  public void setGameOverVisible() {
+    paneGameOver.setVisible(true);
+  }
+
+  public String getVerdictText() {
+    String text = verdictTxt.getText() == null ? "" : verdictTxt.getText();
+    System.out.println(text);
+    return text;
   }
 
   @FXML
   private void onRestart(ActionEvent event) throws IOException {
-    App.setRoot("startScreen");
+    App.openStartScreen(null);
+    App.reinitialize();
   }
 }
