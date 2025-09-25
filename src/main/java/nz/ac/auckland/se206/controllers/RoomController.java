@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -101,12 +102,13 @@ public class RoomController extends Controller {
   public void initializeGuessingState() {
     txtaDialogue.setVisible(true);
     imgTextArea.setVisible(true);
+    imgInstructionBox.setVisible(false);
     lblWhoSpeaking.setVisible(true);
     imgContinueArrow.setVisible(false);
     lblInstructions.setVisible(false);
     lblTimer.setVisible(true);
     arcTimer.setVisible(true);
-    GameTimer.getInstance().setMaxTime(10);
+    GameTimer.getInstance().setMaxTime(100);
     GameTimer.getInstance().updateTimerDisplay();
     GameTimer.getInstance().start();
     GameTimer.getInstance()
@@ -436,8 +438,6 @@ public class RoomController extends Controller {
       txtaDialogue.setVisible(false);
       imgTextArea.setVisible(false);
       lblWhoSpeaking.setVisible(false);
-      btnGuilty.setVisible(true);
-      btnNotGuilty.setVisible(true);
     }
   }
 
