@@ -114,6 +114,13 @@ public class RoomController extends Controller {
         .setOnTimerExpired(
             () -> {
               try {
+                // If the player has not spoken to all participants, send them back to start screen
+                if (!nz.ac.auckland.se206.ChatHistoryManager.getInstance().haveSpokenToAll()) {
+                  App.setRoot("startScreen");
+                  return;
+                }
+
+                // Otherwise proceed with the normal conclusion flow
                 onChooseGuilty(null);
               } catch (IOException e) {
                 e.printStackTrace();
@@ -127,9 +134,16 @@ public class RoomController extends Controller {
         txtaDialogue, fixedDialogue.get(currentDialogueIndex), 50, true, true);
     currentDialogueIndex++;
     isGuessing = true;
-    // After initializing guessing, take the player to the verdict input scene
+
+    // After initializing guessing, only take the player to the verdict scene if they've
+    // questioned all participants. Otherwise inform them which participants are missing.
     try {
-      App.setRoot("verdict");
+      if (nz.ac.auckland.se206.ChatHistoryManager.getInstance().haveSpokenToAll()) {
+        App.setRoot("verdict");
+      } else {
+        // If not all participants have been questioned, send the player to the start screen
+        App.setRoot("startScreen");
+      }
     } catch (IOException e) {
       e.printStackTrace();
     }

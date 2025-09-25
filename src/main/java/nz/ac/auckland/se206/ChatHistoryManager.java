@@ -231,4 +231,46 @@ public class ChatHistoryManager {
 
     return lastMessage.trim();
   }
+
+  /**
+   * Returns a copy of the list of targets currently tracked by the chat history manager.
+   *
+   * @return list of target identifiers
+   */
+  public List<String> getTrackedTargets() {
+    return new ArrayList<>(chatHistory.keySet());
+  }
+
+  /**
+   * Checks whether the player has sent any messages to the given target.
+   *
+   * @param target the character/target to check
+   * @return true if there is at least one user message in the chat history for the target
+   */
+  public boolean hasBeenSpokenTo(String target) {
+    if (!chatHistory.containsKey(target)) {
+      return false;
+    }
+    List<ChatMessage> history = chatHistory.get(target);
+    for (ChatMessage m : history) {
+      if ("user".equals(m.getRole())) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Checks whether the player has spoken to all known targets tracked by the manager.
+   *
+   * @return true if every target has at least one user-sent message
+   */
+  public boolean haveSpokenToAll() {
+    for (String target : chatHistory.keySet()) {
+      if (!hasBeenSpokenTo(target)) {
+        return false;
+      }
+    }
+    return true;
+  }
 }
