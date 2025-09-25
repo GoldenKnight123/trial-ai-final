@@ -64,7 +64,7 @@ public class FlashbackController extends Controller {
     imgScene3.setTranslateX(2560);
 
     // Set the scene name based on target
-    lblSceneName.setText("Flashback - " + target);
+    lblSceneName.setText("Flashback: " + target);
     lblInstruction.setText("Click anywhere to continue.");
 
     setSlideshow(currentTarget);
