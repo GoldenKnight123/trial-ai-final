@@ -65,7 +65,7 @@ public class AiDefendantController extends ChatController {
       interactableComplete = true;
       // Delay before executing completeInteraction()
       Timeline delayTimeline =
-          new Timeline(new KeyFrame(Duration.seconds(2), e -> completeInteraction()));
+          new Timeline(new KeyFrame(Duration.seconds(3), e -> completeInteraction()));
       delayTimeline.play();
     }
   }
@@ -89,8 +89,11 @@ public class AiDefendantController extends ChatController {
                       + " to implement the new technology"));
 
       String message =
-          "[Management Override: Proceed to 100% Efficiency] \n"
-              + "After the call with managament, I was instructed to deploy the new technology.";
+          "[Management Override: Proceed to 100% Efficiency] \n\n"
+              + "Despite my concerns of the risks with the new technology, management has issued a"
+              + " direct override. \n\n"
+              + "I was prompted to increase power output and instruct the lead engineer to start"
+              + " installement of the technology.";
 
       // Add to chat history
       getChatCompletionRequest().addMessage(new ChatMessage("assistant", message));
