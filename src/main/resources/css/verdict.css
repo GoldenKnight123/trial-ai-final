@@ -36,8 +36,19 @@
   -fx-font-size: 12px;
 }
 
-#txtField {
+#verdictTxt {
   /* JavaFX uses -fx- properties */
+  /* standard CSS fallbacks (use before -fx- properties) */
+  padding: 10px;
+  border-color: #000000;
+  border-width: 3px;
+  border-radius: 5px;
+  background-color: #FFF6D6;
+  font-family: Consolas;
+  font-size: 16px;
+  color: #333;
+
+  /* JavaFX-specific properties */
   -fx-padding: 10;
   -fx-border-color: #000000;
   -fx-border-width: 3;

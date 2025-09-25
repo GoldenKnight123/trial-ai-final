@@ -6,11 +6,11 @@
 <?import javafx.scene.layout.Pane?>
 
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: FCF6E2;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: FCF6E2;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" stylesheets="@../css/verdict.css">
    <children>
-      <Button fx:id="btnGuilty" layoutX="171.0" layoutY="94.0" mnemonicParsing="false" onAction="#onGuilty" stylesheets="@../css/verdict.css" text="Guilty" />
-      <Button fx:id="btnNotGuilty" layoutX="368.0" layoutY="95.0" mnemonicParsing="false" onAction="#onNotGuilty" stylesheets="@../css/verdict.css" text="Not Guilty" />
-      <TextField fx:id="txtField" layoutX="91.0" layoutY="155.0" prefHeight="181.0" prefWidth="416.0" promptText="Text Here" stylesheets="@../css/verdict.css" />
-      <Label fx:id="lblVerdict" layoutX="168.0" layoutY="33.0" stylesheets="@../css/verdict.css" text="What is your verdict?" />
+   <Button fx:id="btnGuilty" layoutX="171.0" layoutY="94.0" mnemonicParsing="false" onAction="#onGuilty" text="Guilty" />
+   <Button fx:id="btnNotGuilty" layoutX="368.0" layoutY="95.0" mnemonicParsing="false" onAction="#onNotGuilty" text="Not Guilty" />
+   <TextField fx:id="verdictTxt" layoutX="91.0" layoutY="155.0" prefHeight="181.0" prefWidth="416.0" promptText="Text Here" />
+   <Label fx:id="lblVerdict" layoutX="168.0" layoutY="33.0" text="What is your verdict?" />
    </children>
 </Pane>

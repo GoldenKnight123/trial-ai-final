@@ -39,7 +39,7 @@ public class DebriefController extends Controller {
         new Task<String>() {
           @Override
           protected String call() throws Exception {
-            // Add the system prompt and chat history snapshot with all "You" replaced with "Judge"
+            // Add the system prompt and player's verdict text for analysis
             chatCompletionRequest.addMessage(
                 new ChatMessage(
                     "system",
@@ -88,37 +88,40 @@ public class DebriefController extends Controller {
    * correct verdict between guilty and not guilty. It's designed to use specific quotes and
    * evidence to give detailed feedback
    */
-  private String buildAnalysisPrompt(String chatHistory, boolean wasCorrect) {
+  private String buildAnalysisPrompt(String verdictText, boolean wasCorrect) {
     StringBuilder prompt = new StringBuilder();
-    // Added context
+
     prompt.append(
-        "You are an expert trial analyst. Analyze the following conversation between a judge and"
-            + " characters in a trial simulation.\n\n");
+        "You are an expert trial analyst. The player has just submitted a verdict and an"
+            + " explanation. Your task is to: (1) classify the player's submission into one of"
+            + " three outcomes: [Incorrect verdict], [Correct verdict but incorrect rationale], or"
+            + " [Correct verdict with correct rationale]; (2) provide a brief (1-2 sentence)"
+            + " feedback explaining why the classification was chosen; and (3) provide a short"
+            + " explanation (2-4 sentences) describing the correct verdict and the evidence that"
+            + " supports it.\n\n");
 
-    // Added chat history
-    prompt.append("Chat History:\n").append(chatHistory).append("\n\n");
+    prompt.append("Player's submitted verdict and rationale:\n").append(verdictText).append("\n\n");
 
-    // If the judge was correct then we give positive feedback
-    if (wasCorrect) {
-      prompt.append(
-          "The judge made a CORRECT decision. That INDUS-07 was not responsible for the explosion,"
-              + " and it was the higher ups that pressured it to increase output under the threat"
-              + " of being fired. Explain why their decision was right based on the evidence and"
-              + " conversations shown. Highlight key pieces of evidence or character responses that"
-              + " supported the correct verdict.");
-    } else { // If the judge was incorrect then we give negative feedback
-      prompt.append(
-          "The judge made an INCORRECT decision. That INDUS-07 was responsible for the explosion"
-              + " even though it was the higher ups that pressured it to increase output under the"
-              + " threat of being fired. Explain why their decision was wrong based on the evidence"
-              + " and conversations shown. Highlight key pieces of evidence or character responses"
-              + " that they may have missed or misinterpreted.");
-    }
-
-    // Added focus on specific details
     prompt.append(
-        "Focus on specific details from the conversations that were crucial to determining guilt or"
-            + " innocence.");
+        "Guidelines:\n"
+            + "- If the player's verdict (guilty/not guilty) matches the ground truth, but their"
+            + " reasoning misses key evidence or misattributes causation, classify as 'Correct"
+            + " verdict but incorrect rationale'.\n"
+            + "- If the verdict itself is wrong, classify as 'Incorrect verdict'.\n"
+            + "- If both verdict and reasoning align with the evidence, classify as 'Correct"
+            + " verdict with correct rationale'.\n"
+            + "- Keep the classification short, then give concise feedback and a clear corrective"
+            + " or affirming explanation of the correct verdict.\n\n");
+
+    prompt.append("Please return the result in this format:\n");
+    prompt.append("OUTCOME: <one of the three labels>\n");
+    prompt.append("FEEDBACK: <1-2 sentences>\n");
+    prompt.append("EXPLANATION: <2-4 sentences giving the correct verdict and key evidence>\n");
+
+    // Include whether the player was correct to help the model (keeps backwards compatibility)
+    prompt.append("(Note: the system was told that the decision was: ");
+    prompt.append(wasCorrect ? "CORRECT" : "INCORRECT");
+    prompt.append(").\n");
 
     return prompt.toString();
   }
