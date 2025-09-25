@@ -231,4 +231,21 @@ public class ChatHistoryManager {
 
     return lastMessage.trim();
   }
+
+  public boolean enablePlayerMakeVerdict() {
+    String[] participants = {"LOGOS-09", "INDUS-07", "Evan"};
+    for (String participant : participants) {
+      boolean asked = false;
+      for (ChatMessage msg : getChatHistory(participant)) {
+        if ("user".equals(msg.getRole())) {
+          asked = true;
+          break;
+        }
+      }
+      if (!asked) {
+        return false;
+      }
+    }
+    return true;
+  }
 }
