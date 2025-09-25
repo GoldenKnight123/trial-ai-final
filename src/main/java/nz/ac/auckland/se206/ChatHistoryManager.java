@@ -67,8 +67,9 @@ public class ChatHistoryManager {
             + " output of the power plant.");
     fixedDialogue.put(
         "Evan",
-        "It's early in the morning. I just arrived at the Greenhill Power Plant site and heard a"
-            + " huge explosion.");
+        "After installing the new module, I began a routine diagnostics check.But there was heavy"
+            + " interference in the signal, so I had to carefully tune the diagnostics tool just to"
+            + " get a clear reading");
 
     // Initialize interaction dialogue for each character
     interactionDialogue.put(
@@ -81,7 +82,8 @@ public class ChatHistoryManager {
             + " plant.\"");
     interactionDialogue.put(
         "Evan",
-        "Evan: \"I just arrived at the Greenhill Power Plant site and heard a huge explosion.\"");
+        "Evan: \"After carefully tuning the diagnostics, I finally saw the readings clearly — the"
+            + " values were at dangerously high levels.\"");
   }
 
   /**

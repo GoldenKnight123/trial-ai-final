@@ -127,3 +127,19 @@
   background-color: #b48700;
   -fx-background-color: #b48700;
 }
+
+/* Font-face for Open Sans (local resource) */
+@font-face {
+  font-family: 'Open Sans';
+  src: url('../fonts/OpenSans-Regular.ttf');
+}
+
+/* Class for scrambled/unscrambled tablet display text only */
+.unscrambled-text {
+  -fx-font-family: 'Open Sans', 'Consolas', sans-serif;
+  font-family: 'Open Sans', 'Consolas', sans-serif;
+  -fx-font-size: 18px; 
+  font-size: 18px;
+  -fx-fill: black;
+  fill: black;
+}

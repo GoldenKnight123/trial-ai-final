@@ -22,11 +22,6 @@
          </image>
       </ImageView>
       <Rectangle fx:id="rectHistory" arcHeight="5.0" arcWidth="5.0" height="720.0" layoutX="10.0" layoutY="10.0" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="1280.0" />
-      <ImageView id="background" fitHeight="907.0" fitWidth="1603.0" layoutX="-157.0" layoutY="-59.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../images/evan-memory.png" />
-         </image>
-      </ImageView>
       <ImageView fx:id="lblLocation" fitHeight="47.0" fitWidth="175.0" layoutX="-7.0" layoutY="19.0" pickOnBounds="true">
          <image>
             <Image url="@../images/locationIndicator.png" />
@@ -59,12 +54,12 @@
          </font>
       </Label>
       <Button fx:id="btnSend" layoutX="1092.0" layoutY="662.0" mnemonicParsing="false" onAction="#onSendMessage" prefHeight="51.0" prefWidth="153.0" stylesheets="@../css/memory.css" text="Send" />
-      <ImageView fitHeight="939.0" fitWidth="781.0" layoutX="254.0" layoutY="-187.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
+      <ImageView fitHeight="939.0" fitWidth="781.0" layoutX="254.0" layoutY="-197.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
          <image>
             <Image url="@../images/tablet.png" />
          </image>
       </ImageView>
-      <Pane fx:id="tabletInterfacePane" layoutX="452.0" layoutY="46.0" prefHeight="308.0" prefWidth="417.0">
+      <Pane fx:id="tabletInterfacePane" layoutX="453.0" layoutY="39.0" prefHeight="308.0" prefWidth="417.0">
          <children>
             <ImageView fitHeight="448.0" fitWidth="498.0" layoutX="-41.0" layoutY="-69.0" pickOnBounds="true">
                <image>
@@ -75,10 +70,10 @@
                <cursor>
                   <Cursor fx:constant="CLOSED_HAND" />
                </cursor></Slider>
-            <Text fx:id="tempTxt" layoutX="76.0" layoutY="96.0" strokeType="OUTSIDE" strokeWidth="0.0" text="######" wrappingWidth="86.8033447265625" />
-            <Text fx:id="pressureTxt" layoutX="111.0" layoutY="131.0" strokeType="OUTSIDE" strokeWidth="0.0" text="######" wrappingWidth="86.8033447265625" />
-            <Text fx:id="flowTxt" layoutX="87.0" layoutY="150.0" strokeType="OUTSIDE" strokeWidth="0.0" text="######" wrappingWidth="86.8033447265625" />
-            <Text fx:id="stressTxt" layoutX="98.0" layoutY="167.0" strokeType="OUTSIDE" strokeWidth="0.0" text="######" wrappingWidth="86.8033447265625" />
+            <Text fx:id="tempTxt" layoutX="76.0" layoutY="96.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="unscrambled-text" text="######" wrappingWidth="86.8033447265625" />
+            <Text fx:id="pressureTxt" layoutX="111.0" layoutY="131.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="unscrambled-text" text="######" wrappingWidth="86.8033447265625" />
+            <Text fx:id="flowTxt" layoutX="87.0" layoutY="150.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="unscrambled-text" text="######" wrappingWidth="86.8033447265625" />
+            <Text fx:id="stressTxt" layoutX="98.0" layoutY="167.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="unscrambled-text" text="######" wrappingWidth="86.8033447265625" />
             <ImageView fx:id="errorImage" fitHeight="21.0" fitWidth="18.0" layoutX="148.0" layoutY="63.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/warning.png" />

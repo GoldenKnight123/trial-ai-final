@@ -1,13 +1,17 @@
 package nz.ac.auckland.se206.controllers;
 
 import javafx.animation.AnimationTimer;
+import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
+import nz.ac.auckland.apiproxy.chat.openai.ChatMessage;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
+import nz.ac.auckland.se206.ChatHistoryManager;
 
 public class HumanController extends ChatController {
 
@@ -30,6 +34,13 @@ public class HumanController extends ChatController {
 
   private boolean waveStarted = false;
 
+  // Track whether we've notified the AI that the tablet is unscrambled
+  private boolean tabletUnscrambledNotified = false;
+
+  // Lock timer and state: if slider stays in sweet spot for this duration, lock it
+  private PauseTransition lockTimer;
+  private boolean sliderLocked = false;
+
   // Real values
   private final String tempValue = "512";
   private final String pressureValue = "2870";
@@ -45,6 +56,29 @@ public class HumanController extends ChatController {
   public void initialize() throws ApiProxyException {
     super.initialize();
     gc = sinGraphCanvas.getGraphicsContext2D();
+
+    // Initialize lock timer (1 second)
+    lockTimer = new PauseTransition(Duration.millis(1000));
+    lockTimer.setOnFinished(
+        e -> {
+          if (!sliderLocked) {
+            slider.setDisable(true);
+            sliderLocked = true;
+
+            // Notify AI that the tablet is unscrambled (only when locked)
+            if (!tabletUnscrambledNotified && getChatCompletionRequest() != null) {
+              ChatMessage sysMsg =
+                  new ChatMessage(
+                      "system", "The tablet interface is now unscrambled and readable.");
+              displayInteractionDialogue();
+              if (getTarget() != null) {
+                ChatHistoryManager.getInstance().addMessage(getTarget(), sysMsg);
+              }
+              getChatCompletionRequest().addMessage(sysMsg);
+              tabletUnscrambledNotified = true;
+            }
+          }
+        });
 
     // AnimationTimer for sine wave
     waveTimer =
@@ -86,11 +120,15 @@ public class HumanController extends ChatController {
                 pressureTxt.setText(pressureValue);
                 flowTxt.setText(flowValue);
                 stressTxt.setText(stressValue);
-
                 if (!waveStarted) {
                   resetWave();
                   waveTimer.start();
                   waveStarted = true;
+                }
+                // Start lock timer: only lock the slider and notify the AI if the slider
+                // remains in the sweet spot for 1 second.
+                if (!sliderLocked) {
+                  lockTimer.playFromStart();
                 }
               } else {
                 // Gradually scramble values
@@ -105,6 +143,15 @@ public class HumanController extends ChatController {
                   waveTimer.stop();
                   waveStarted = false;
                 }
+                // Cancel lock timer and unlock slider if they move away before it fires
+                lockTimer.stop();
+                if (sliderLocked) {
+                  slider.setDisable(false);
+                  sliderLocked = false;
+                }
+                // Reset notification flag so we can notify again when the user returns to
+                // the sweet spot later
+                tabletUnscrambledNotified = false;
               }
             });
   }
