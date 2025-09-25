@@ -1,0 +1,58 @@
+#btnGuilty {
+  font-family: "Consolas";
+  -fx-font-family: "Consolas";
+  background-color: #FF5757;
+  -fx-background-color: #FF5757;
+  -fx-background-radius: 10px;
+  -fx-background-insets: 0;
+  border-color: black;
+  -fx-border-color: black;
+  border-radius: 10px;
+  -fx-border-radius: 10px;
+  -fx-border-insets: 0;
+  border-width: 3px;
+  -fx-border-width: 3px;
+  -fx-text-fill: black;
+  font-size: 30px;
+  -fx-font-size: 12px;
+}
+
+#btnNotGuilty {
+  font-family: "Consolas";
+  -fx-font-family: "Consolas";
+  background-color: #4FFFA3;
+  -fx-background-color: #4FFFA3;
+  -fx-background-radius: 10px;
+  -fx-background-insets: 0;
+  border-color: black;
+  -fx-border-color: black;
+  border-radius: 10px;
+  -fx-border-radius: 10px;
+  -fx-border-insets: 0;
+  border-width: 3px;
+  -fx-border-width: 3px;
+  -fx-text-fill: black;
+  font-size: 30px;
+  -fx-font-size: 12px;
+}
+
+#txtField {
+  /* JavaFX uses -fx- properties */
+  -fx-padding: 10;
+  -fx-border-color: #000000;
+  -fx-border-width: 3;
+  -fx-border-radius: 5;
+  -fx-background-color: #FFF6D6;
+  -fx-font-family: Consolas;
+  -fx-font-size: 16;
+  -fx-text-fill: #333;
+}
+
+#lblVerdict {
+  font-family: "Consolas";
+  -fx-font-family: "Consolas";
+  font-size: 30px;
+  -fx-font-size: 30px;
+  -fx-text-fill: black;
+  align-items: center;
+}
