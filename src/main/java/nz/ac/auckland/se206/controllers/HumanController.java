@@ -70,12 +70,13 @@ public class HumanController extends ChatController {
               ChatMessage sysMsg =
                   new ChatMessage(
                       "system", "The tablet interface is now unscrambled and readable.");
-              displayInteractionDialogue();
+
               if (getTarget() != null) {
                 ChatHistoryManager.getInstance().addMessage(getTarget(), sysMsg);
               }
               getChatCompletionRequest().addMessage(sysMsg);
               tabletUnscrambledNotified = true;
+              displayInteractionDialogue();
             }
           }
         });

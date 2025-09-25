@@ -67,7 +67,7 @@ public class ChatHistoryManager {
             + " output of the power plant.");
     fixedDialogue.put(
         "Evan",
-        "After installing the new module, I began a routine diagnostics check.But there was heavy"
+        "After installing the new module, I began a routine diagnostics check. But there was heavy"
             + " interference in the signal, so I had to carefully tune the diagnostics tool just to"
             + " get a clear reading");
 
@@ -82,7 +82,7 @@ public class ChatHistoryManager {
             + " plant.\"");
     interactionDialogue.put(
         "Evan",
-        "Evan: \"After carefully tuning the diagnostics, I finally saw the readings clearly — the"
+        "Evan: \"After carefully tuning the diagnostics, I finally saw the readings clearly, the"
             + " values were at dangerously high levels.\"");
   }
 
