@@ -78,12 +78,11 @@ public class ChatHistoryManager {
             + " before they decided to install the new Helios system.");
     interactionDialogue.put(
         "INDUS-07",
-        "INDUS-07: \"I was preparing and analysing a way to increase the output of the power"
-            + " plant.\"");
+        "I was preparing and analysing a way to increase the output of the power" + " plant.");
     interactionDialogue.put(
         "Evan",
-        "Evan: \"After carefully tuning the diagnostics, I finally saw the readings clearly, the"
-            + " values were at dangerously high levels.\"");
+        "After carefully tuning the diagnostics, I finally saw the readings clearly, the"
+            + " values were at dangerously high levels.");
   }
 
   /**
