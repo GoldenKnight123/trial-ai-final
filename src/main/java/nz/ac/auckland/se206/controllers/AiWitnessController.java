@@ -132,6 +132,7 @@ public class AiWitnessController extends ChatController {
         txtTerminal.setEditable(false);
         txtTerminalTemplate.setVisible(false);
         txtTerminal.setVisible(false);
+        lblTerminalError.setVisible(false);
         interactableComplete = true;
       } else {
         lblTerminalError.setVisible(true);

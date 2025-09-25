@@ -72,12 +72,12 @@
             <Image url="@../images/clock.png" />
          </image>
       </ImageView>
-      <Label fx:id="lblTimer" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="22.0" layoutY="33.0" prefWidth="60.0" stylesheets="@../css/room.css" text="99" textAlignment="CENTER" textFill="#000000" textOverrun="CLIP">
+      <Arc fx:id="arcTimer" layoutX="52.0" layoutY="49.0" length="360.0" opacity="0.25" radiusX="34.0" radiusY="35.0" startAngle="90.0" stroke="BLACK" strokeType="INSIDE" type="ROUND" />
+      <Label fx:id="lblTimer" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="22.0" layoutY="37.0" prefWidth="60.0" stylesheets="@../css/room.css" text="99" textAlignment="CENTER" textFill="#000000" textOverrun="CLIP">
          <font>
             <Font name="System Bold" size="24.0" />
          </font>
       </Label>
-      <Arc fx:id="arcTimer" layoutX="35.0" layoutY="35.0" length="360.0" opacity="0.25" radiusX="30.0" radiusY="30.0" startAngle="90.0" stroke="BLACK" strokeType="INSIDE" type="ROUND" visible="false" />
       <Button fx:id="btnGuilty" layoutX="367.0" layoutY="504.0" mnemonicParsing="false" onAction="#onChooseGuilty" prefHeight="70.0" prefWidth="165.0" text="GUILTY" visible="false">
          <font>
             <Font size="18.0" />

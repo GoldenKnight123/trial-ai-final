@@ -40,6 +40,15 @@
   align-items: flex-start;
 }
 
+#lblSceneName {
+  font-family: "Consolas";
+  -fx-font-family: "Consolas";
+  font-size: 18px;
+  -fx-font-size: 18px;
+  -fx-text-fill: black;
+  align-items: flex-start;
+}
+
 #lblWhoSpeaking {
   font-family: "Consolas";
   -fx-font-family: "Consolas";
@@ -61,8 +70,8 @@
 #lblTimer {
   font-family: "Consolas";
   -fx-font-family: "Consolas";
-  font-size: 24px;
-  -fx-font-size: 24px;
+  font-size: 20px;
+  -fx-font-size: 20px;
   -fx-text-fill: black;
   align-items: center;
 }

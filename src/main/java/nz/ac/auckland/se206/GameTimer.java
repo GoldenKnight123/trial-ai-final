@@ -32,8 +32,8 @@ public class GameTimer {
   }
 
   private Timeline timeline;
-  private int secondsLeft = 120;
-  private int maxTime = 120;
+  private int secondsLeft = 300;
+  private int maxTime = 300;
   private boolean isRunning = false;
   private List<Label> timerLabels = new ArrayList<>();
   private List<Arc> timerArcs = new ArrayList<>();
@@ -111,7 +111,7 @@ public class GameTimer {
     if (!timerLabels.contains(label)) {
       timerLabels.add(label);
       // Update the label immediately with current time (formatted with fixed width)
-      Platform.runLater(() -> label.setText(String.valueOf(secondsLeft)));
+      Platform.runLater(() -> label.setText(formatTime(secondsLeft)));
     }
   }
 
@@ -134,11 +134,17 @@ public class GameTimer {
     Platform.runLater(
         () -> {
           for (Label label : timerLabels) {
-            label.setText(String.valueOf(secondsLeft));
+            label.setText(formatTime(secondsLeft));
           }
           for (Arc arc : timerArcs) {
             arc.setLength(360.0 * secondsLeft / maxTime);
           }
         });
+  }
+
+  private String formatTime(int totalSeconds) {
+    int minutes = totalSeconds / 60;
+    int seconds = totalSeconds % 60;
+    return String.format("%01d:%02d", minutes, seconds);
   }
 }
