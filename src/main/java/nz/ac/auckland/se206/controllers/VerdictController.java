@@ -19,7 +19,7 @@ public class VerdictController extends Controller {
   @FXML
   private void onGuilty(ActionEvent event) throws IOException {
     // Check if the player has asked each participant a question
-    if (!ChatHistoryManager.getInstance().enablePlayerMakeVerdict()) {
+    if (!ChatHistoryManager.getInstance().haveSpokenToAll()) {
       paneGameOver.setVisible(true);
     } else {
       String text = verdictTxt.getText() == null ? "" : verdictTxt.getText();
@@ -41,7 +41,7 @@ public class VerdictController extends Controller {
   @FXML
   private void onNotGuilty(ActionEvent event) throws IOException {
     // Check if the player has asked each participant a question
-    if (!ChatHistoryManager.getInstance().enablePlayerMakeVerdict()) {
+    if (!ChatHistoryManager.getInstance().haveSpokenToAll()) {
       paneGameOver.setVisible(true);
     } else {
       String text = verdictTxt.getText() == null ? "" : verdictTxt.getText();
