@@ -142,6 +142,13 @@ public class GameTimer {
         });
   }
 
+  /** Resets the timer to the maximum time and updates displays. */
+  public void reset() {
+    stop();
+    secondsLeft = maxTime;
+    updateTimerDisplay();
+  }
+
   private String formatTime(int totalSeconds) {
     int minutes = totalSeconds / 60;
     int seconds = totalSeconds % 60;

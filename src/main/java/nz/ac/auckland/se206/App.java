@@ -1,6 +1,12 @@
 package nz.ac.auckland.se206;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import javafx.application.Application;
@@ -15,9 +21,11 @@ import nz.ac.auckland.se206.controllers.AiDefendantController;
 import nz.ac.auckland.se206.controllers.AiWitnessController;
 import nz.ac.auckland.se206.controllers.ChatController;
 import nz.ac.auckland.se206.controllers.DebriefController;
-import nz.ac.auckland.se206.controllers.HumanController;
 import nz.ac.auckland.se206.controllers.FlashbackController;
+import nz.ac.auckland.se206.controllers.HumanController;
 import nz.ac.auckland.se206.controllers.RoomController;
+import nz.ac.auckland.se206.controllers.StartMenuController;
+import nz.ac.auckland.se206.controllers.VerdictController;
 
 /**
  * This is the entry point of the JavaFX application. This class initializes and runs the JavaFX
@@ -47,6 +55,7 @@ public class App extends Application {
   // Cached scene and primary stage
   private static Scene scene;
   private static Stage primaryStage;
+  private static String currentId = "";
 
   // Cache for storing loaded scenes and controllers
   private static Map<String, Scene> sceneCache = new HashMap<>();
@@ -73,6 +82,7 @@ public class App extends Application {
 
     if (!sceneCache.containsKey(cacheKey)) {
       FXMLLoader loader = new FXMLLoader(App.class.getResource("/fxml/" + fxml + ".fxml"));
+      System.out.println("Loading and caching scene: " + fxml);
       Parent root = loader.load();
       Object controller = loader.getController();
       Scene newScene = new Scene(root);
@@ -119,6 +129,19 @@ public class App extends Application {
     FlashbackController flashbackController = (FlashbackController) pair.getController();
     flashbackController.setTarget(target);
     flashbackController.fadeIn();
+    currentId = "flashback";
+
+    scene = pair.getScene();
+    primaryStage.setScene(scene);
+    primaryStage.show();
+  }
+
+  public static void openStartScreen(MouseEvent event) throws IOException {
+    SceneControllerPair pair = loadAndCacheScene("startScreen");
+    StartMenuController startMenuController = (StartMenuController) pair.getController();
+    System.out.println("Opening start screen");
+    startMenuController.fadeIn();
+    currentId = "startScreen";
 
     scene = pair.getScene();
     primaryStage.setScene(scene);
@@ -145,6 +168,7 @@ public class App extends Application {
         scene = witnessPair.getScene();
         primaryStage.setScene(scene);
         primaryStage.show();
+        currentId = "memoryAiWitness";
 
         aiWitnessController.fadeIn();
         break;
@@ -160,6 +184,7 @@ public class App extends Application {
         scene = defendantPair.getScene();
         primaryStage.setScene(scene);
         primaryStage.show();
+        currentId = "memoryAiDefendant";
 
         aiDefendantController.fadeIn();
         break;
@@ -174,6 +199,7 @@ public class App extends Application {
         scene = pair.getScene();
         primaryStage.setScene(scene);
         primaryStage.show();
+        currentId = "memoryHuman";
 
         humanController.fadeIn();
         break;
@@ -190,6 +216,21 @@ public class App extends Application {
 
     // Start fade in first, then set scene
     roomController.fadeIn();
+    currentId = "room";
+
+    scene = pair.getScene();
+    primaryStage.setScene(scene);
+    primaryStage.show();
+  }
+
+  public static void openVerdict(ActionEvent event, boolean sendDirectlyGameOver)
+      throws IOException {
+    SceneControllerPair pair = loadAndCacheScene("verdict");
+    VerdictController verdictController = (VerdictController) pair.getController();
+    if (sendDirectlyGameOver) {
+      verdictController.setGameOverVisible();
+    }
+    currentId = "verdict";
 
     scene = pair.getScene();
     primaryStage.setScene(scene);
@@ -208,11 +249,17 @@ public class App extends Application {
       debriefController.setCorrectLabel("You were INCORRECT!");
     }
 
+    // Set verdict text in debrief controller
+    VerdictController verdictController = (VerdictController) getController("verdict");
+    String verdictText = verdictController.getVerdictText();
+    debriefController.setVerdictText(verdictText);
+
     // Get chat history from ChatHistoryManager
     String chatHistory = ChatHistoryManager.getInstance().getChatHistoryText();
 
     // Start GPT analysis with chat history and decision correctness
-    debriefController.runGptDebrief(chatHistory, correct);
+    debriefController.runGptDebrief(chatHistory, verdictText, correct);
+    currentId = "debrief";
 
     scene = pair.getScene();
     primaryStage.setScene(scene);
@@ -221,8 +268,11 @@ public class App extends Application {
 
   /** Forces the user back to the room scene (used when timer expires). */
   public static void forceReturnToRoom() {
+    System.out.println("Timer expired, forcing return to room");
+    ArrayList<String> roomIds =
+        new ArrayList<>(Arrays.asList("memoryAiWitness", "memoryAiDefendant", "memoryHuman"));
     try {
-      if (primaryStage.getScene().getRoot().getId().equals("room")) {
+      if (currentId.equals("room")) {
         SceneControllerPair roomPair = loadAndCacheScene("room");
         RoomController roomController = (RoomController) roomPair.getController();
         roomController.getContext().setState(roomController.getContext().getGuessingState());
@@ -230,10 +280,20 @@ public class App extends Application {
         return;
       }
 
-      SceneControllerPair pair = loadAndCacheScene("chat");
+      System.out.println("Current scene: " + currentId);
+      SceneControllerPair pair = loadAndCacheScene(currentId);
 
-      ChatController chatController = (ChatController) pair.getController();
-      chatController.fadeOut(null);
+      if (roomIds.contains(currentId)) {
+        ChatController chatController = (ChatController) pair.getController();
+        chatController.fadeOut(null);
+      } else if (currentId.equals("flashback")) {
+        FlashbackController flashbackController = (FlashbackController) pair.getController();
+        flashbackController.fadeOut(null);
+      } else {
+        System.out.println("Unknown scene, returning to room directly");
+        openRoom(null);
+        return;
+      }
 
       SceneControllerPair roomPair = loadAndCacheScene("room");
       RoomController roomController = (RoomController) roomPair.getController();
@@ -267,5 +327,42 @@ public class App extends Application {
     stage.setScene(scene);
     stage.show();
     scene.getRoot().requestFocus();
+  }
+
+  public static void resetFxmlFiles() {
+    try {
+      Path fxmlReloadDir = Paths.get("src/main/resources/fxml_reload");
+      Path fxmlDir = Paths.get("src/main/resources/fxml");
+
+      // Copy each FXML file from fxml_reload to fxml
+      Files.list(fxmlReloadDir)
+          .filter(path -> path.toString().endsWith(".fxml"))
+          .forEach(
+              source -> {
+                try {
+                  Path target = fxmlDir.resolve(source.getFileName());
+                  Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
+                  System.out.println("Reset: " + source.getFileName());
+                } catch (IOException e) {
+                  System.err.println("Failed to reset: " + source.getFileName());
+                  e.printStackTrace();
+                }
+              });
+
+    } catch (IOException e) {
+      System.err.println("Failed to reset FXML files");
+      e.printStackTrace();
+    }
+  }
+
+  public static void reinitialize() {
+    RoomController roomController = (RoomController) getController("room");
+    if (roomController != null) {
+      roomController.setFirstTimeInit(true);
+    }
+    sceneCache.clear();
+    controllerCache.clear();
+    GameTimer.getInstance().reset();
+    ChatHistoryManager.getInstance().reset();
   }
 }

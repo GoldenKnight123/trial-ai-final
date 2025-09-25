@@ -21,6 +21,7 @@ import javafx.scene.shape.Arc;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import nz.ac.auckland.se206.App;
+import nz.ac.auckland.se206.ChatHistoryManager;
 import nz.ac.auckland.se206.GameStateContext;
 import nz.ac.auckland.se206.GameTimer;
 
@@ -40,6 +41,7 @@ public class RoomController extends Controller {
    * will be displayed one by one and is handled by the displayNextLine method
    */
   private static void initializeFixedDialogue() {
+    fixedDialogue.clear();
     // Introduction - Introducing defendant - Explaining the incident
     fixedDialogue.add(
         "Members of the jury - human and artificial. We shall now commence the trial of"
@@ -75,7 +77,6 @@ public class RoomController extends Controller {
   @FXML private ImageView imgWitnessAi;
   @FXML private ImageView imgDefendant;
   @FXML private ImageView imgWitnessHuman;
-  @FXML private Rectangle rectFade;
   @FXML private TextArea txtaDialogue;
   @FXML private ImageView imgContinueArrow;
   @FXML private ImageView imgTextArea;
@@ -103,31 +104,61 @@ public class RoomController extends Controller {
   public void initializeGuessingState() {
     txtaDialogue.setVisible(true);
     imgTextArea.setVisible(true);
+    imgInstructionBox.setVisible(false);
     lblWhoSpeaking.setVisible(true);
     imgContinueArrow.setVisible(false);
     lblInstructions.setVisible(false);
     lblTimer.setVisible(true);
     arcTimer.setVisible(true);
-    GameTimer.getInstance().setMaxTime(10);
+    GameTimer.getInstance().setMaxTime(100);
     GameTimer.getInstance().updateTimerDisplay();
     GameTimer.getInstance().start();
     GameTimer.getInstance()
         .setOnTimerExpired(
             () -> {
               try {
+                // If the player has not spoken to all participants, send them back to start screen
+                if (!nz.ac.auckland.se206.ChatHistoryManager.getInstance().haveSpokenToAll()) {
+                  App.setRoot("startScreen");
+                  return;
+                }
+
+                // Otherwise proceed with the normal conclusion flow
                 onChooseGuilty(null);
               } catch (IOException e) {
                 e.printStackTrace();
               }
             });
     fixedDialogue.clear();
-    fixedDialogue.add("I have finished analysing the memories of the witness and defendants.");
-    fixedDialogue.add("I shall now decide if defendant is GUILTY or NOT GUILTY.");
+    if (ChatHistoryManager.getInstance().haveSpokenToAll()) {
+      fixedDialogue.add("I have finished analysing the memories of the witness and defendants.");
+      fixedDialogue.add("I shall now decide if defendant is GUILTY or NOT GUILTY.");
+    } else {
+      fixedDialogue.add("I have not been able to gather enough evidence.");
+      fixedDialogue.add(
+          "I am not able to make a decision on whether the defendant is guilty or not.");
+    }
+
     currentDialogueIndex = 0;
     displayTextWithTypewriterEffect(
         txtaDialogue, fixedDialogue.get(currentDialogueIndex), 50, true, true);
     currentDialogueIndex++;
     isGuessing = true;
+
+    // After initializing guessing, only take the player to the verdict scene if they've
+    // questioned all participants. Otherwise inform them which participants are missing.
+    /*try {
+      if (nz.ac.auckland.se206.ChatHistoryManager.getInstance().haveSpokenToAll()) {
+        App.setRoot("verdict");
+      } else {
+        // If not all participants have been questioned, send the player to the start screen
+        System.out.println(
+            "Not all participants have been questioned. Sending player to start screen.");
+        App.openStartScreen(null);
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }*/
   }
 
   public void fadeIn() {
@@ -137,19 +168,15 @@ public class RoomController extends Controller {
     // Ensure the room itself is fully visible first
     room.setOpacity(1.0);
 
-    rectFade.setVisible(true);
-    rectFade.setOpacity(1.0); // Ensure it starts fully opaque
-
     FadeTransition fadeTransition = new FadeTransition();
     fadeTransition.setDuration(Duration.millis(1000));
-    fadeTransition.setNode(rectFade);
-    fadeTransition.setFromValue(1.0);
-    fadeTransition.setToValue(0.0);
+    fadeTransition.setNode(room);
+    fadeTransition.setFromValue(0.0);
+    fadeTransition.setToValue(1.0);
 
     fadeTransition.setOnFinished(
         e -> {
           isFading = false; // Reset flag when fade completes
-          rectFade.setVisible(false); // Hide the fade rectangle when done
           if (GameTimer.getInstance().getTimeLeft() <= 0) {
             context.setState(context.getGuessingState());
           }
@@ -202,10 +229,11 @@ public class RoomController extends Controller {
   public void initialize() {
     context.setRoomController(this); // Set reference to this controller
 
+    isGuessing = false;
+
     lblTimer.setVisible(true);
     arcTimer.setVisible(true);
     lblTimer.setAlignment(Pos.CENTER);
-    GameTimer.getInstance().start();
 
     // Create a highlight effect for hover
     ColorAdjust highlight = new ColorAdjust();
@@ -285,9 +313,12 @@ public class RoomController extends Controller {
     GameTimer.getInstance().registerTimerArc(arcTimer);
 
     if (isFirstTimeInit) {
+      System.out.println("Initializing RoomController");
+      GameTimer.getInstance().start();
       imgContinueArrow.setVisible(false);
       lblInstructions.setVisible(false);
       imgInstructionBox.setVisible(false);
+      currentDialogueIndex = 0;
       initializeFixedDialogue();
       displayTextWithTypewriterEffect(
           txtaDialogue, fixedDialogue.get(currentDialogueIndex), 50, true, true);
@@ -455,8 +486,19 @@ public class RoomController extends Controller {
       txtaDialogue.setVisible(false);
       imgTextArea.setVisible(false);
       lblWhoSpeaking.setVisible(false);
-      btnGuilty.setVisible(true);
-      btnNotGuilty.setVisible(true);
+      if (ChatHistoryManager.getInstance().haveSpokenToAll()) {
+        try {
+          App.openVerdict(null, false);
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      } else {
+        try {
+          App.openVerdict(null, true);
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
     }
   }
 
@@ -475,5 +517,9 @@ public class RoomController extends Controller {
 
   public Boolean isGuessing() {
     return isGuessing;
+  }
+
+  public void setFirstTimeInit(Boolean value) {
+    isFirstTimeInit = value;
   }
 }
