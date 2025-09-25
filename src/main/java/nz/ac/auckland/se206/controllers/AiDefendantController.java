@@ -14,7 +14,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import nz.ac.auckland.apiproxy.chat.openai.ChatMessage;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
+import nz.ac.auckland.se206.ChatHistoryManager;
 
 public class AiDefendantController extends ChatController {
 
@@ -29,6 +31,8 @@ public class AiDefendantController extends ChatController {
   @FXML private Text txtTablet4;
   @FXML private Pane paneInteractable;
   @FXML private ImageView imgOverride;
+
+  private boolean interactableComplete = false;
 
   // @FXML private AnchorPane paneInteract;
 
@@ -59,8 +63,40 @@ public class AiDefendantController extends ChatController {
                   Duration.seconds(2),
                   new KeyValue(sldrProtocol.valueProperty(), end, Interpolator.EASE_BOTH)));
       timeline.play();
+      interactableComplete = true;
+      completeInteraction();
     } else if (start == 100) {
       //
+    }
+  }
+
+  private void completeInteraction() {
+    if (interactableComplete) {
+      getChatCompletionRequest()
+          .addMessage(
+              new ChatMessage(
+                  "user",
+                  "The judge is in the AI defendant's memory where the judge themselves is asked to"
+                      + " use a slider, choosing between the Safety Protocol which will hold the"
+                      + " curret ppower output or the Efficiency Protocol which will increase the"
+                      + " power output. This places them in Indus-07 shoes when it was instructed"
+                      + " to deploy the new technology. However, when the user confirms their"
+                      + " choice, a message from the upper management that says (Management"
+                      + " Override: Proceed to 100% Efficiency) which gives the illusion that the"
+                      + " judge had a choice which relates to the fact that INDUS-07 was pressured"
+                      + " to implement the new technology"));
+
+      String message =
+          "[Management Override: Proceed to 100% Efficiency] \n"
+              + "After the call with managament, I was instructed to deploy the new technology.";
+
+      // Add to chat history
+      getChatCompletionRequest().addMessage(new ChatMessage("assistant", message));
+      ChatHistoryManager.getInstance()
+          .addMessage(getTarget(), new ChatMessage("assistant", message));
+
+      // Display to chatbox
+      // displayTextWithTypewriterEffect(txtaChat, message);
     }
   }
 }

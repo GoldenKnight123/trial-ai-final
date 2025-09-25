@@ -16,7 +16,7 @@
    <children>
       <ImageView disable="true" fitHeight="720.0" fitWidth="1280.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../images/indus07-background.gif" />
+            <Image url="@../images/indus07-background.png" />
          </image>
       </ImageView>
       <Rectangle fx:id="rectHistory" arcHeight="5.0" arcWidth="5.0" height="720.0" layoutX="10.0" layoutY="10.0" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="1280.0" />
@@ -25,7 +25,7 @@
             <Image url="@../images/indus07-memory.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="lblLocation" fitHeight="47.0" fitWidth="175.0" layoutX="-7.0" layoutY="19.0" pickOnBounds="true">
+      <ImageView fx:id="imgLocation" fitHeight="47.0" fitWidth="175.0" layoutX="-7.0" layoutY="19.0" pickOnBounds="true">
          <image>
             <Image url="@../images/locationIndicator.png" />
          </image>
@@ -92,7 +92,7 @@
       </Pane>
       <ImageView fx:id="imgOverride" fitHeight="529.0" fitWidth="1317.0" layoutX="526.0" layoutY="213.0" pickOnBounds="true" preserveRatio="true" visible="false">
          <image>
-            <Image url="@../images/override-message.gif" />
+            <Image url="@../images/override-message.png" />
          </image>
       </ImageView>
    </children>

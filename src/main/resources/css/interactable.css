@@ -26,7 +26,8 @@
   -fx-pref-width: 400px;
 }
 
-#btnConfirm {
+#btnConfirm,
+#btnExitInteractable {
   font-family: "Consolas";
   -fx-font-family: "Consolas";
   background-color: #FFF8E3;
@@ -45,7 +46,8 @@
   -fx-font-size: 15px;
 }
 
-#btnConfirm:hover {
+#btnConfirm:hover,
+#btnExitInteractable:hover {
   background-color: #b48700;
   -fx-background-color: #b48700;
 }
