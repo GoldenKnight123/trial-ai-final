@@ -1,8 +1,10 @@
 package nz.ac.auckland.se206.controllers;
 
+import java.io.IOException;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -15,6 +17,7 @@ import nz.ac.auckland.apiproxy.chat.openai.ChatMessage;
 import nz.ac.auckland.apiproxy.chat.openai.Choice;
 import nz.ac.auckland.apiproxy.config.ApiProxyConfig;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
+import nz.ac.auckland.se206.App;
 
 public class DebriefController extends Controller {
   @FXML private TextArea txtaDebrief;
@@ -169,5 +172,11 @@ public class DebriefController extends Controller {
 
   public void setCorrectLabel(String text) {
     lblCorrect.setText(text);
+  }
+
+  @FXML
+  private void onRestart(ActionEvent event) throws IOException {
+    App.openStartScreen(null);
+    App.reinitialize();
   }
 }

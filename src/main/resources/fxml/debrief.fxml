@@ -30,6 +30,6 @@
          <font>
             <Font size="24.0" />
          </font></TextArea>
-      <Button fx:id="btnReturn" layoutX="1138.0" layoutY="639.0" mnemonicParsing="false" onAction="#onReturn" stylesheets="@../css/verdict.css" text="Restart" />
+      <Button fx:id="btnReturn" layoutX="1138.0" layoutY="639.0" mnemonicParsing="false" onAction="#onRestart" stylesheets="@../css/verdict.css" text="Restart" />
    </children>
 </Pane>
