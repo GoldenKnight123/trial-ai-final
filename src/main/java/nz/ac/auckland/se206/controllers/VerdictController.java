@@ -15,6 +15,7 @@ public class VerdictController extends Controller {
   @FXML private TextField verdictTxt;
   @FXML private Pane paneGameOver;
   @FXML private Button btnRestart;
+  @FXML private Pane paneBackground;
 
   @FXML
   private void onGuilty(ActionEvent event) throws IOException {
@@ -35,6 +36,10 @@ public class VerdictController extends Controller {
           (nz.ac.auckland.se206.controllers.DebriefController) App.getController("debrief");
       debriefController.setCorrectLabel(wasCorrect ? "You were CORRECT!" : "You were INCORRECT!");
       debriefController.runGptDebrief(text, wasCorrect);
+
+      if (!wasCorrect) {
+        paneBackground.setStyle("-fx-background-color: #FF5757;");
+      }
     }
   }
 
@@ -49,6 +54,9 @@ public class VerdictController extends Controller {
       if (text.trim().isEmpty()) {
         // default to incorrect if no rationale provided
         wasCorrect = false;
+      }
+      if (!wasCorrect) {
+        paneBackground.setStyle("-fx-background-color: #FF5757;");
       }
     }
   }

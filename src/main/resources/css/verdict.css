@@ -66,7 +66,28 @@
   -fx-background-color: #FFF6D6;
 }
 
-#btnRestart {
+.text-area {
+  -fx-background-color: transparent;
+  /* Makes the main TextArea background transparent */
+}
+
+.text-area .scroll-pane {
+  -fx-background-color: transparent;
+  /* Makes the ScrollPane background transparent */
+}
+
+.text-area .scroll-pane .viewport {
+  -fx-background-color: transparent;
+  /* Makes the Viewport background transparent */
+}
+
+.text-area .scroll-pane .content {
+  -fx-background-color: transparent;
+  /* Makes the Content background transparent */
+}
+
+#btnRestart,
+#btnReturn {
   font-family: "Consolas";
   -fx-font-family: "Consolas";
   background-color: #FFF8E3;
@@ -85,7 +106,12 @@
   -fx-font-size: 24px;
 }
 
-#btnRestart:hover {
+#btnRestart:hover,
+#btnReturn:hover {
   background-color: #b48700;
   -fx-background-color: #b48700;
+}
+
+#paneBackground {
+  -fx-background-color: #FFF6D6;
 }
