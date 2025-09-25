@@ -8,9 +8,11 @@ import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -93,7 +95,7 @@ public class RoomController extends Controller {
   private HashMap<String, Boolean> flashbackMap =
       new HashMap<>() {
         {
-          put("LOGOS-09", true);
+          put("LOGOS-09", false);
           put("Evan", false);
           put("INDUS-07", false);
         }
@@ -230,7 +232,12 @@ public class RoomController extends Controller {
     isGuessing = false;
 
     lblTimer.setVisible(true);
+    arcTimer.setVisible(true);
     lblTimer.setAlignment(Pos.CENTER);
+
+    // Create a highlight effect for hover
+    ColorAdjust highlight = new ColorAdjust();
+    highlight.setBrightness(0.3);
 
     // Setup hover effects of images
     Image logos09 = imgWitnessAi.getImage();
@@ -238,14 +245,18 @@ public class RoomController extends Controller {
 
     imgWitnessAi.setOnMouseEntered(
         event -> {
-          if (currentDialogueIndex >= fixedDialogue.size()) {
+          if (currentDialogueIndex >= fixedDialogue.size() && !isFading) {
+            imgWitnessAi.setEffect(highlight);
             imgWitnessAi.setImage(logos09Hover);
+            imgWitnessAi.setCursor(Cursor.HAND);
           }
         });
 
     imgWitnessAi.setOnMouseExited(
         event -> {
+          imgWitnessAi.setEffect(null);
           imgWitnessAi.setImage(logos09);
+          imgWitnessAi.setCursor(Cursor.DEFAULT);
         });
 
     Image indus07 = imgDefendant.getImage();
@@ -253,14 +264,18 @@ public class RoomController extends Controller {
 
     imgDefendant.setOnMouseEntered(
         event -> {
-          if (currentDialogueIndex >= fixedDialogue.size()) {
+          if (currentDialogueIndex >= fixedDialogue.size() && !isFading) {
+            imgDefendant.setEffect(highlight);
             imgDefendant.setImage(indus07Hover);
+            imgDefendant.setCursor(Cursor.HAND);
           }
         });
 
     imgDefendant.setOnMouseExited(
         event -> {
+          imgDefendant.setEffect(null);
           imgDefendant.setImage(indus07);
+          imgDefendant.setCursor(Cursor.DEFAULT);
         });
 
     Image evan = imgWitnessHuman.getImage();
@@ -268,14 +283,18 @@ public class RoomController extends Controller {
 
     imgWitnessHuman.setOnMouseEntered(
         event -> {
-          if (currentDialogueIndex >= fixedDialogue.size()) {
+          if (currentDialogueIndex >= fixedDialogue.size() && !isFading) {
+            imgWitnessHuman.setEffect(highlight);
             imgWitnessHuman.setImage(evanHover);
+            imgWitnessHuman.setCursor(Cursor.HAND);
           }
         });
 
     imgWitnessHuman.setOnMouseExited(
         event -> {
+          imgWitnessHuman.setEffect(null);
           imgWitnessHuman.setImage(evan);
+          imgWitnessHuman.setCursor(Cursor.DEFAULT);
         });
 
     txtaDialogue.setVisible(true);

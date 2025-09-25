@@ -34,6 +34,7 @@ import nz.ac.auckland.apiproxy.config.ApiProxyConfig;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
 import nz.ac.auckland.se206.App;
 import nz.ac.auckland.se206.ChatHistoryManager;
+import nz.ac.auckland.se206.GameTimer;
 import nz.ac.auckland.se206.prompts.PromptEngineering;
 
 /**
@@ -77,8 +78,8 @@ public class ChatController extends Controller {
   @FXML
   public void initialize() throws ApiProxyException {
     // Register timer label with GameTimer
-    // GameTimer.getInstance().registerTimerLabel(lblTimer);
-    // GameTimer.getInstance().registerTimerArc(arcTimer);
+    GameTimer.getInstance().registerTimerLabel(lblTimer);
+    GameTimer.getInstance().registerTimerArc(arcTimer);
 
     txtInput.setVisible(false);
     imgInput.setVisible(false);
@@ -179,15 +180,14 @@ public class ChatController extends Controller {
           new ChatMessage(
               "system", getSystemPrompt(target) + chatHistoryTextSnapShot.replace("You", "Judge")));
 
-      currentSpeaker = "gpt";
-      lblWhoSpeaking.setText(target + ":");
-
       // If the chatHistorySnapshot does not contain the targets fixed dialogue display it
       String fixedDialogue = ChatHistoryManager.getInstance().getFixedDialogue(target);
       if (!ChatHistoryManager.getInstance().containsDialogue(target, fixedDialogue)) {
         txtInput.setVisible(false);
         imgInput.setVisible(false);
         btnSend.setVisible(false);
+        currentSpeaker = "gpt";
+        lblWhoSpeaking.setText(target + ":");
         ChatHistoryManager.getInstance()
             .addMessage(target, new ChatMessage("assistant", fixedDialogue));
         btnReturn.setDisable(true);
