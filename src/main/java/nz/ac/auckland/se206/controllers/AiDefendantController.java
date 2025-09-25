@@ -63,6 +63,10 @@ public class AiDefendantController extends ChatController {
                   new KeyValue(sldrProtocol.valueProperty(), end, Interpolator.EASE_BOTH)));
       timeline.play();
       interactableComplete = true;
+
+      // Mark ineteractable as complete
+      ChatHistoryManager.getInstance().markInteractableComplete("INDUS-07");
+
       // Delay before executing completeInteraction()
       Timeline delayTimeline =
           new Timeline(new KeyFrame(Duration.seconds(3), e -> completeInteraction()));

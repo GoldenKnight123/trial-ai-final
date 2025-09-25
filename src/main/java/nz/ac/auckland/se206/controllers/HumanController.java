@@ -77,6 +77,9 @@ public class HumanController extends ChatController {
               getChatCompletionRequest().addMessage(sysMsg);
               tabletUnscrambledNotified = true;
               displayInteractionDialogue();
+
+              // Mark interactable as completed
+              ChatHistoryManager.getInstance().markInteractableComplete("Evan");
             }
           }
         });

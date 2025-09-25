@@ -358,6 +358,9 @@ public class ChatController extends Controller {
 
     displayTextWithTypewriterEffect(txtaChat, message, 50, true, true);
 
+    // Mark that the player has spoken to this target
+    ChatHistoryManager.getInstance().markSpokenTo(target);
+
     // Create a background task to run GPT
     Task<ChatMessage> gptTask =
         new Task<ChatMessage>() {

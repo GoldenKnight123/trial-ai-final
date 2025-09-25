@@ -145,6 +145,7 @@ public class GameTimer {
   /** Resets the timer to the maximum time and updates displays. */
   public void reset() {
     stop();
+    maxTime = 300;
     secondsLeft = maxTime;
     updateTimerDisplay();
   }

@@ -81,9 +81,15 @@ public class RoomController extends Controller {
   @FXML private ImageView imgContinueArrow;
   @FXML private ImageView imgTextArea;
   @FXML private ImageView imgInstructionBox;
+  @FXML private ImageView imgInteractable1;
+  @FXML private ImageView imgInteractable2;
+  @FXML private ImageView imgInteractable3;
   @FXML private Label lblWhoSpeaking;
   @FXML private Label lblInstructions;
   @FXML private Label lblTimer;
+  @FXML private Label lblSpokenTo1;
+  @FXML private Label lblSpokenTo2;
+  @FXML private Label lblSpokenTo3;
   @FXML private Button btnGuilty;
   @FXML private Button btnNotGuilty;
   @FXML private Arc arcTimer;
@@ -110,27 +116,21 @@ public class RoomController extends Controller {
     lblInstructions.setVisible(false);
     lblTimer.setVisible(true);
     arcTimer.setVisible(true);
-    GameTimer.getInstance().setMaxTime(100);
+    GameTimer.getInstance().setMaxTime(60);
     GameTimer.getInstance().updateTimerDisplay();
     GameTimer.getInstance().start();
     GameTimer.getInstance()
         .setOnTimerExpired(
             () -> {
               try {
-                // If the player has not spoken to all participants, send them back to start screen
-                if (!nz.ac.auckland.se206.ChatHistoryManager.getInstance().haveSpokenToAll()) {
-                  App.setRoot("startScreen");
-                  return;
-                }
-
-                // Otherwise proceed with the normal conclusion flow
-                onChooseGuilty(null);
+                App.openVerdict(null, true);
               } catch (IOException e) {
                 e.printStackTrace();
               }
             });
     fixedDialogue.clear();
-    if (ChatHistoryManager.getInstance().haveSpokenToAll()) {
+    if (ChatHistoryManager.getInstance().haveSpokenToAll()
+        && ChatHistoryManager.getInstance().interactablesComplete()) {
       fixedDialogue.add("I have finished analysing the memories of the witness and defendants.");
       fixedDialogue.add("I shall now decide if defendant is GUILTY or NOT GUILTY.");
     } else {
@@ -174,6 +174,27 @@ public class RoomController extends Controller {
     fadeTransition.setFromValue(0.0);
     fadeTransition.setToValue(1.0);
 
+    // Check if interactables are complete and set state accordingly
+    if (ChatHistoryManager.getInstance().isInteractableComplete("LOGOS-09")) {
+      imgInteractable1.setOpacity(1);
+    }
+    if (ChatHistoryManager.getInstance().isInteractableComplete("INDUS-07")) {
+      imgInteractable2.setOpacity(1);
+    }
+    if (ChatHistoryManager.getInstance().isInteractableComplete("Evan")) {
+      imgInteractable3.setOpacity(1);
+    }
+
+    // Check if the player has spoken to each character and show "Spoken To" labels
+    if (ChatHistoryManager.getInstance().hasBeenSpokenTo("LOGOS-09")) {
+      lblSpokenTo1.setVisible(true);
+    }
+    if (ChatHistoryManager.getInstance().hasBeenSpokenTo("INDUS-07")) {
+      lblSpokenTo2.setVisible(true);
+    }
+    if (ChatHistoryManager.getInstance().hasBeenSpokenTo("Evan")) {
+      lblSpokenTo3.setVisible(true);
+    }
     fadeTransition.setOnFinished(
         e -> {
           isFading = false; // Reset flag when fade completes
@@ -315,6 +336,18 @@ public class RoomController extends Controller {
     if (isFirstTimeInit) {
       System.out.println("Initializing RoomController");
       GameTimer.getInstance().start();
+      // Set up timer expired callback to force return to room
+      GameTimer.getInstance()
+          .setOnTimerExpired(
+              () -> {
+                App.forceReturnToRoom();
+              });
+
+      // Reset flashback map
+      flashbackMap.put("LOGOS-09", false);
+      flashbackMap.put("Evan", false);
+      flashbackMap.put("INDUS-07", false);
+
       imgContinueArrow.setVisible(false);
       lblInstructions.setVisible(false);
       imgInstructionBox.setVisible(false);

@@ -315,13 +315,6 @@ public class App extends Application {
   public void start(final Stage stage) throws IOException {
     primaryStage = stage; // Store reference to primary stage
 
-    // Set up timer expired callback to force return to room
-    GameTimer.getInstance()
-        .setOnTimerExpired(
-            () -> {
-              forceReturnToRoom();
-            });
-
     SceneControllerPair pair = loadAndCacheScene("startScreen");
     scene = pair.getScene();
     stage.setScene(scene);

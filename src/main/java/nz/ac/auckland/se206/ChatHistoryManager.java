@@ -27,6 +27,12 @@ public class ChatHistoryManager {
   // Store interaction dialogue for each character
   private Map<String, String> interactionDialogue;
 
+  // Store interactables that have been completed
+  private Map<String, Boolean> interactablesMap = new HashMap<>();
+
+  // Store whether the player has spoken to each target
+  private Map<String, Boolean> spokenToMap = new HashMap<>();
+
   /** Private constructor to enforce singleton pattern. */
   private ChatHistoryManager() {
     initialize();
@@ -50,6 +56,10 @@ public class ChatHistoryManager {
     chatHistoryText = "";
     fixedDialogue = new HashMap<>();
     interactionDialogue = new HashMap<>();
+
+    // Clear spokenToMap and interactablesMap
+    spokenToMap.clear();
+    interactablesMap.clear();
 
     // Initialize chat history for each character
     chatHistory.put("LOGOS-09", new ArrayList<>());
@@ -78,12 +88,11 @@ public class ChatHistoryManager {
             + " before they decided to install the new Helios system.");
     interactionDialogue.put(
         "INDUS-07",
-        "INDUS-07: \"I was preparing and analysing a way to increase the output of the power"
-            + " plant.\"");
+        "I was preparing and analysing a way to increase the output of the power" + " plant.");
     interactionDialogue.put(
         "Evan",
-        "Evan: \"After carefully tuning the diagnostics, I finally saw the readings clearly, the"
-            + " values were at dangerously high levels.\"");
+        "After carefully tuning the diagnostics, I finally saw the readings clearly, the"
+            + " values were at dangerously high levels.");
   }
 
   /**
@@ -242,22 +251,22 @@ public class ChatHistoryManager {
   }
 
   /**
-   * Checks whether the player has sent any messages to the given target.
+   * Marks that the player has spoken to a specific target.
+   *
+   * @param target the character/target that has been spoken to
+   */
+  public void markSpokenTo(String target) {
+    spokenToMap.put(target, true);
+  }
+
+  /**
+   * Checks whether the player has spoken to a specific target.
    *
    * @param target the character/target to check
-   * @return true if there is at least one user message in the chat history for the target
+   * @return true if the target has at least one user-sent message, false otherwise
    */
   public boolean hasBeenSpokenTo(String target) {
-    if (!chatHistory.containsKey(target)) {
-      return false;
-    }
-    List<ChatMessage> history = chatHistory.get(target);
-    for (ChatMessage m : history) {
-      if ("user".equals(m.getRole())) {
-        return true;
-      }
-    }
-    return false;
+    return spokenToMap.getOrDefault(target, false);
   }
 
   /**
@@ -266,11 +275,41 @@ public class ChatHistoryManager {
    * @return true if every target has at least one user-sent message
    */
   public boolean haveSpokenToAll() {
-    // for (String target : chatHistory.keySet()) {
-    //  if (!hasBeenSpokenTo(target)) {
-    //    return false;
-    //  }
-    // }
+    for (String target : chatHistory.keySet()) {
+      if (!hasBeenSpokenTo(target)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Stores that participant to map once interactable has been completed.
+   *
+   * @return true if every target has at least one user-sent message
+   */
+  public void markInteractableComplete(String target) {
+    // Set to true when interactable is completed
+    interactablesMap.put(target, true);
+  }
+
+  public boolean isInteractableComplete(String target) {
+    // Return false if target is not found
+    return interactablesMap.getOrDefault(target, false);
+  }
+
+  /**
+   * Checks whether the player has completed all interactables.
+   *
+   * @return true if every target has at least one user-sent message
+   */
+  public boolean interactablesComplete() {
+    // Check if all interactable have been completed for all participants
+    for (String target : getTrackedTargets()) {
+      if (!isInteractableComplete(target)) {
+        return false;
+      }
+    }
     return true;
   }
 }
