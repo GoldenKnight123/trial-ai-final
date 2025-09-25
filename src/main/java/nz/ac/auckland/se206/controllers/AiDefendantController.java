@@ -8,6 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -29,12 +30,11 @@ public class AiDefendantController extends ChatController {
   @FXML private Text txtTablet2;
   @FXML private Text txtTablet3;
   @FXML private Text txtTablet4;
+  @FXML private TextArea txtaChat;
   @FXML private Pane paneInteractable;
   @FXML private ImageView imgOverride;
 
   private boolean interactableComplete = false;
-
-  // @FXML private AnchorPane paneInteract;
 
   @Override
   public void initialize() throws ApiProxyException {
@@ -43,13 +43,12 @@ public class AiDefendantController extends ChatController {
 
   @FXML
   private void onCompClick(MouseEvent event) {
-    System.out.println("Computer Clicked");
     paneInteractable.setVisible(true);
   }
 
   @FXML
   private void onConfirm(ActionEvent event) {
-    System.out.println("Confirm button clicked!");
+    rectComputer.setVisible(false);
     double start = sldrProtocol.getValue();
     double end = 100; // move to "Efficiency" side
 
@@ -64,21 +63,24 @@ public class AiDefendantController extends ChatController {
                   new KeyValue(sldrProtocol.valueProperty(), end, Interpolator.EASE_BOTH)));
       timeline.play();
       interactableComplete = true;
-      completeInteraction();
-    } else if (start == 100) {
-      //
+      // Delay before executing completeInteraction()
+      Timeline delayTimeline =
+          new Timeline(new KeyFrame(Duration.seconds(2), e -> completeInteraction()));
+      delayTimeline.play();
     }
   }
 
   private void completeInteraction() {
     if (interactableComplete) {
+      paneInteractable.setVisible(false);
+      imgOverride.setVisible(false);
       getChatCompletionRequest()
           .addMessage(
               new ChatMessage(
                   "user",
                   "The judge is in the AI defendant's memory where the judge themselves is asked to"
                       + " use a slider, choosing between the Safety Protocol which will hold the"
-                      + " curret ppower output or the Efficiency Protocol which will increase the"
+                      + " current power output or the Efficiency Protocol which will increase the"
                       + " power output. This places them in Indus-07 shoes when it was instructed"
                       + " to deploy the new technology. However, when the user confirms their"
                       + " choice, a message from the upper management that says (Management"
@@ -96,7 +98,7 @@ public class AiDefendantController extends ChatController {
           .addMessage(getTarget(), new ChatMessage("assistant", message));
 
       // Display to chatbox
-      // displayTextWithTypewriterEffect(txtaChat, message);
+      displayTextWithTypewriterEffect(txtaChat, message);
     }
   }
 }
