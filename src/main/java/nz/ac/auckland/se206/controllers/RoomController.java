@@ -19,6 +19,7 @@ import javafx.scene.shape.Arc;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import nz.ac.auckland.se206.App;
+import nz.ac.auckland.se206.ChatHistoryManager;
 import nz.ac.auckland.se206.GameStateContext;
 import nz.ac.auckland.se206.GameTimer;
 
@@ -73,7 +74,6 @@ public class RoomController extends Controller {
   @FXML private ImageView imgWitnessAi;
   @FXML private ImageView imgDefendant;
   @FXML private ImageView imgWitnessHuman;
-  @FXML private Rectangle rectFade;
   @FXML private TextArea txtaDialogue;
   @FXML private ImageView imgContinueArrow;
   @FXML private ImageView imgTextArea;
@@ -127,8 +127,15 @@ public class RoomController extends Controller {
               }
             });
     fixedDialogue.clear();
-    fixedDialogue.add("I have finished analysing the memories of the witness and defendants.");
-    fixedDialogue.add("I shall now decide if defendant is GUILTY or NOT GUILTY.");
+    if (ChatHistoryManager.getInstance().haveSpokenToAll()) {
+      fixedDialogue.add("I have finished analysing the memories of the witness and defendants.");
+      fixedDialogue.add("I shall now decide if defendant is GUILTY or NOT GUILTY.");
+    } else {
+      fixedDialogue.add("I have not been able to gather enough evidence.");
+      fixedDialogue.add(
+          "I am not able to make a decision on whether the defendant is guilty or not.");
+    }
+
     currentDialogueIndex = 0;
     displayTextWithTypewriterEffect(
         txtaDialogue, fixedDialogue.get(currentDialogueIndex), 50, true, true);
@@ -137,16 +144,18 @@ public class RoomController extends Controller {
 
     // After initializing guessing, only take the player to the verdict scene if they've
     // questioned all participants. Otherwise inform them which participants are missing.
-    try {
+    /*try {
       if (nz.ac.auckland.se206.ChatHistoryManager.getInstance().haveSpokenToAll()) {
         App.setRoot("verdict");
       } else {
         // If not all participants have been questioned, send the player to the start screen
-        App.setRoot("startScreen");
+        System.out.println(
+            "Not all participants have been questioned. Sending player to start screen.");
+        App.openStartScreen(null);
       }
     } catch (IOException e) {
       e.printStackTrace();
-    }
+    }*/
   }
 
   public void fadeIn() {
@@ -156,19 +165,15 @@ public class RoomController extends Controller {
     // Ensure the room itself is fully visible first
     room.setOpacity(1.0);
 
-    rectFade.setVisible(true);
-    rectFade.setOpacity(1.0); // Ensure it starts fully opaque
-
     FadeTransition fadeTransition = new FadeTransition();
     fadeTransition.setDuration(Duration.millis(1000));
-    fadeTransition.setNode(rectFade);
-    fadeTransition.setFromValue(1.0);
-    fadeTransition.setToValue(0.0);
+    fadeTransition.setNode(room);
+    fadeTransition.setFromValue(0.0);
+    fadeTransition.setToValue(1.0);
 
     fadeTransition.setOnFinished(
         e -> {
           isFading = false; // Reset flag when fade completes
-          rectFade.setVisible(false); // Hide the fade rectangle when done
           if (GameTimer.getInstance().getTimeLeft() <= 0) {
             context.setState(context.getGuessingState());
           }
@@ -457,6 +462,19 @@ public class RoomController extends Controller {
       txtaDialogue.setVisible(false);
       imgTextArea.setVisible(false);
       lblWhoSpeaking.setVisible(false);
+      if (ChatHistoryManager.getInstance().haveSpokenToAll()) {
+        try {
+          App.openVerdict(null);
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      } else {
+        try {
+          App.openVerdict(null);
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
     }
   }
 

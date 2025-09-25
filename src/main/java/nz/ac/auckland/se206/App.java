@@ -1,6 +1,8 @@
 package nz.ac.auckland.se206;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import javafx.application.Application;
@@ -15,9 +17,11 @@ import nz.ac.auckland.se206.controllers.AiDefendantController;
 import nz.ac.auckland.se206.controllers.AiWitnessController;
 import nz.ac.auckland.se206.controllers.ChatController;
 import nz.ac.auckland.se206.controllers.DebriefController;
-import nz.ac.auckland.se206.controllers.HumanController;
 import nz.ac.auckland.se206.controllers.FlashbackController;
+import nz.ac.auckland.se206.controllers.HumanController;
 import nz.ac.auckland.se206.controllers.RoomController;
+import nz.ac.auckland.se206.controllers.StartMenuController;
+import nz.ac.auckland.se206.controllers.VerdictController;
 
 /**
  * This is the entry point of the JavaFX application. This class initializes and runs the JavaFX
@@ -125,6 +129,17 @@ public class App extends Application {
     primaryStage.show();
   }
 
+  public static void openStartScreen(MouseEvent event) throws IOException {
+    SceneControllerPair pair = loadAndCacheScene("startScreen");
+    StartMenuController startMenuController = (StartMenuController) pair.getController();
+    System.out.println("Opening start screen");
+    startMenuController.fadeIn();
+
+    scene = pair.getScene();
+    primaryStage.setScene(scene);
+    primaryStage.show();
+  }
+
   /**
    * Opens the chat view and sets the profession in the chat controller using cached scenes.
    *
@@ -196,6 +211,15 @@ public class App extends Application {
     primaryStage.show();
   }
 
+  public static void openVerdict(ActionEvent event) throws IOException {
+    SceneControllerPair pair = loadAndCacheScene("verdict");
+    VerdictController verdictController = (VerdictController) pair.getController();
+
+    scene = pair.getScene();
+    primaryStage.setScene(scene);
+    primaryStage.show();
+  }
+
   public static void openDebrief(ActionEvent event, boolean correct) throws IOException {
     SceneControllerPair pair = loadAndCacheScene("debrief");
 
@@ -221,6 +245,9 @@ public class App extends Application {
 
   /** Forces the user back to the room scene (used when timer expires). */
   public static void forceReturnToRoom() {
+    ArrayList<String> roomIds =
+        new ArrayList<>(
+            Arrays.asList("flashback", "memoryAiWitness", "memoryAiDefendant", "memoryHuman"));
     try {
       if (primaryStage.getScene().getRoot().getId().equals("room")) {
         SceneControllerPair roomPair = loadAndCacheScene("room");
