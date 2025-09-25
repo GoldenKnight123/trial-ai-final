@@ -13,8 +13,8 @@
   border-width: 3px;
   -fx-border-width: 3px;
   -fx-text-fill: black;
-  font-size: 30px;
-  -fx-font-size: 12px;
+  font-size: 40px;
+  -fx-font-size: 20px;
 }
 
 #btnNotGuilty {
@@ -32,30 +32,18 @@
   border-width: 3px;
   -fx-border-width: 3px;
   -fx-text-fill: black;
-  font-size: 30px;
-  -fx-font-size: 12px;
+  font-size: 40px;
+  -fx-font-size: 20px;
 }
 
 #verdictTxt {
-  /* JavaFX uses -fx- properties */
-  /* standard CSS fallbacks (use before -fx- properties) */
-  padding: 10px;
-  border-color: #000000;
-  border-width: 3px;
-  border-radius: 5px;
-  background-color: #FFF6D6;
-  font-family: Consolas;
-  font-size: 16px;
-  color: #333;
-
-  /* JavaFX-specific properties */
   -fx-padding: 10;
   -fx-border-color: #000000;
   -fx-border-width: 3;
   -fx-border-radius: 5;
   -fx-background-color: #FFF6D6;
   -fx-font-family: Consolas;
-  -fx-font-size: 16;
+  -fx-font-size: 20;
   -fx-text-fill: #333;
 }
 
@@ -66,4 +54,38 @@
   -fx-font-size: 30px;
   -fx-text-fill: black;
   align-items: center;
+}
+
+#paneBackground {
+  -fx-background-color: #CEFEE5;
+  -fx-border-color: #a9ffd3;
+  -fx-border-width: 2;
+}
+
+#paneGameOver {
+  -fx-background-color: #FFF6D6;
+}
+
+#btnRestart {
+  font-family: "Consolas";
+  -fx-font-family: "Consolas";
+  background-color: #FFF8E3;
+  -fx-background-color: #FFF8E3;
+  -fx-background-radius: 10px;
+  -fx-background-insets: 0;
+  border-color: black;
+  -fx-border-color: black;
+  border-radius: 10px;
+  -fx-border-radius: 10px;
+  -fx-border-insets: 0;
+  border-width: 3px;
+  -fx-border-width: 3px;
+  -fx-text-fill: black;
+  font-size: 24px;
+  -fx-font-size: 24px;
+}
+
+#btnRestart:hover {
+  background-color: #b48700;
+  -fx-background-color: #b48700;
 }
