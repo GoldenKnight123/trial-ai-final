@@ -88,7 +88,10 @@ public class ChatHistoryManager {
             + " before they decided to install the new Helios system.");
     interactionDialogue.put(
         "INDUS-07",
-        "I was preparing and analysing a way to increase the output of the power" + " plant.");
+        "Despite my concerns of the risks with the new technology, management has issued a"
+            + " direct override. \n\n"
+            + "I was prompted to increase power output and instruct the lead engineer to start"
+            + " installement of the technology.");
     interactionDialogue.put(
         "Evan",
         "After carefully tuning the diagnostics, I finally saw the readings clearly, the"

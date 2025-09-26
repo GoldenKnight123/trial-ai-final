@@ -67,7 +67,7 @@
             <Font size="24.0" />
          </font>
       </Label>
-      <Rectangle fx:id="rectHistory" arcHeight="5.0" arcWidth="5.0" height="750.0" layoutX="-18.0" layoutY="-8.0" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="1280.0" />
+      <Rectangle fx:id="rectHistory" arcHeight="5.0" arcWidth="5.0" height="720.0" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="1280.0" />
       <TextArea fx:id="txtaHistory" editable="false" layoutX="818.0" layoutY="82.0" prefHeight="620.0" prefWidth="444.0" stylesheets="@../css/memory.css" visible="false" wrapText="true" />
       <Button fx:id="btnHistory" layoutX="1126.0" layoutY="27.0" mnemonicParsing="false" onAction="#onToggleHistory" prefHeight="44.0" prefWidth="143.0" stylesheets="@../css/memory.css" text="Show History" />
       <Pane fx:id="paneInteractable" prefHeight="720.0" prefWidth="1280.0" visible="false">
