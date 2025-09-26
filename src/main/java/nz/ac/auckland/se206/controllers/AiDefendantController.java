@@ -21,7 +21,7 @@ import nz.ac.auckland.se206.ChatHistoryManager;
 
 public class AiDefendantController extends ChatController {
 
-  @FXML private Rectangle rectInteractable;
+  @FXML private Rectangle rectOverlay;
   @FXML private Rectangle rectComputer;
   @FXML private ImageView imgTablet;
   @FXML private Slider sldrProtocol;
@@ -42,13 +42,22 @@ public class AiDefendantController extends ChatController {
   }
 
   @FXML
-  private void onCompClick(MouseEvent event) {
+  private void onInteractable(MouseEvent event) {
     paneInteractable.setVisible(true);
+
+    if (interactableComplete) {
+      imgOverride.setVisible(true);
+    }
+  }
+
+  @FXML
+  private void onCloseInteraction(MouseEvent event) {
+    paneInteractable.setVisible(false);
+    imgOverride.setVisible(false);
   }
 
   @FXML
   private void onConfirm(ActionEvent event) {
-    rectComputer.setVisible(false);
     double start = sldrProtocol.getValue();
     double end = 100; // move to "Efficiency" side
 

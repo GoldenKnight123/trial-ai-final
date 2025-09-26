@@ -17,7 +17,7 @@
    <children>
       <ImageView disable="true" fitHeight="720.0" fitWidth="1280.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../images/indus07-background.gif" />
+            <Image url="@../images/indus07-background.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="723.0" fitWidth="1414.0" layoutX="5.0" layoutY="-124.0" pickOnBounds="true" preserveRatio="true">
@@ -30,7 +30,7 @@
             <Image url="@../images/textArea.png" />
          </image>
       </ImageView>
-      <Rectangle fx:id="rectComputer" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="169.0" layoutX="920.0" layoutY="169.0" onMouseClicked="#onCompClick" opacity="0.0" pickOnBounds="true" stroke="BLACK" strokeType="INSIDE" width="202.0" />
+      <Rectangle fx:id="rectComputer" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="169.0" layoutX="920.0" layoutY="169.0" onMouseClicked="#onInteractable" opacity="0.0" pickOnBounds="true" stroke="BLACK" strokeType="INSIDE" width="202.0" />
       <ImageView fx:id="imgInput" fitHeight="707.0" fitWidth="1263.0" layoutX="-80.0" layoutY="336.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/text-field.png" />
@@ -53,7 +53,7 @@
             <Font name="System Bold" size="24.0" />
          </font>
       </Label>
-      <TextField fx:id="txtInput" layoutX="29.0" layoutY="664.0" onKeyPressed="#onKeyPressed" prefHeight="45.0" prefWidth="1072.0" styleClass="text-field" stylesheets="@../css/memory.css" text="Send Message" />
+      <TextField fx:id="txtInput" layoutX="29.0" layoutY="664.0" onKeyPressed="#onKeyPressed" prefHeight="45.0" prefWidth="1072.0" promptText="Enter message here..." styleClass="text-field" stylesheets="@../css/memory.css" />
       <TextArea fx:id="txtaChat" editable="false" focusTraversable="false" layoutX="45.0" layoutY="400.0" prefHeight="240.0" prefWidth="1189.0" style="-fx-background-color: transparent;" styleClass="text-area" stylesheets="@../css/memory.css" text="Text Here" wrapText="true" />
       <Button fx:id="btnSend" layoutX="1088.0" layoutY="665.0" mnemonicParsing="false" onAction="#onSendMessage" prefHeight="50.0" prefWidth="157.0" stylesheets="@../css/memory.css" text="Send" />
       <Button fx:id="btnReturn" layoutX="939.0" layoutY="27.0" mnemonicParsing="false" onAction="#onGoBack" prefHeight="44.0" prefWidth="175.0" stylesheets="@../css/memory.css" text="Go Back to Courtroom" />
@@ -72,7 +72,7 @@
       <Button fx:id="btnHistory" layoutX="1126.0" layoutY="27.0" mnemonicParsing="false" onAction="#onToggleHistory" prefHeight="44.0" prefWidth="143.0" stylesheets="@../css/memory.css" text="Show History" />
       <Pane fx:id="paneInteractable" prefHeight="720.0" prefWidth="1280.0" visible="false">
          <children>
-            <Rectangle fx:id="rectInteractable" arcHeight="5.0" arcWidth="5.0" height="720.0" opacity="0.4" stroke="BLACK" strokeType="INSIDE" width="1280.0" />
+            <Rectangle fx:id="rectOverlay" arcHeight="5.0" arcWidth="5.0" height="720.0" onMouseClicked="#onCloseInteraction" opacity="0.4" stroke="BLACK" strokeType="INSIDE" width="1280.0" />
             <ImageView fx:id="imgTablet" fitHeight="718.0" fitWidth="1302.0">
                <image>
                   <Image url="@../images/tablet-defendant.png" />
@@ -102,7 +102,7 @@
             <Button fx:id="btnConfirm" layoutX="900.0" layoutY="585.0" mnemonicParsing="false" onAction="#onConfirm" prefHeight="46.0" prefWidth="129.0" stylesheets="@../css/interactable.css" text="Confirm Choice" />
             <ImageView fx:id="imgOverride" disable="true" fitHeight="529.0" fitWidth="1317.0" layoutX="554.0" layoutY="158.0" pickOnBounds="true" preserveRatio="true" visible="false">
                <image>
-                  <Image url="@../images/override-message.gif" />
+                  <Image url="@../images/override-message.png" />
                </image>
             </ImageView>
          </children>
