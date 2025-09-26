@@ -87,10 +87,11 @@ public class AiDefendantController extends ChatController {
     if (interactableComplete) {
       paneInteractable.setVisible(false);
       imgOverride.setVisible(false);
+
       getChatCompletionRequest()
           .addMessage(
               new ChatMessage(
-                  "user",
+                  "system",
                   "The judge is in the AI defendant's memory where the judge themselves is asked to"
                       + " use a slider, choosing between the Safety Protocol which will hold the"
                       + " current power output or the Efficiency Protocol which will increase the"
@@ -98,23 +99,19 @@ public class AiDefendantController extends ChatController {
                       + " to deploy the new technology. However, when the user confirms their"
                       + " choice, a message from the upper management that says (Management"
                       + " Override: Proceed to 100% Efficiency) which gives the illusion that the"
-                      + " judge had a choice which relates to the fact that INDUS-07 was pressured"
-                      + " to implement the new technology"));
-
-      String message =
-          "[Management Override: Proceed to 100% Efficiency] \n\n"
-              + "Despite my concerns of the risks with the new technology, management has issued a"
-              + " direct override. \n\n"
-              + "I was prompted to increase power output and instruct the lead engineer to start"
-              + " installement of the technology.";
+                      + " judge had a choice which relates to the fact that INDUS-07 was pressured "
+                      + " to implement the new technology. Convey that despite of your concerns of"
+                      + " about the risks of the new technology, management has issued a direct"
+                      + " override."));
 
       // Add to chat history
-      getChatCompletionRequest().addMessage(new ChatMessage("assistant", message));
-      ChatHistoryManager.getInstance()
-          .addMessage(getTarget(), new ChatMessage("assistant", message));
+      // getChatCompletionRequest().addMessage(new ChatMessage("assistant", message));
+      // ChatHistoryManager.getInstance().addMessage(getTarget(), new ChatMessage("user", message));
+
+      displayInteractionDialogue();
 
       // Display to chatbox
-      displayTextWithTypewriterEffect(txtaChat, message);
+      // displayTextWithTypewriterEffect(txtaChat, message);
     }
   }
 }
