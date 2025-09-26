@@ -450,6 +450,9 @@ public class ChatController extends Controller {
       txtaHistory.setText(
           ChatHistoryManager.getInstance().getChatHistoryText()); // Set chat history text
 
+      // Scroll to bottom
+      txtaHistory.setScrollTop(Double.MAX_VALUE);
+
       rectHistory.setVisible(true);
       // Fade rectHistory to 0.5 opacity
       FadeTransition fade = new FadeTransition(Duration.millis(300), rectHistory);
