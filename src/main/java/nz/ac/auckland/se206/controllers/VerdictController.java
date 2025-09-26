@@ -77,10 +77,6 @@ public class VerdictController extends Controller {
         wasCorrect = false;
       }
 
-      if (!wasCorrect) {
-        paneBackground.setStyle("-fx-background-color: #FF5757;");
-      }
-
       GameTimer.getInstance().stop();
       App.openDebrief(event, wasCorrect);
     }
@@ -98,10 +94,6 @@ public class VerdictController extends Controller {
       if (text.trim().isEmpty()) {
         // default to incorrect if no rationale provided
         wasCorrect = false;
-      }
-
-      if (!wasCorrect) {
-        paneBackground.setStyle("-fx-background-color: #FF5757;");
       }
 
       GameTimer.getInstance().stop();

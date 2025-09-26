@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
@@ -20,12 +21,12 @@
             <Image url="@../images/indus07-background.gif" />
          </image>
       </ImageView>
-      <ImageView fitHeight="723.0" fitWidth="1414.0" layoutX="5.0" layoutY="-124.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="723.0" fitWidth="1414.0" layoutX="5.0" layoutY="-124.0" onMouseClicked="#onSkipText" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/indus07-memory.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="731.0" fitWidth="1295.0" layoutX="-15.0" layoutY="-45.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="731.0" fitWidth="1295.0" layoutX="-15.0" layoutY="-45.0" onMouseClicked="#onSkipText" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/textArea.png" />
          </image>
@@ -54,7 +55,7 @@
          </font>
       </Label>
       <TextField fx:id="txtInput" layoutX="29.0" layoutY="664.0" onKeyPressed="#onKeyPressed" prefHeight="45.0" prefWidth="1072.0" promptText="Enter message here..." styleClass="text-field" stylesheets="@../css/memory.css" />
-      <TextArea fx:id="txtaChat" editable="false" focusTraversable="false" layoutX="45.0" layoutY="400.0" prefHeight="240.0" prefWidth="1189.0" style="-fx-background-color: transparent;" styleClass="text-area" stylesheets="@../css/memory.css" text="Text Here" wrapText="true" />
+      <TextArea fx:id="txtaChat" editable="false" focusTraversable="false" layoutX="45.0" layoutY="400.0" mouseTransparent="true" prefHeight="240.0" prefWidth="1189.0" style="-fx-background-color: transparent;" styleClass="text-area" stylesheets="@../css/memory.css" text="Text Here" wrapText="true" />
       <Button fx:id="btnSend" layoutX="1088.0" layoutY="665.0" mnemonicParsing="false" onAction="#onSendMessage" prefHeight="50.0" prefWidth="157.0" stylesheets="@../css/memory.css" text="Send" />
       <Button fx:id="btnReturn" layoutX="939.0" layoutY="27.0" mnemonicParsing="false" onAction="#onGoBack" prefHeight="44.0" prefWidth="175.0" stylesheets="@../css/memory.css" text="Go Back to Courtroom" />
       <Label fx:id="lblWhoSpeaking" alignment="CENTER" contentDisplay="CENTER" layoutX="49.0" layoutY="352.0" prefHeight="29.0" prefWidth="131.0" stylesheets="@../css/memory.css" text="You:" textAlignment="CENTER">
@@ -73,7 +74,7 @@
       <Pane fx:id="paneInteractable" prefHeight="720.0" prefWidth="1280.0" visible="false">
          <children>
             <Rectangle fx:id="rectOverlay" arcHeight="5.0" arcWidth="5.0" height="720.0" onMouseClicked="#onCloseInteraction" opacity="0.4" stroke="BLACK" strokeType="INSIDE" width="1280.0" />
-            <ImageView fx:id="imgTablet" fitHeight="718.0" fitWidth="1302.0">
+            <ImageView fx:id="imgTablet" fitHeight="718.0" fitWidth="1302.0" layoutX="8.0" layoutY="1.0">
                <image>
                   <Image url="@../images/tablet-defendant.png" />
                </image>
@@ -99,11 +100,19 @@
                   <Font size="20.0" />
                </font>
             </Text>
-            <Button fx:id="btnConfirm" layoutX="900.0" layoutY="585.0" mnemonicParsing="false" onAction="#onConfirm" prefHeight="46.0" prefWidth="129.0" stylesheets="@../css/interactable.css" text="Confirm Choice" />
+            <Button fx:id="btnConfirm" layoutX="881.0" layoutY="586.0" mnemonicParsing="false" onAction="#onConfirm" prefHeight="46.0" prefWidth="143.0" stylesheets="@../css/interactable.css" text="Confirm Choice" />
             <ImageView fx:id="imgOverride" disable="true" fitHeight="529.0" fitWidth="1317.0" layoutX="554.0" layoutY="158.0" pickOnBounds="true" preserveRatio="true" visible="false">
                <image>
                   <Image url="@../images/override-message.gif" />
                </image>
+            </ImageView>
+            <ImageView fx:id="imgClose" fitHeight="127.0" fitWidth="60.0" layoutX="1090.0" layoutY="78.0" onMouseClicked="#onCloseInteraction" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/close-interaction.png" />
+               </image>
+               <effect>
+                  <ColorAdjust />
+               </effect>
             </ImageView>
          </children>
       </Pane>

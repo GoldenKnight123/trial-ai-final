@@ -450,6 +450,9 @@ public class ChatController extends Controller {
       txtaHistory.setText(
           ChatHistoryManager.getInstance().getChatHistoryText()); // Set chat history text
 
+      // Scroll to bottom
+      txtaHistory.setScrollTop(Double.MAX_VALUE);
+
       rectHistory.setVisible(true);
       // Fade rectHistory to 0.5 opacity
       FadeTransition fade = new FadeTransition(Duration.millis(300), rectHistory);
@@ -504,20 +507,16 @@ public class ChatController extends Controller {
   }
 
   /**
-   * Handles click on computer interactable
+   * Handles a click anywhere on the screen to skip text
    *
    * @param event the action event triggered by the go back button
    * @throws ApiProxyException if there is an error communicating with the API proxy
    * @throws IOException if there is an I/O error
    */
   @FXML
-  private void onComputerClick(MouseEvent event) throws ApiProxyException, IOException {
-    // Handle computer click event
-    if (currentSpeaker.equals("") && !isTyping()) {
-      txtInput.setText(
-          "Did INDUS-07 receive any messages before sending the command to the workers?");
-      onSendMessage(null);
-      return;
+  private void onSkipText(MouseEvent event) throws ApiProxyException, IOException {
+    if (isTyping()) {
+      finishTypewriterEffectInstantly();
     }
   }
 

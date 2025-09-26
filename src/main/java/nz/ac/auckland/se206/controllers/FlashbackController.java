@@ -73,7 +73,7 @@ public class FlashbackController extends Controller {
     // Reset slide progress
     slideProgress = 0;
     lblInstruction.setVisible(false);
-    lblInstruction.setLayoutX(1049);
+    lblInstruction.setLayoutX(916);
 
     // Set 500ms cooldown before allowing first slide
     canSlide = false;
@@ -221,8 +221,8 @@ public class FlashbackController extends Controller {
                       lblInstruction.setVisible(true);
                     } else {
                       canExit = true;
-                      lblInstruction.setText("Click anywhere to return to courtroom.");
-                      lblInstruction.setLayoutX(964);
+                      lblInstruction.setText("Click anywhere to go to memory.");
+                      lblInstruction.setLayoutX(857);
                       lblInstruction.setVisible(true);
                     }
                   }));
