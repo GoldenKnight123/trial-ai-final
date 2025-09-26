@@ -19,6 +19,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
 import nz.ac.auckland.se206.App;
 import nz.ac.auckland.se206.ChatHistoryManager;
@@ -333,6 +334,10 @@ public class RoomController extends Controller {
     GameTimer.getInstance().registerTimerArc(arcTimer);
 
     if (isFirstTimeInit) {
+      // Load font at the size you're using in CSS
+      Font.loadFont(getClass().getResourceAsStream("/fonts/VT323-Regular.ttf"), 48);
+      Font.loadFont(getClass().getResourceAsStream("/fonts/CONSOLA.TTF"), 48);
+
       System.out.println("Initializing RoomController");
       GameTimer.getInstance().start();
       // Set up timer expired callback to force return to room

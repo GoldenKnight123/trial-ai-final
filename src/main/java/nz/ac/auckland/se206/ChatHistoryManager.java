@@ -69,12 +69,11 @@ public class ChatHistoryManager {
     // Initialize fixed dialogue for each character
     fixedDialogue.put(
         "LOGOS-09",
-        "It is currently 16th July 22:17AM. I have detected a message from INDUS-07 sent to site"
-            + " workers to increase the output levels of the power plant by 15%.");
+        "Greetings, I am LOGOS-09, the AI in charge of managing the communication systems and logs"
+            + " at this power plant.");
     fixedDialogue.put(
         "INDUS-07",
-        "It is currently 16th July 21:27AM. I am preparing and analysing a way to increase the"
-            + " output of the power plant.");
+        "The Helios system has been installed successfully, I should adjust the settings of it.");
     fixedDialogue.put(
         "Evan",
         "After installing the new module, I began a routine diagnostics check. But there was heavy"
