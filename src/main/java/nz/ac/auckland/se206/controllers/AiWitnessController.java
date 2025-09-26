@@ -18,6 +18,7 @@ public class AiWitnessController extends ChatController {
 
   @FXML private ImageView imgInteractable;
   @FXML private ImageView imgOverlay;
+  @FXML private ImageView imgClose;
   @FXML private Rectangle rectOverlay;
   @FXML private TextField txtTerminal;
   @FXML private TextField txtTerminalTemplate;
@@ -67,6 +68,7 @@ public class AiWitnessController extends ChatController {
     if (getCurrentSpeaker() == "") {
       rectOverlay.setVisible(true);
       imgOverlay.setVisible(true);
+      imgClose.setVisible(true);
       if (!interactableComplete) {
         txtTerminalTemplate.setVisible(true);
         txtTerminal.setVisible(true);
@@ -88,6 +90,7 @@ public class AiWitnessController extends ChatController {
     // Closes the overlay when clicked
     rectOverlay.setVisible(false);
     imgOverlay.setVisible(false);
+    imgClose.setVisible(false);
 
     // Hide terminal elements and exit interaction state
     txtTerminalTemplate.setVisible(false);
