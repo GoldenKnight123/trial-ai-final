@@ -12,10 +12,10 @@
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: FCF6E2;" stylesheets="@../css/verdict.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.controllers.VerdictController">
    <children>
       <Pane fx:id="paneBackground" disable="true" layoutX="189.0" layoutY="50.0" opacity="0.58" prefHeight="600.0" prefWidth="900.0" stylesheets="@../css/verdict.css" />
-   <Button fx:id="btnGuilty" layoutX="475.0" layoutY="157.0" mnemonicParsing="false" onAction="#onSelectGuilty" prefHeight="70.0" prefWidth="140.0" text="Guilty" />
-   <Button fx:id="btnNotGuilty" layoutX="703.0" layoutY="157.0" mnemonicParsing="false" onAction="#onSelectNotGuilty" prefHeight="70.0" prefWidth="140.0" text="Not Guilty" />
-      <TextArea fx:id="verdictTxt" layoutX="350.0" layoutY="250.0" prefHeight="329.0" prefWidth="591.0" promptText="Type your reason for your choice above." wrapText="true" />
-   <Label fx:id="lblVerdict" layoutX="515.0" layoutY="82.0" text="What is your verdict?" textAlignment="CENTER" />
+      <TextArea fx:id="verdictTxt" layoutX="345.0" layoutY="133.0" prefHeight="329.0" prefWidth="591.0" promptText="Type your reason for your choice above." wrapText="true" />
+   <Button fx:id="btnNotGuilty" layoutX="743.0" layoutY="500.0" mnemonicParsing="false" onAction="#onSelectNotGuilty" prefHeight="70.0" prefWidth="146.0" text="Not Guilty" />
+   <Button fx:id="btnGuilty" layoutX="391.0" layoutY="500.0" mnemonicParsing="false" onAction="#onSelectGuilty" prefHeight="70.0" prefWidth="146.0" text="Guilty" />
+   <Label fx:id="lblVerdict" layoutX="467.0" layoutY="71.0" text="What is your verdict?" textAlignment="CENTER" />
       <Pane fx:id="paneGameOver" prefHeight="720.0" prefWidth="1280.0" stylesheets="@../css/verdict.css" visible="false">
          <children>
             <ImageView fitHeight="720.0" fitWidth="1280.0" pickOnBounds="true" preserveRatio="true">
@@ -23,7 +23,7 @@
                   <Image url="@../images/game-over.png" />
                </image>
             </ImageView>
-            <Button fx:id="btnRestart" layoutX="614.0" layoutY="314.0" mnemonicParsing="false" onAction="#onRestart" stylesheets="@../css/verdict.css" text="Restart" />
+            <Button fx:id="btnRestart" layoutX="586.0" layoutY="310.0" mnemonicParsing="false" onAction="#onRestart" stylesheets="@../css/verdict.css" text="Restart" />
             <Label layoutX="364.0" layoutY="210.0" text="Failed to interact with all participants." textAlignment="CENTER">
                <font>
                   <Font size="36.0" />
