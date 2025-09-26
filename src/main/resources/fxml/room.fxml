@@ -99,8 +99,8 @@
             <Image url="@../images/continueArrow.png" />
          </image>
       </ImageView>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#e5fff6" height="146.0" layoutX="807.0" layoutY="6.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="3.0" width="402.0" />
-      <ImageView fx:id="imgInteractable1" fitHeight="114.0" fitWidth="188.0" layoutX="787.0" layoutY="38.0" opacity="0.5" pickOnBounds="true" preserveRatio="true">
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#e5fff6" height="146.0" layoutX="848.0" layoutY="6.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="3.0" width="361.0" />
+      <ImageView fx:id="imgInteractable1" fitHeight="114.0" fitWidth="188.0" layoutX="819.0" layoutY="38.0" opacity="0.5" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/computer2.png" />
          </image>
@@ -108,7 +108,15 @@
             <ColorAdjust />
          </effect>
       </ImageView>
-      <ImageView fx:id="imgInteractable2" fitHeight="85.0" fitWidth="109.0" layoutX="961.0" layoutY="52.0" opacity="0.5" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="imgInteractable2" fitHeight="77.0" fitWidth="131.0" layoutX="966.0" layoutY="48.0" opacity="0.5" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/tablet-defendant.png" />
+         </image>
+         <effect>
+            <ColorAdjust />
+         </effect>
+      </ImageView>
+      <ImageView fx:id="imgInteractable3" fitHeight="70.0" fitWidth="94.0" layoutX="1098.0" layoutY="52.0" opacity="0.5" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/interactable2.png" />
          </image>
@@ -116,15 +124,7 @@
             <ColorAdjust />
          </effect>
       </ImageView>
-      <ImageView fx:id="imgInteractable3" fitHeight="130.0" fitWidth="135.0" layoutX="1077.0" layoutY="26.0" opacity="0.5" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../images/tablet.png" />
-         </image>
-         <effect>
-            <ColorAdjust />
-         </effect>
-      </ImageView>
-      <Label fx:id="lblEvidence" layoutX="917.0" layoutY="12.0" stylesheets="@../css/room.css" text="Evidence Gathered:" />
+      <Label fx:id="lblEvidence" layoutX="913.0" layoutY="14.0" stylesheets="@../css/room.css" text="Evidence Gathered:" />
       <Label fx:id="lblSpokenTo1" layoutX="218.0" layoutY="171.0" stylesheets="@../css/room.css" text="Spoken To" visible="false" />
       <Label fx:id="lblSpokenTo2" layoutX="613.0" layoutY="133.0" stylesheets="@../css/room.css" text="Spoken To" visible="false" />
       <Label fx:id="lblSpokenTo3" layoutX="1051.0" layoutY="161.0" stylesheets="@../css/room.css" text="Spoken To" visible="false" />
