@@ -10,7 +10,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
 import nz.ac.auckland.apiproxy.chat.openai.ChatMessage;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
 import nz.ac.auckland.se206.ChatHistoryManager;
@@ -32,9 +31,6 @@ public class AiWitnessController extends ChatController {
   @Override
   public void initialize() throws ApiProxyException {
     super.initialize();
-
-    // Load font at the size you're using in CSS
-    Font.loadFont(getClass().getResourceAsStream("/fonts/VT323-Regular.ttf"), 48);
 
     // Cap txtTerminal to 26 characters
     txtTerminal
