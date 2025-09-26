@@ -144,21 +144,6 @@ public class RoomController extends Controller {
         txtaDialogue, fixedDialogue.get(currentDialogueIndex), 50, true, true);
     currentDialogueIndex++;
     isGuessing = true;
-
-    // After initializing guessing, only take the player to the verdict scene if they've
-    // questioned all participants. Otherwise inform them which participants are missing.
-    /*try {
-      if (nz.ac.auckland.se206.ChatHistoryManager.getInstance().haveSpokenToAll()) {
-        App.setRoot("verdict");
-      } else {
-        // If not all participants have been questioned, send the player to the start screen
-        System.out.println(
-            "Not all participants have been questioned. Sending player to start screen.");
-        App.openStartScreen(null);
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
-    }*/
   }
 
   public void fadeIn() {
@@ -227,12 +212,10 @@ public class RoomController extends Controller {
             if (flashbackMap.get(target)) {
               // If the flashback for this target has already been viewed, send them to their memory
               App.openChat(event, target);
-              return;
             } else {
               // If not, mark it as viewed and open the flashback
               flashbackMap.put(target, true);
               App.openFlashback(event, target);
-              return;
             }
 
           } catch (IOException ex) {
@@ -501,12 +484,17 @@ public class RoomController extends Controller {
    * trigger the different changes to the scene based on which state the user is currently in.
    */
   public void displayNextLine() {
+    // Display next line of fixed dialogue if available
     if (currentDialogueIndex < fixedDialogue.size()) {
       imgContinueArrow.setVisible(false);
       displayTextWithTypewriterEffect(
           txtaDialogue, fixedDialogue.get(currentDialogueIndex), 50, true, true);
       currentDialogueIndex++;
-    } else if (!isGuessing) {
+    }
+
+    // If all fixed dialogue has been consumed and the user is not yet guessing transition to game
+    // started state to allow interaction with individuals in the courtroom
+    else if (!isGuessing) {
       imgContinueArrow.setVisible(false);
       txtaDialogue.setVisible(false);
       imgTextArea.setVisible(false);
@@ -514,7 +502,11 @@ public class RoomController extends Controller {
       lblInstructions.setVisible(true);
       imgInstructionBox.setVisible(true);
       context.setState(context.getGameStartedState());
-    } else {
+    }
+
+    // If all fixed dialogue has been consumed and the user is guessing, transition to verdict scene
+    // depending on whether all witnesses have been spoken to and interactions have been completed
+    else {
       imgContinueArrow.setVisible(false);
       txtaDialogue.setVisible(false);
       imgTextArea.setVisible(false);

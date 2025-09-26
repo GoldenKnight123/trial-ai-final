@@ -30,7 +30,7 @@ public class HumanController extends ChatController {
 
   private double amplitude = 20;
   private double frequency = 0.05;
-  private double x = 0;
+  private double x_position = 0;
 
   private boolean waveStarted = false;
 
@@ -95,16 +95,16 @@ public class HumanController extends ChatController {
             gc.setStroke(javafx.scene.paint.Color.LIME);
             gc.setLineWidth(2);
 
-            double y = height / 2 + amplitude * Math.sin(x * frequency);
+            double y = height / 2 + amplitude * Math.sin(x_position * frequency);
 
-            if (x > 0) {
-              double prevY = height / 2 + amplitude * Math.sin((x - 1) * frequency);
-              gc.strokeLine(x - 1, prevY, x, y);
+            if (x_position > 0) {
+              double prevY = height / 2 + amplitude * Math.sin((x_position - 1) * frequency);
+              gc.strokeLine(x_position - 1, prevY, x_position, y);
             }
 
-            x += 1;
+            x_position += 1;
 
-            if (x >= width) {
+            if (x_position >= width) {
               stop(); // Stop animation when the wave finishes
               waveStarted = false;
             }
@@ -162,9 +162,16 @@ public class HumanController extends ChatController {
 
   private void resetWave() {
     gc.clearRect(0, 0, sinGraphCanvas.getWidth(), sinGraphCanvas.getHeight());
-    x = 0;
+    x_position = 0;
   }
 
+  /**
+   * Scrambles a string by replacing characters with random symbols based on a scramble factor.
+   *
+   * @param input the original string to scramble
+   * @param scrambleFactor a value between 0 and 1 indicating the degree of scrambling
+   * @return the scrambled string
+   */
   private String scramble(String input, double scrambleFactor) {
     StringBuilder sb = new StringBuilder();
     for (char c : input.toCharArray()) {

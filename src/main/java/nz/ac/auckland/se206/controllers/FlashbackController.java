@@ -22,6 +22,18 @@ import nz.ac.auckland.se206.App;
 import nz.ac.auckland.se206.GameTimer;
 
 public class FlashbackController extends Controller {
+
+  // Custom tangent interpolator - fast start, slow end
+  private static final Interpolator POWER_INTERPOLATOR =
+      new Interpolator() {
+        @Override
+        protected double curve(double t) {
+          // Using a tangent-based curve that starts fast and ends slow
+          // This creates a steep curve at the beginning and gradual at the end
+          return 1 - Math.pow(1 - t, 3);
+        }
+      };
+
   @FXML private AnchorPane flashbackRoom;
   @FXML private StackPane imgScene1;
   @FXML private StackPane imgScene2;
@@ -41,17 +53,6 @@ public class FlashbackController extends Controller {
   private boolean canSlide = false;
   private boolean canExit = false;
   private String currentTarget = "";
-
-  // Custom tangent interpolator - fast start, slow end
-  private static final Interpolator TANGENT_INTERPOLATOR =
-      new Interpolator() {
-        @Override
-        protected double curve(double t) {
-          // Using a tangent-based curve that starts fast and ends slow
-          // This creates a steep curve at the beginning and gradual at the end
-          return 1 - Math.pow(1 - t, 3);
-        }
-      };
 
   public void setTarget(String target) {
     currentTarget = target;
@@ -143,7 +144,6 @@ public class FlashbackController extends Controller {
     GameTimer.getInstance().registerTimerLabel(lblTimer);
     GameTimer.getInstance().registerTimerArc(arcTimer);
 
-    // Initialize cloud animations
     initializeCloudAnimations();
 
     String borderStyle = "-fx-border-color: black; -fx-border-width: 6px; -fx-border-style: solid;";
@@ -205,49 +205,10 @@ public class FlashbackController extends Controller {
       // slide image scenes to left with animation
       slideProgress++;
 
-      // Scene 1: slide from 0 to -1000 with overshoot
-      TranslateTransition sceneSlide = new TranslateTransition(Duration.millis(500), imgScene1);
-      sceneSlide.setFromX(imgScene1.getTranslateX());
-      sceneSlide.setToX(imgScene1.getTranslateX() - 1330); // Overshoot by 100px
-      sceneSlide.setInterpolator(TANGENT_INTERPOLATOR); // Add easing
-
-      TranslateTransition sceneSlideBack = new TranslateTransition(Duration.millis(150), imgScene1);
-      sceneSlideBack.setFromX(imgScene1.getTranslateX() - 1330);
-      sceneSlideBack.setToX(imgScene1.getTranslateX() - 1280); // Snap back to target
-      sceneSlideBack.setInterpolator(Interpolator.EASE_BOTH); // Add easing
-
-      sceneSlide.setOnFinished(e -> sceneSlideBack.play());
-      sceneSlide.play();
-
-      // Scene 2: slide from 1280 to 0 with overshoot
-      TranslateTransition sceneSlide2 = new TranslateTransition(Duration.millis(500), imgScene2);
-      sceneSlide2.setFromX(imgScene2.getTranslateX());
-      sceneSlide2.setToX(imgScene2.getTranslateX() - 1330); // Overshoot by 100px
-      sceneSlide2.setInterpolator(TANGENT_INTERPOLATOR); // Add easing
-
-      TranslateTransition sceneSlideBack2 =
-          new TranslateTransition(Duration.millis(150), imgScene2);
-      sceneSlideBack2.setFromX(imgScene2.getTranslateX() - 1330);
-      sceneSlideBack2.setToX(imgScene2.getTranslateX() - 1280); // Snap back to target
-      sceneSlideBack2.setInterpolator(Interpolator.EASE_BOTH); // Add easing
-
-      sceneSlide2.setOnFinished(e -> sceneSlideBack2.play());
-      sceneSlide2.play();
-
-      // Scene 3: slide from 2560 to 1000 with overshoot
-      TranslateTransition sceneSlide3 = new TranslateTransition(Duration.millis(500), imgScene3);
-      sceneSlide3.setFromX(imgScene3.getTranslateX());
-      sceneSlide3.setToX(imgScene3.getTranslateX() - 1330); // Overshoot by 100px
-      sceneSlide3.setInterpolator(TANGENT_INTERPOLATOR); // Add easing
-
-      TranslateTransition sceneSlideBack3 =
-          new TranslateTransition(Duration.millis(150), imgScene3);
-      sceneSlideBack3.setFromX(imgScene3.getTranslateX() - 1330);
-      sceneSlideBack3.setToX(imgScene3.getTranslateX() - 1280); // Snap back to target
-      sceneSlideBack3.setInterpolator(Interpolator.EASE_BOTH); // Add easing
-
-      sceneSlide3.setOnFinished(e -> sceneSlideBack3.play());
-      sceneSlide3.play();
+      // Animate all scenes with overshoot effect
+      createSlideAnimation(imgScene1);
+      createSlideAnimation(imgScene2);
+      createSlideAnimation(imgScene3);
 
       // Restrict sliding to once every 500ms
       Timeline cooldownTimer =
@@ -267,5 +228,29 @@ public class FlashbackController extends Controller {
                   }));
       cooldownTimer.play();
     }
+  }
+
+  /**
+   * Creates a slide animation with overshoot effect for a given scene. The scene slides left with
+   * an overshoot and then snaps back to the target position.
+   *
+   * @param scene the StackPane to animate
+   */
+  private void createSlideAnimation(StackPane scene) {
+    // Slide with overshoot
+    TranslateTransition sceneSlide = new TranslateTransition(Duration.millis(500), scene);
+    sceneSlide.setFromX(scene.getTranslateX());
+    sceneSlide.setToX(scene.getTranslateX() - 1330); // Overshoot by 50px (1280 + 50)
+    sceneSlide.setInterpolator(POWER_INTERPOLATOR); // Add easing
+
+    // Snap back to target
+    TranslateTransition sceneSlideBack = new TranslateTransition(Duration.millis(150), scene);
+    sceneSlideBack.setFromX(scene.getTranslateX() - 1330);
+    sceneSlideBack.setToX(scene.getTranslateX() - 1280); // Final target position
+    sceneSlideBack.setInterpolator(Interpolator.EASE_BOTH); // Add easing
+
+    // Chain the animations
+    sceneSlide.setOnFinished(e -> sceneSlideBack.play());
+    sceneSlide.play();
   }
 }

@@ -38,15 +38,18 @@ public class App extends Application {
     private final Scene scene;
     private final Object controller;
 
+    // Constructor
     public SceneControllerPair(Scene scene, Object controller) {
       this.scene = scene;
       this.controller = controller;
     }
 
+    // Getter for scene
     public Scene getScene() {
       return scene;
     }
 
+    // Getter for controller
     public Object getController() {
       return controller;
     }
@@ -125,8 +128,11 @@ public class App extends Application {
    * @throws IOException if the FXMflashbackRoomL file is not found
    */
   public static void openFlashback(MouseEvent event, String target) throws IOException {
+    // Load and cache the flashback scene
     SceneControllerPair pair = loadAndCacheScene("flashback");
     FlashbackController flashbackController = (FlashbackController) pair.getController();
+
+    // Set the target for the flashback controller and fade in
     flashbackController.setTarget(target);
     flashbackController.fadeIn();
     currentId = "flashback";
@@ -136,6 +142,12 @@ public class App extends Application {
     primaryStage.show();
   }
 
+  /**
+   * Opens the start screen using cached scenes.
+   *
+   * @param event the mouse event that triggered the method
+   * @throws IOException if the FXML file is not found
+   */
   public static void openStartScreen(MouseEvent event) throws IOException {
     SceneControllerPair pair = loadAndCacheScene("startScreen");
     StartMenuController startMenuController = (StartMenuController) pair.getController();
@@ -223,6 +235,13 @@ public class App extends Application {
     primaryStage.show();
   }
 
+  /**
+   * Opens the verdict scene using cached scenes.
+   *
+   * @param event the mouse event that triggered the method
+   * @param sendDirectlyGameOver whether to send the game over state directly
+   * @throws IOException if the FXML file is not found
+   */
   public static void openVerdict(ActionEvent event, boolean sendDirectlyGameOver)
       throws IOException {
     SceneControllerPair pair = loadAndCacheScene("verdict");
@@ -252,7 +271,6 @@ public class App extends Application {
     // Set verdict text in debrief controller
     VerdictController verdictController = (VerdictController) getController("verdict");
     String verdictText = verdictController.getVerdictText();
-    debriefController.setVerdictText(verdictText);
 
     // Get chat history from ChatHistoryManager
     String chatHistory = ChatHistoryManager.getInstance().getChatHistoryText();
@@ -266,12 +284,19 @@ public class App extends Application {
     primaryStage.show();
   }
 
-  /** Forces the user back to the room scene (used when timer expires). */
+  /**
+   * Forces a return to the room scene, typically invoked when the timer expires.
+   *
+   * <p>This method handles different current scenes appropriately, ensuring a smooth transition
+   * back to the room. If the current scene is already the room, it resets the room state. If in a
+   * chat or flashback scene, it fades out before transitioning.
+   */
   public static void forceReturnToRoom() {
     System.out.println("Timer expired, forcing return to room");
     ArrayList<String> roomIds =
         new ArrayList<>(Arrays.asList("memoryAiWitness", "memoryAiDefendant", "memoryHuman"));
     try {
+      // If already in the room, just reset the state
       if (currentId.equals("room")) {
         SceneControllerPair roomPair = loadAndCacheScene("room");
         RoomController roomController = (RoomController) roomPair.getController();
@@ -280,6 +305,7 @@ public class App extends Application {
         return;
       }
 
+      // Otherwise, fade out current scene and return to room
       System.out.println("Current scene: " + currentId);
       SceneControllerPair pair = loadAndCacheScene(currentId);
 
@@ -295,6 +321,7 @@ public class App extends Application {
         return;
       }
 
+      // Set to guessing state in room after fade out
       SceneControllerPair roomPair = loadAndCacheScene("room");
       RoomController roomController = (RoomController) roomPair.getController();
       roomController.getContext().setState(roomController.getContext().getGuessingState());
@@ -348,6 +375,11 @@ public class App extends Application {
     }
   }
 
+  /**
+   * Reinitializes the application state by clearing cached scenes and controllers, resetting the
+   * game timer, resetting chat history and resetting the state of the courtroom. This is used for
+   * starting a new game session.
+   */
   public static void reinitialize() {
     RoomController roomController = (RoomController) getController("room");
     if (roomController != null) {

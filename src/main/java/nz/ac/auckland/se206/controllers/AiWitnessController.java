@@ -17,13 +17,13 @@ import nz.ac.auckland.se206.ChatHistoryManager;
 
 public class AiWitnessController extends ChatController {
 
-  @FXML ImageView imgInteractable;
-  @FXML ImageView imgOverlay;
-  @FXML Rectangle rectOverlay;
-  @FXML TextField txtTerminal;
-  @FXML TextField txtTerminalTemplate;
-  @FXML TextArea txtaTerminalFixed;
-  @FXML Label lblTerminalError;
+  @FXML private ImageView imgInteractable;
+  @FXML private ImageView imgOverlay;
+  @FXML private Rectangle rectOverlay;
+  @FXML private TextField txtTerminal;
+  @FXML private TextField txtTerminalTemplate;
+  @FXML private TextArea txtaTerminalFixed;
+  @FXML private Label lblTerminalError;
 
   private boolean interactableState = false;
   private boolean interactableComplete = false;
@@ -81,6 +81,12 @@ public class AiWitnessController extends ChatController {
     }
   }
 
+  /**
+   * Function that handles when the user clicks outside the interaction area while it is open (black
+   * areas on the edge) and closes the interaction overlay.
+   *
+   * @param event the mouse event that triggered the method
+   */
   @FXML
   public void onCloseInteraction(MouseEvent event) {
     // Closes the overlay when clicked
@@ -112,6 +118,12 @@ public class AiWitnessController extends ChatController {
     }
   }
 
+  /**
+   * Function that handles when the user presses enter in the terminal while the interaction overlay
+   * is open.
+   *
+   * @param event the key event that triggered the method
+   */
   @FXML
   public void onTerminalEnter(KeyEvent event) {
     if (!interactableState) {
