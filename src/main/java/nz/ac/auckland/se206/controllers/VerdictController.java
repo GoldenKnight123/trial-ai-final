@@ -18,6 +18,8 @@ import nz.ac.auckland.se206.GameTimer;
 public class VerdictController extends Controller {
 
   @FXML private TextArea verdictTxt;
+  @FXML private Button btnNotGuilty;
+  @FXML private Button btnGuilty;
   @FXML private Pane paneGameOver;
   @FXML private Button btnRestart;
   @FXML private Pane paneBackground;
@@ -34,6 +36,30 @@ public class VerdictController extends Controller {
     imgTimer.setVisible(true);
     lblTimer.setVisible(true);
     arcTimer.setVisible(true);
+
+    // Disable verdict buttons until user enters non-whitespace text
+    if (btnGuilty != null) {
+      btnGuilty.setDisable(true);
+    }
+    if (btnNotGuilty != null) {
+      btnNotGuilty.setDisable(true);
+    }
+
+    // Listen for text changes and enable buttons only when there's non-whitespace content
+    if (verdictTxt != null) {
+      verdictTxt
+          .textProperty()
+          .addListener(
+              (obs, oldText, newText) -> {
+                boolean hasText = newText != null && !newText.trim().isEmpty();
+                if (btnGuilty != null) {
+                  btnGuilty.setDisable(!hasText);
+                }
+                if (btnNotGuilty != null) {
+                  btnNotGuilty.setDisable(!hasText);
+                }
+              });
+    }
   }
 
   @FXML
