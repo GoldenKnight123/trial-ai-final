@@ -9,11 +9,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
 import javafx.util.Duration;
 import nz.ac.auckland.apiproxy.chat.openai.ChatMessage;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
@@ -26,10 +26,6 @@ public class AiDefendantController extends ChatController {
   @FXML private ImageView imgTablet;
   @FXML private Slider sldrProtocol;
   @FXML private Button btnConfirm;
-  @FXML private Text txtTablet1;
-  @FXML private Text txtTablet2;
-  @FXML private Text txtTablet3;
-  @FXML private Text txtTablet4;
   @FXML private TextArea txtaChat;
   @FXML private Pane paneInteractable;
   @FXML private ImageView imgOverride;
@@ -39,13 +35,31 @@ public class AiDefendantController extends ChatController {
   @Override
   public void initialize() throws ApiProxyException {
     super.initialize();
+
+    // Create a highlight effect for hover
+    ColorAdjust highlight = new ColorAdjust();
+    highlight.setBrightness(0.5);
+
+    rectComputer.setOnMouseEntered(
+        event -> {
+          if (getCurrentSpeaker() == "") {
+            rectComputer.setEffect(highlight);
+          }
+        });
+    rectComputer.setOnMouseExited(
+        event -> {
+          rectComputer.setEffect(null);
+        });
   }
 
   @FXML
   private void onInteractable(MouseEvent event) {
     paneInteractable.setVisible(true);
 
-    if (interactableComplete) {
+    if (!interactableComplete) {
+      rectOverlay.setDisable(true); // Disable overlay on first click before completion
+    } else {
+      rectOverlay.setDisable(false); // Enable overlay after interactable is completed
       imgOverride.setVisible(true);
     }
   }
@@ -62,7 +76,7 @@ public class AiDefendantController extends ChatController {
     double end = 100; // move to "Efficiency" side
 
     // Move slider to max
-    if (start < 100) {
+    if (start <= 100) {
       imgOverride.setVisible(true);
       Timeline timeline =
           new Timeline(
