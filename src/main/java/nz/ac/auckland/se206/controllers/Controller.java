@@ -3,7 +3,6 @@ package nz.ac.auckland.se206.controllers;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.control.TextArea;
-import javafx.scene.media.AudioClip;
 import javafx.util.Duration;
 
 /**
@@ -16,8 +15,6 @@ public abstract class Controller {
   private boolean isTyping = false;
   private String currentFullText = ""; // Store the full text being displayed
   private TextArea currentTextArea = null; // Store the current TextArea being used
-  private AudioClip userTalkSound =
-      new AudioClip(getClass().getResource("/sounds/userTalk.wav").toString());
 
   /**
    * Creates a typewriter effect for displaying text in a TextArea.
@@ -65,11 +62,6 @@ public abstract class Controller {
                   textArea.setText(textToDisplay.substring(0, charIndex));
                 } else {
                   textArea.setText(existingText + textToDisplay.substring(0, charIndex));
-                }
-
-                // Play user talk sound if enabled
-                if (addSound) {
-                  userTalkSound.play();
                 }
 
                 // Auto-scroll to bottom after each character is added

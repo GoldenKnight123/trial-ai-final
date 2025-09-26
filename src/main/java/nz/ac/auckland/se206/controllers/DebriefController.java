@@ -66,18 +66,16 @@ public class DebriefController extends Controller {
     if (!wasCorrect) {
       paneBackground.setStyle("-fx-background-color: #FF5757;"); // red incorrect
     }
-    
+
     // Create a background task for GPT analysis
     Task<String> gptTask =
         new Task<String>() {
           @Override
           protected String call() throws Exception {
             // Add the system prompt and player's verdict text for analysis
-            chatCompletionRequest.addMessage(
-                new ChatMessage(
-                    "system",
-                    buildAnalysisPrompt(
-                        chatHistory.replace("You", "Judge"), verdictText, wasCorrect)));
+            String prompt = buildAnalysisPrompt(chatHistory, verdictText, wasCorrect);
+            System.out.println(prompt);
+            chatCompletionRequest.addMessage(new ChatMessage("system", prompt));
 
             try {
               ChatCompletionResult chatCompletionResult = chatCompletionRequest.execute();
@@ -162,10 +160,6 @@ public class DebriefController extends Controller {
   private String buildAnalysisPrompt(String chatHistory, String verdictText, boolean wasCorrect) {
     StringBuilder prompt = new StringBuilder();
 
-    System.out.println(chatHistory);
-    System.out.println(verdictText);
-    System.out.println(wasCorrect);
-
     // Give the model context about its role, the user's input, and the correct rationale
     prompt.append(
         "You are an expert trial analyst. The player has just submitted a verdict and an"
@@ -215,16 +209,9 @@ public class DebriefController extends Controller {
             + " The defendant is not guilty because they were manipulated and pressured by higher"
             + " ups to install new technology which they did not know the risks of.\n\n");
 
-    // Example for contradiction handling
     prompt.append(
-        "Example:\n"
-            + "Player's verdict: not guilty\n"
-            + "Player's rationale: 'They are guilty because they installed the system.'\n"
-            + "Correct outcome: [Correct verdict but incorrect rationale]\n"
-            + "Feedback: The verdict is correct, but your reasoning contradicts it. You stated they"
-            + " are guilty, which does not support your verdict.\n"
-            + "Explanation: The defendant is innocent because they were manipulated by higher ups"
-            + " and did not know the risks.\n\n");
+        "As long as the user mentions the manipulation and pressure from higher ups, it should be"
+            + " considered a valid rationale.\n\n");
 
     // Specify the desired output format
     prompt.append("Please return the result in this format:\n");
