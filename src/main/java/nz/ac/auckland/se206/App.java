@@ -17,6 +17,7 @@ import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import nz.ac.auckland.apiproxy.chat.openai.ChatMessage;
 import nz.ac.auckland.se206.controllers.AiDefendantController;
 import nz.ac.auckland.se206.controllers.AiWitnessController;
 import nz.ac.auckland.se206.controllers.ChatController;
@@ -186,6 +187,9 @@ public class App extends Application {
         AiWitnessController aiWitnessController = (AiWitnessController) witnessPair.getController();
         aiWitnessController.setTarget(target);
 
+        // Send the context prompt after setTarget
+        recallMemory();
+
         aiWitnessController.setInitialOpacity();
 
         scene = witnessPair.getScene();
@@ -202,6 +206,9 @@ public class App extends Application {
             (AiDefendantController) defendantPair.getController();
         aiDefendantController.setTarget(target);
 
+        // Send the context prompt after setTarget
+        recallMemory();
+
         aiDefendantController.setInitialOpacity();
 
         scene = defendantPair.getScene();
@@ -216,6 +223,9 @@ public class App extends Application {
         SceneControllerPair pair = loadAndCacheScene("memoryHuman");
         HumanController humanController = (HumanController) pair.getController();
         humanController.setTarget(target);
+
+        // Send the context prompt after setTarget
+        recallMemory();
 
         humanController.setInitialOpacity();
 
@@ -408,5 +418,14 @@ public class App extends Application {
     // Reset game timer and chat history
     GameTimer.getInstance().reset();
     ChatHistoryManager.getInstance().reset();
+  }
+
+  public static void recallMemory() {
+    // Send the context prompt after setTarget
+    ChatMessage sysMsg =
+        new ChatMessage(
+            "system",
+            "You are now in a memory and not a flashback. Please respond as your role, recalling"
+                + " your memory directly.");
   }
 }
