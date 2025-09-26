@@ -92,11 +92,15 @@ public class AiWitnessController extends ChatController {
     // Closes the overlay when clicked
     rectOverlay.setVisible(false);
     imgOverlay.setVisible(false);
+
+    // Hide terminal elements and exit interaction state
     txtTerminalTemplate.setVisible(false);
     txtTerminal.setVisible(false);
     txtaTerminalFixed.setVisible(false);
     lblTerminalError.setVisible(false);
     interactableState = false;
+
+    // Display interaction if interaction is complete and dialogue if not already played
     if (interactableComplete && !interactionDialoguePlayed) {
       getChatCompletionRequest()
           .addMessage(
@@ -113,6 +117,8 @@ public class AiWitnessController extends ChatController {
                   "The judge uses the terminal to decrypt a message. It states: Manager (sent to"
                       + " INDUS-07): \"Remember to install the new Helios system before the end of"
                       + " the week.\""));
+
+      // Display interaction dialogue and mark as played
       displayInteractionDialogue();
       interactionDialoguePlayed = true;
     }
@@ -130,8 +136,11 @@ public class AiWitnessController extends ChatController {
       return;
     }
 
+    // Only process if enter key is pressed
     if (event.getCode() == KeyCode.ENTER) {
+      // Check if the command is correct
       if (txtTerminal.getText().equals("decrypt -r message.private")) {
+        // Display decrypted message
         txtaTerminalFixed.setText(
             "Message Received at 6/7/2055 12:36PM\n"
                 + "[Status: Viewable]\n"
@@ -140,8 +149,11 @@ public class AiWitnessController extends ChatController {
             txtaTerminalFixed,
             "Manager (sent to INDUS-07): \"Remember to install the new Helios system before the end"
                 + " of the week.\"");
+        // Clear and disable input field
         txtTerminal.setText("");
         txtTerminal.setEditable(false);
+
+        // Hide terminal elements
         txtTerminalTemplate.setVisible(false);
         txtTerminal.setVisible(false);
         lblTerminalError.setVisible(false);

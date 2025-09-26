@@ -83,14 +83,21 @@ public class App extends Application {
   private static SceneControllerPair loadAndCacheScene(String fxml) throws IOException {
     String cacheKey = fxml;
 
+    // Load and cache the scene if not already cached
     if (!sceneCache.containsKey(cacheKey)) {
+      // Load FXML and create scene
       FXMLLoader loader = new FXMLLoader(App.class.getResource("/fxml/" + fxml + ".fxml"));
       System.out.println("Loading and caching scene: " + fxml);
+
+      // Load FXML and create scene
       Parent root = loader.load();
       Object controller = loader.getController();
+
+      // Create scene with black background
       Scene newScene = new Scene(root);
       newScene.setFill(Color.BLACK);
 
+      // Cache the scene and controller
       sceneCache.put(cacheKey, newScene);
       controllerCache.put(cacheKey, controller);
     }
@@ -149,12 +156,16 @@ public class App extends Application {
    * @throws IOException if the FXML file is not found
    */
   public static void openStartScreen(MouseEvent event) throws IOException {
+    // Load and cache the start screen scene
     SceneControllerPair pair = loadAndCacheScene("startScreen");
     StartMenuController startMenuController = (StartMenuController) pair.getController();
     System.out.println("Opening start screen");
+
+    // Start fade in first, then set scene
     startMenuController.fadeIn();
     currentId = "startScreen";
 
+    // Set the scene and show the primary stage
     scene = pair.getScene();
     primaryStage.setScene(scene);
     primaryStage.show();
@@ -244,13 +255,17 @@ public class App extends Application {
    */
   public static void openVerdict(ActionEvent event, boolean sendDirectlyGameOver)
       throws IOException {
+    // Load and cache the verdict scene
     SceneControllerPair pair = loadAndCacheScene("verdict");
     VerdictController verdictController = (VerdictController) pair.getController();
+
+    // Show game over if specified
     if (sendDirectlyGameOver) {
       verdictController.setGameOverVisible();
     }
     currentId = "verdict";
 
+    // Set the verdict text in the controller
     scene = pair.getScene();
     primaryStage.setScene(scene);
     primaryStage.show();
@@ -381,12 +396,16 @@ public class App extends Application {
    * starting a new game session.
    */
   public static void reinitialize() {
+    // Reset the room controller state
     RoomController roomController = (RoomController) getController("room");
     if (roomController != null) {
       roomController.setFirstTimeInit(true);
     }
+    // Clear cached scenes and controllers
     sceneCache.clear();
     controllerCache.clear();
+
+    // Reset game timer and chat history
     GameTimer.getInstance().reset();
     ChatHistoryManager.getInstance().reset();
   }

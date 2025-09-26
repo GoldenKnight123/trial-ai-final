@@ -286,12 +286,20 @@ public class ChatController extends Controller {
    * @throws ApiProxyException if there is an error communicating with the API proxy
    */
   public void displayInteractionDialogue() {
+    // Set current speaker to gpt to prevent user input during interaction dialogue
     currentSpeaker = "gpt";
+
+    // Get the interaction dialogue for the target
     String interactionDialogue = ChatHistoryManager.getInstance().getInteractionDialogue(target);
+
+    // If there is interaction dialogue, display it
     if (!interactionDialogue.isEmpty()) {
+      // Hide input controls during interaction dialogue
       txtInput.setVisible(false);
       imgInput.setVisible(false);
       btnSend.setVisible(false);
+
+      // Add interaction dialogue to history and display it
       ChatHistoryManager.getInstance()
           .addMessage(target, new ChatMessage("assistant", interactionDialogue));
       chatCompletionRequest.addMessage(new ChatMessage("assistant", interactionDialogue));

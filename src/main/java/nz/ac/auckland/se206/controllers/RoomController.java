@@ -107,18 +107,28 @@ public class RoomController extends Controller {
         }
       };
 
+  // Function to set variables and states for the guessing state
   public void initializeGuessingState() {
+    // Show text area to display dialogue
     txtaDialogue.setVisible(true);
     imgTextArea.setVisible(true);
     imgInstructionBox.setVisible(false);
     lblWhoSpeaking.setVisible(true);
+
+    // Hide continue arrow and show timer
     imgContinueArrow.setVisible(false);
     lblInstructions.setVisible(false);
+
+    // Show timer and start countdown
     lblTimer.setVisible(true);
     arcTimer.setVisible(true);
+
+    // Set max time to 60 seconds and start timer
     GameTimer.getInstance().setMaxTime(60);
     GameTimer.getInstance().updateTimerDisplay();
     GameTimer.getInstance().start();
+
+    // Set up timer expired callback to send to game over screen
     GameTimer.getInstance()
         .setOnTimerExpired(
             () -> {
@@ -128,7 +138,12 @@ public class RoomController extends Controller {
                 e.printStackTrace();
               }
             });
+
+    // Initialize fixed dialogue for guessing state
     fixedDialogue.clear();
+
+    // If all interactables are complete and the player has spoken to each character, allow them to
+    // make a guess, otherwise send them to game over
     if (ChatHistoryManager.getInstance().haveSpokenToAll()
         && ChatHistoryManager.getInstance().interactablesComplete()) {
       fixedDialogue.add("I have finished analysing the memories of the witness and defendants.");
@@ -139,6 +154,7 @@ public class RoomController extends Controller {
           "I am not able to make a decision on whether the defendant is guilty or not.");
     }
 
+    // Reset dialogue index and display first line
     currentDialogueIndex = 0;
     displayTextWithTypewriterEffect(
         txtaDialogue, fixedDialogue.get(currentDialogueIndex), 50, true, true);
