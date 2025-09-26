@@ -1,6 +1,7 @@
 package nz.ac.auckland.se206.controllers;
 
 import java.io.IOException;
+import java.net.URL;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -9,6 +10,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 import nz.ac.auckland.apiproxy.chat.openai.ChatCompletionRequest;
 import nz.ac.auckland.apiproxy.chat.openai.ChatCompletionRequest.Model;
@@ -24,6 +27,15 @@ public class DebriefController extends Controller {
   @FXML private Label lblCorrect;
   @FXML private Pane debrief;
 
+  // Tracks whether the decision was correct; set when runGptDebrief is invoked
+  private Boolean wasCorrectFlag = null;
+
+  // Whether the fade-in animation has finished
+  private boolean fadeCompleted = false;
+
+  // MediaPlayer used to play the result sound; keep a reference so we can stop/dispose
+  private MediaPlayer resultPlayer = null;
+
   private ChatCompletionRequest chatCompletionRequest;
 
   public void fadeIn() {
@@ -33,10 +45,22 @@ public class DebriefController extends Controller {
     fadeTransition.setFromValue(0.0);
     fadeTransition.setToValue(1.0);
 
+    // When fade-in finishes, attempt to play the result sound if we already know correctness
+    fadeTransition.setOnFinished(
+        e -> {
+          fadeCompleted = true;
+          if (wasCorrectFlag != null) {
+            playResultSound(wasCorrectFlag);
+          }
+        });
+
     fadeTransition.play();
   }
 
   public void runGptDebrief(String chatHistory, String verdictText, boolean wasCorrect) {
+    // store correctness so sound can be played when fade completes
+    wasCorrectFlag = wasCorrect;
+
     // Create a background task for GPT analysis
     Task<String> gptTask =
         new Task<String>() {
@@ -85,6 +109,43 @@ public class DebriefController extends Controller {
     Thread gptThread = new Thread(gptTask);
     gptThread.setDaemon(true);
     gptThread.start();
+
+    // If fade already finished, play the result sound immediately
+    if (fadeCompleted) {
+      playResultSound(wasCorrectFlag);
+    }
+  }
+
+  /**
+   * Play the result sound (correct/incorrect) located in resources/sounds. Uses JavaFX MediaPlayer
+   * and stops any existing player first.
+   */
+  private void playResultSound(boolean wasCorrect) {
+    // Stop previous player if playing
+    try {
+      if (resultPlayer != null) {
+        resultPlayer.stop();
+        resultPlayer.dispose();
+        resultPlayer = null;
+      }
+
+      String fileName = wasCorrect ? "correct.mp3" : "incorrect.mp3";
+
+      // Load from resources (classpath) under /sounds/
+      URL resource = App.class.getResource("/sounds/" + fileName);
+      if (resource == null) {
+        System.err.println("Result sound not found: /sounds/" + fileName);
+        return;
+      }
+
+      Media media = new Media(resource.toString());
+      resultPlayer = new MediaPlayer(media);
+      resultPlayer.setVolume(0.8);
+      resultPlayer.play();
+    } catch (Exception ex) {
+      // Non-fatal: log and continue
+      ex.printStackTrace();
+    }
   }
 
   /**
