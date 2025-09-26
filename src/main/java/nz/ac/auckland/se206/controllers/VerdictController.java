@@ -21,6 +21,7 @@ public class VerdictController extends Controller {
   @FXML private Button btnNotGuilty;
   @FXML private Button btnGuilty;
   @FXML private Pane paneGameOver;
+  @FXML private Label lblGameOverMessage;
   @FXML private Button btnRestart;
   @FXML private Pane paneBackground;
   @FXML private ImageView imgTimer;
@@ -114,6 +115,24 @@ public class VerdictController extends Controller {
     imgTimer.setVisible(false);
     lblTimer.setVisible(false);
     arcTimer.setVisible(false);
+  }
+
+  /**
+   * Bind a timer-expired callback so when the GameTimer expires while on the verdict scene we
+   * display an explicit message.
+   */
+  public void bindTimerExpired() {
+    GameTimer.getInstance()
+        .setOnTimerExpired(
+            () -> {
+              // Show message indicating player didn't choose in time
+              paneGameOver.setVisible(true);
+              lblGameOverMessage.setText("You didn't choose in time");
+              GameTimer.getInstance().stop();
+              imgTimer.setVisible(false);
+              lblTimer.setVisible(false);
+              arcTimer.setVisible(false);
+            });
   }
 
   public String getVerdictText() {
