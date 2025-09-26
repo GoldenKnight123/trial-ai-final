@@ -23,6 +23,7 @@ public class DebriefController extends Controller {
   @FXML private TextArea txtaDebrief;
   @FXML private Label lblCorrect;
   @FXML private Pane debrief;
+  @FXML private Pane paneBackground;
 
   private ChatCompletionRequest chatCompletionRequest;
 
@@ -37,6 +38,11 @@ public class DebriefController extends Controller {
   }
 
   public void runGptDebrief(String chatHistory, String verdictText, boolean wasCorrect) {
+
+    // change background colour depending on user verdict
+    if (!wasCorrect) {
+      paneBackground.setStyle("-fx-background-color: #FF5757;"); // red incorrect
+    }
     // Create a background task for GPT analysis
     Task<String> gptTask =
         new Task<String>() {
