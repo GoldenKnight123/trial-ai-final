@@ -121,16 +121,18 @@ public class ChatHistoryManager {
 
     if ("user".equals(role)) {
       speaker = "You";
+    } else if ("system".equals(role)) {
+      speaker = "System";
     } else {
       speaker = target;
     }
 
-    chatHistoryText += speaker + ": " + message.getContent() + "\n";
+    chatHistoryText += "\n" + speaker + ": " + message.getContent() + "\n";
 
-    // Add extra newline for assistant messages to match original formatting
-    if ("assistant".equals(role)) {
-      chatHistoryText += "\n";
-    }
+    // // Add extra newline for assistant messages to match original formatting
+    // if ("system".equals(role)) {
+    //   chatHistoryText += "\n";
+    // }
   }
 
   /**

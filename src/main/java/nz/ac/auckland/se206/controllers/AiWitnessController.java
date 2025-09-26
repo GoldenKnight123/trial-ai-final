@@ -101,7 +101,7 @@ public class AiWitnessController extends ChatController {
       getChatCompletionRequest()
           .addMessage(
               new ChatMessage(
-                  "user",
+                  "system",
                   "The judge uses the terminal to decrypt a message. It states: Manager (sent to"
                       + " INDUS-07): \"Remember to install the new Helios system before the end of"
                       + " the week.\""));
@@ -109,7 +109,7 @@ public class AiWitnessController extends ChatController {
           .addMessage(
               getTarget(),
               new ChatMessage(
-                  "user",
+                  "system",
                   "The judge uses the terminal to decrypt a message. It states: Manager (sent to"
                       + " INDUS-07): \"Remember to install the new Helios system before the end of"
                       + " the week.\""));
