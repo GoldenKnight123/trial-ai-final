@@ -72,6 +72,7 @@ public class AiDefendantController extends ChatController {
 
   @FXML
   private void onConfirm(ActionEvent event) {
+    btnConfirm.setDisable(true); // Prevent multiple clicks
     double start = sldrProtocol.getValue();
     double end = 100; // move to "Efficiency" side
 
