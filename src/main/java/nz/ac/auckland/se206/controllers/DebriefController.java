@@ -112,12 +112,6 @@ public class DebriefController extends Controller {
     // Include the player's verdict and rationale
     prompt.append("Player's submitted verdict and rationale:\n").append(verdictText).append("\n\n");
 
-    // Provide the correct rationale for the case
-    prompt.append(
-        "The correct rationale is that the defendant is innocent, because they were manipulated by"
-            + " higher ups to install the new Helios system into the power plant, but they did not"
-            + " know the risks. But ultimately it is not their fault.\n\n");
-
     // Include the chat history between the player and trial participants for additional context
     prompt
         .append("Chat history between the player and trial participants:\n")
@@ -139,12 +133,20 @@ public class DebriefController extends Controller {
             + "- If you detect a contradiction between the verdict and rationale, classify as"
             + " 'Correct verdict but incorrect rationale' and explain the contradiction in your"
             + " feedback.\n"
+            + " You can be lenient with minor errors in the rationale, as long as they got the main"
+            + " points right it is acceptable.\n"
             + "- Always keep the classification short, then give concise feedback and a clear"
             + " corrective or affirming explanation of the correct verdict.\n"
             + "- Use the following output format:\n"
             + "OUTCOME: <one of the three labels>\n"
             + "FEEDBACK: <1-2 sentences>\n"
             + "EXPLANATION: <2-4 sentences giving the correct verdict and key evidence>\n\n");
+
+    // Provide the correct verdict and rationale for reference
+    prompt.append(
+        "The correct verdict and rationale should be something along the lines of:\n"
+            + " The defendant is not guilty because they were manipulated and pressured by higher"
+            + " ups to install new technology which they did not know the risks of.\n\n");
 
     // Example for contradiction handling
     prompt.append(
