@@ -124,17 +124,38 @@ public class DebriefController extends Controller {
         .append(chatHistory)
         .append("\n\n");
 
-    // Provide guidelines for classification and response format
+    // Provide structured guidelines for classification and response format
     prompt.append(
         "Guidelines:\n"
-            + "- If the player's verdict (guilty/not guilty) matches the ground truth, but their"
-            + " reasoning misses key evidence or misattributes causation, classify as 'Correct"
-            + " verdict but incorrect rationale'.\n"
-            + "- If the verdict itself is wrong, classify as 'Incorrect verdict'.\n"
-            + "- If both verdict and reasoning align with the evidence, classify as 'Correct"
-            + " verdict with correct rationale'.\n"
-            + "- Keep the classification short, then give concise feedback and a clear corrective"
-            + " or affirming explanation of the correct verdict.\n\n");
+            + "- There are three possible outcomes:\n"
+            + "    1. [Incorrect verdict]: The player's verdict (guilty/not guilty) does not match"
+            + " the ground truth.\n"
+            + "    2. [Correct verdict but incorrect rationale]: The verdict matches the ground"
+            + " truth, but the rationale either misses key evidence, misattributes causation, or"
+            + " directly contradicts the verdict (e.g., verdict is 'not guilty' but rationale says"
+            + " 'they are guilty', or vice versa).\n"
+            + "    3. [Correct verdict with correct rationale]: Both verdict and rationale align"
+            + " with the evidence and do not contradict each other.\n"
+            + "- If you detect a contradiction between the verdict and rationale, classify as"
+            + " 'Correct verdict but incorrect rationale' and explain the contradiction in your"
+            + " feedback.\n"
+            + "- Always keep the classification short, then give concise feedback and a clear"
+            + " corrective or affirming explanation of the correct verdict.\n"
+            + "- Use the following output format:\n"
+            + "OUTCOME: <one of the three labels>\n"
+            + "FEEDBACK: <1-2 sentences>\n"
+            + "EXPLANATION: <2-4 sentences giving the correct verdict and key evidence>\n\n");
+
+    // Example for contradiction handling
+    prompt.append(
+        "Example:\n"
+            + "Player's verdict: not guilty\n"
+            + "Player's rationale: 'They are guilty because they installed the system.'\n"
+            + "Correct outcome: [Correct verdict but incorrect rationale]\n"
+            + "Feedback: The verdict is correct, but your reasoning contradicts it. You stated they"
+            + " are guilty, which does not support your verdict.\n"
+            + "Explanation: The defendant is innocent because they were manipulated by higher ups"
+            + " and did not know the risks.\n\n");
 
     // Specify the desired output format
     prompt.append("Please return the result in this format:\n");
