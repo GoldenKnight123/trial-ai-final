@@ -5,7 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Arc;
@@ -17,7 +17,7 @@ import nz.ac.auckland.se206.GameTimer;
 /** Controller for the verdict input screen. */
 public class VerdictController extends Controller {
 
-  @FXML private TextField verdictTxt;
+  @FXML private TextArea verdictTxt;
   @FXML private Pane paneGameOver;
   @FXML private Button btnRestart;
   @FXML private Pane paneBackground;
@@ -37,7 +37,7 @@ public class VerdictController extends Controller {
   }
 
   @FXML
-  private void onGuilty(ActionEvent event) throws IOException {
+  private void onSelectGuilty(ActionEvent event) throws IOException {
     // Check if the player has asked each participant a question and has completed all interactables
     if (!ChatHistoryManager.getInstance().haveSpokenToAll()
         && !ChatHistoryManager.getInstance().interactablesComplete()) {
@@ -60,7 +60,7 @@ public class VerdictController extends Controller {
   }
 
   @FXML
-  private void onNotGuilty(ActionEvent event) throws IOException {
+  private void onSelectNotGuilty(ActionEvent event) throws IOException {
     // Check if the player has asked each participant a question
     if (!ChatHistoryManager.getInstance().haveSpokenToAll()
         && !ChatHistoryManager.getInstance().interactablesComplete()) {

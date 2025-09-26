@@ -129,20 +129,23 @@ public class GameTimer {
     }
   }
 
-  /** Updates all registered timer labels with the current time. */
+  /* Updates all registered timer labels within each scene with the current time. */
   public void updateTimerDisplay() {
+    // Update all registered labels and arcs on the JavaFX Application Thread
     Platform.runLater(
         () -> {
+          // Update each label with formatted time
           for (Label label : timerLabels) {
             label.setText(formatTime(secondsLeft));
           }
+          // Update each arc to reflect remaining time
           for (Arc arc : timerArcs) {
             arc.setLength(360.0 * secondsLeft / maxTime);
           }
         });
   }
 
-  /** Resets the timer to the maximum time and updates displays. */
+  /* Resets the timer to the maximum time and updates displays. */
   public void reset() {
     stop();
     maxTime = 300;

@@ -279,6 +279,12 @@ public class ChatController extends Controller {
     }
   }
 
+  /**
+   * Displays the corresponding interaction dialogue for the target once their interaction is
+   * complete. Can be called through child chatroom controllers.
+   *
+   * @throws ApiProxyException if there is an error communicating with the API proxy
+   */
   public void displayInteractionDialogue() {
     currentSpeaker = "gpt";
     String interactionDialogue = ChatHistoryManager.getInstance().getInteractionDialogue(target);

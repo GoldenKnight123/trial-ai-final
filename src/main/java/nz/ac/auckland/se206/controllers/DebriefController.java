@@ -25,7 +25,6 @@ public class DebriefController extends Controller {
   @FXML private Pane debrief;
 
   private ChatCompletionRequest chatCompletionRequest;
-  private String verdictText = "";
 
   public void fadeIn() {
     FadeTransition fadeTransition = new FadeTransition();
@@ -100,6 +99,7 @@ public class DebriefController extends Controller {
     System.out.println(verdictText);
     System.out.println(wasCorrect);
 
+    // Give the model context about its role, the user's input, and the correct rationale
     prompt.append(
         "You are an expert trial analyst. The player has just submitted a verdict and an"
             + " explanation. Your task is to: (1) classify the player's submission into one of"
@@ -109,18 +109,22 @@ public class DebriefController extends Controller {
             + " explanation (2-4 sentences) describing the correct verdict and the evidence that"
             + " supports it.\n\n");
 
+    // Include the player's verdict and rationale
     prompt.append("Player's submitted verdict and rationale:\n").append(verdictText).append("\n\n");
 
+    // Provide the correct rationale for the case
     prompt.append(
         "The correct rationale is that the defendant is innocent, because they were manipulated by"
             + " higher ups to install the new Helios system into the power plant, but they did not"
             + " know the risks. But ultimately it is not their fault.\n\n");
 
+    // Include the chat history between the player and trial participants for additional context
     prompt
         .append("Chat history between the player and trial participants:\n")
         .append(chatHistory)
         .append("\n\n");
 
+    // Provide guidelines for classification and response format
     prompt.append(
         "Guidelines:\n"
             + "- If the player's verdict (guilty/not guilty) matches the ground truth, but their"
@@ -132,6 +136,7 @@ public class DebriefController extends Controller {
             + "- Keep the classification short, then give concise feedback and a clear corrective"
             + " or affirming explanation of the correct verdict.\n\n");
 
+    // Specify the desired output format
     prompt.append("Please return the result in this format:\n");
     prompt.append("OUTCOME: <one of the three labels>\n");
     prompt.append("FEEDBACK: <1-2 sentences>\n");
@@ -145,6 +150,7 @@ public class DebriefController extends Controller {
     return prompt.toString();
   }
 
+  /** Initializes the controller, setting up the chat completion request with desired parameters. */
   @FXML
   public void initialize() {
     fadeIn();
@@ -164,10 +170,6 @@ public class DebriefController extends Controller {
 
   public void setDebriefText(String text) {
     txtaDebrief.setText(text);
-  }
-
-  public void setVerdictText(String text) {
-    verdictText = text;
   }
 
   public void setCorrectLabel(String text) {

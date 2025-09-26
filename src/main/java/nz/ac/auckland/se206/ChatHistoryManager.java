@@ -15,6 +15,18 @@ public class ChatHistoryManager {
 
   private static ChatHistoryManager instance;
 
+  /**
+   * Gets the singleton instance of ChatHistoryManager.
+   *
+   * @return the singleton instance
+   */
+  public static ChatHistoryManager getInstance() {
+    if (instance == null) {
+      instance = new ChatHistoryManager();
+    }
+    return instance;
+  }
+
   // Store chat messages for each target
   private Map<String, List<ChatMessage>> chatHistory;
 
@@ -36,18 +48,6 @@ public class ChatHistoryManager {
   /** Private constructor to enforce singleton pattern. */
   private ChatHistoryManager() {
     initialize();
-  }
-
-  /**
-   * Gets the singleton instance of ChatHistoryManager.
-   *
-   * @return the singleton instance
-   */
-  public static ChatHistoryManager getInstance() {
-    if (instance == null) {
-      instance = new ChatHistoryManager();
-    }
-    return instance;
   }
 
   /** Initializes the chat history manager with default values and fixed dialogue. */

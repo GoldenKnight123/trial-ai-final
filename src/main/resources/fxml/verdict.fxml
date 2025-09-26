@@ -12,8 +12,8 @@
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: FCF6E2;" stylesheets="@../css/verdict.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.controllers.VerdictController">
    <children>
       <Pane fx:id="paneBackground" disable="true" layoutX="189.0" layoutY="50.0" opacity="0.58" prefHeight="600.0" prefWidth="900.0" stylesheets="@../css/verdict.css" />
-   <Button fx:id="btnGuilty" layoutX="475.0" layoutY="157.0" mnemonicParsing="false" onAction="#onGuilty" prefHeight="70.0" prefWidth="140.0" text="Guilty" />
-   <Button fx:id="btnNotGuilty" layoutX="703.0" layoutY="157.0" mnemonicParsing="false" onAction="#onNotGuilty" prefHeight="70.0" prefWidth="140.0" text="Not Guilty" />
+   <Button fx:id="btnGuilty" layoutX="475.0" layoutY="157.0" mnemonicParsing="false" onAction="#onSelectGuilty" prefHeight="70.0" prefWidth="140.0" text="Guilty" />
+   <Button fx:id="btnNotGuilty" layoutX="703.0" layoutY="157.0" mnemonicParsing="false" onAction="#onSelectNotGuilty" prefHeight="70.0" prefWidth="140.0" text="Not Guilty" />
       <TextArea fx:id="verdictTxt" layoutX="350.0" layoutY="250.0" prefHeight="329.0" prefWidth="591.0" promptText="Type your reason for your choice above." wrapText="true" />
    <Label fx:id="lblVerdict" layoutX="515.0" layoutY="82.0" text="What is your verdict?" textAlignment="CENTER" />
       <Pane fx:id="paneGameOver" prefHeight="720.0" prefWidth="1280.0" stylesheets="@../css/verdict.css" visible="false">
