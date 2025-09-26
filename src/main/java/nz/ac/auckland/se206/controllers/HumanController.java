@@ -30,7 +30,7 @@ public class HumanController extends ChatController {
 
   private double amplitude = 20;
   private double frequency = 0.05;
-  private double x_position = 0;
+  private double positionX = 0;
 
   private boolean waveStarted = false;
 
@@ -95,16 +95,16 @@ public class HumanController extends ChatController {
             gc.setStroke(javafx.scene.paint.Color.LIME);
             gc.setLineWidth(2);
 
-            double y = height / 2 + amplitude * Math.sin(x_position * frequency);
+            double y = height / 2 + amplitude * Math.sin(positionX * frequency);
 
-            if (x_position > 0) {
-              double prevY = height / 2 + amplitude * Math.sin((x_position - 1) * frequency);
-              gc.strokeLine(x_position - 1, prevY, x_position, y);
+            if (positionX > 0) {
+              double prevY = height / 2 + amplitude * Math.sin((positionX - 1) * frequency);
+              gc.strokeLine(positionX - 1, prevY, positionX, y);
             }
 
-            x_position += 1;
+            positionX += 1;
 
-            if (x_position >= width) {
+            if (positionX >= width) {
               stop(); // Stop animation when the wave finishes
               waveStarted = false;
             }
@@ -162,7 +162,7 @@ public class HumanController extends ChatController {
 
   private void resetWave() {
     gc.clearRect(0, 0, sinGraphCanvas.getWidth(), sinGraphCanvas.getHeight());
-    x_position = 0;
+    positionX = 0;
   }
 
   /**
@@ -173,8 +173,12 @@ public class HumanController extends ChatController {
    * @return the scrambled string
    */
   private String scramble(String input, double scrambleFactor) {
+    // Create a StringBuilder to hold the scrambled string
     StringBuilder sb = new StringBuilder();
+
+    // Iterate through each character in the input string
     for (char c : input.toCharArray()) {
+      // Decide whether to scramble this character based on the scramble factor
       if (Character.isWhitespace(c)
           || Character.isDigit(c)
           || c == '.'
@@ -184,9 +188,12 @@ public class HumanController extends ChatController {
           || c == 'P'
           || c == 'a'
           || c == 'm') {
+        // Only scramble non-whitespace, non-digit, and non-special characters
         if (Math.random() < scrambleFactor) {
+          // Replace with a random symbol
           sb.append(randomChar());
         } else {
+          // Keep the original character
           sb.append(c);
         }
       } else {

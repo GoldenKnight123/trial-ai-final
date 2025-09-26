@@ -153,7 +153,10 @@ public class DebriefController extends Controller {
   /** Initializes the controller, setting up the chat completion request with desired parameters. */
   @FXML
   public void initialize() {
+    // Start with debrief pane invisible for fade-in effect
     fadeIn();
+
+    // Initialize the chat completion request for GPT analysis
     try {
       ApiProxyConfig config = ApiProxyConfig.readConfig();
       chatCompletionRequest =
