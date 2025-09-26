@@ -273,6 +273,12 @@ public class App extends Application {
     if (sendDirectlyGameOver) {
       verdictController.setGameOverVisible();
     }
+    // Bind a timer-expired handler for the verdict scene so the controller can show a message
+    try {
+      verdictController.bindTimerExpired();
+    } catch (Exception e) {
+      // safe no-op if controller doesn't support it
+    }
     currentId = "verdict";
 
     // Set the verdict text in the controller

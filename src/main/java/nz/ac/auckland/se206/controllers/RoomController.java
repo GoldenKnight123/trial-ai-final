@@ -532,19 +532,27 @@ public class RoomController extends Controller {
       txtaDialogue.setVisible(false);
       imgTextArea.setVisible(false);
       lblWhoSpeaking.setVisible(false);
-      if (ChatHistoryManager.getInstance().haveSpokenToAll()) {
-        try {
-          App.openVerdict(null, false);
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      } else {
-        try {
-          App.openVerdict(null, true);
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-      }
+      // Fade out the room and then open the verdict scene. We always open the verdict scene;
+      // the boolean below selects whether the verdict view should show the "game over" variant
+      // (used when the player hasn't spoken to all required participants).
+      boolean showGameOverVariant = !ChatHistoryManager.getInstance().haveSpokenToAll();
+      FadeTransition fadeTransition = new FadeTransition(Duration.millis(1000), room);
+      fadeTransition.setFromValue(1.0);
+      fadeTransition.setToValue(0.0);
+      // Prevent interactions during fade
+      isFading = true;
+      fadeTransition.setOnFinished(
+          e -> {
+            try {
+              App.openVerdict(null, showGameOverVariant);
+            } catch (IOException ioEx) {
+              ioEx.printStackTrace();
+            }
+            // Reset fading flag (this controller may be cached but should not accept input while
+            // faded)
+            isFading = false;
+          });
+      fadeTransition.play();
     }
   }
 
