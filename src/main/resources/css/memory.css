@@ -209,3 +209,13 @@
   align-items: center;
   -fx-alignment: center;
 }
+
+#lblInstruction {
+  font-family: "Consolas";
+  -fx-font-family: "Consolas";
+  font-size: 24px;
+  -fx-font-size: 24px;
+  -fx-text-fill: black;
+  align-items: center;
+  -fx-alignment: center;
+}
