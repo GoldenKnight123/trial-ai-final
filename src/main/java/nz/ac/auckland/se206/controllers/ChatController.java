@@ -191,7 +191,8 @@ public class ChatController extends Controller {
         ChatHistoryManager.getInstance()
             .addMessage(target, new ChatMessage("assistant", fixedDialogue));
         btnReturn.setDisable(true);
-        displayTextWithTypewriterEffect(txtaChat, fixedDialogue);
+        System.out.println("Displaying fixed dialogue for " + target + ": " + fixedDialogue);
+        displayTextWithTypewriterEffect(txtaChat, fixedDialogue, 50, true, true, target);
       } else {
         // Find the last message sent by target in chatHistoryTextSnapShot
         String lastMessage = ChatHistoryManager.getInstance().getLastMessage(target);
@@ -265,7 +266,8 @@ public class ChatController extends Controller {
                     currentSpeaker = "gpt";
                     lblWhoSpeaking.setText(target + ":");
                     stopThinkingAnimation();
-                    displayTextWithTypewriterEffect(txtaChat, message.getContent());
+                    displayTextWithTypewriterEffect(
+                        txtaChat, message.getContent(), 50, true, true, target);
                     waitingForGptResponse = false;
                   }));
       timeline.play();
@@ -274,7 +276,7 @@ public class ChatController extends Controller {
       currentSpeaker = "gpt";
       lblWhoSpeaking.setText(target + ":");
       stopThinkingAnimation();
-      displayTextWithTypewriterEffect(txtaChat, message.getContent());
+      displayTextWithTypewriterEffect(txtaChat, message.getContent(), 50, true, true, target);
       waitingForGptResponse = false;
     }
   }
@@ -304,7 +306,7 @@ public class ChatController extends Controller {
           .addMessage(target, new ChatMessage("assistant", interactionDialogue));
       chatCompletionRequest.addMessage(new ChatMessage("assistant", interactionDialogue));
       btnReturn.setDisable(true);
-      displayTextWithTypewriterEffect(txtaChat, interactionDialogue);
+      displayTextWithTypewriterEffect(txtaChat, interactionDialogue, 50, true, true, target);
     }
   }
 
@@ -370,7 +372,7 @@ public class ChatController extends Controller {
 
     chatCompletionRequest.addMessage(msg);
 
-    displayTextWithTypewriterEffect(txtaChat, message, 50, true, true);
+    displayTextWithTypewriterEffect(txtaChat, message, 50, true, true, "user");
 
     // Mark that the player has spoken to this target
     ChatHistoryManager.getInstance().markSpokenTo(target);
