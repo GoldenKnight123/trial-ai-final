@@ -41,6 +41,10 @@ public abstract class Controller {
   Media computerTalkMedia = new Media(computerTalkFile.toURI().toString());
   MediaPlayer computerTalk = new MediaPlayer(computerTalkMedia);
 
+  File computerTalk2File = new File("src/main/resources/sounds/computerTalk2.wav");
+  Media computerTalk2Media = new Media(computerTalk2File.toURI().toString());
+  MediaPlayer computerTalk2 = new MediaPlayer(computerTalk2Media);
+
   /**
    * Creates a typewriter effect for displaying text in a TextArea.
    *
@@ -127,6 +131,12 @@ public abstract class Controller {
                         computerTalk.stop();
                         computerTalk.setVolume(0.5);
                         computerTalk.play();
+                        break;
+                      case "computer2":
+                        computerTalk2.stop();
+                        computerTalk2.setVolume(0.5);
+                        evanTalk.setRate(random.nextFloat() * 0.1f + 0.95f);
+                        computerTalk2.play();
                         break;
                       default:
                         // No sound for empty or unrecognized speaker
