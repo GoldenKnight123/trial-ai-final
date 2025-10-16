@@ -13,6 +13,7 @@ public class AudioPlayer {
   private Random random;
   private int lastKeyboardSoundIndex = -1;
   private final int MAX_KEYBOARD_SOUNDS = 5;
+  private boolean backgroundMuted = false;
 
   private AudioPlayer() {
     soundCache = new HashMap<>();
@@ -204,5 +205,11 @@ public class AudioPlayer {
     if (player != null) {
       player.setRate(rate);
     }
+  }
+
+  public boolean toggleBackgroundMuted() {
+    backgroundMuted = !backgroundMuted;
+    setVolume("background", backgroundMuted ? 0 : 0.25);
+    return backgroundMuted;
   }
 }
