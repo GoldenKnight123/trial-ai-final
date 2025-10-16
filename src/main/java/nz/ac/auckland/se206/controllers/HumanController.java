@@ -1,210 +1,263 @@
 package nz.ac.auckland.se206.controllers;
 
-import javafx.animation.AnimationTimer;
-import javafx.animation.PauseTransition;
+import java.util.Random;
 import javafx.fxml.FXML;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
-import javafx.scene.text.Text;
-import javafx.util.Duration;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
+import javafx.scene.shape.Rectangle;
 import nz.ac.auckland.apiproxy.chat.openai.ChatMessage;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
 import nz.ac.auckland.se206.ChatHistoryManager;
 
 public class HumanController extends ChatController {
 
-  @FXML private Slider slider;
-  @FXML private Text tempTxt;
-  @FXML private Text pressureTxt;
-  @FXML private Text flowTxt;
-  @FXML private Text stressTxt;
+  // Newspaper jigsaw pieces from the FXML
+  @FXML private ImageView newsPaperGuide;
+  @FXML private ImageView topLeftNewsPaper;
+  @FXML private ImageView topRightNewsPaper;
+  @FXML private ImageView bottomLeftNewspaper;
+  @FXML private ImageView bottomRightNewsPaper;
+  @FXML private Rectangle rectOverlay;
+  @FXML private Pane interactablePane;
 
-  @FXML private Canvas sinGraphCanvas;
-  @FXML private ImageView errorImage;
+  // --- Puzzle Logic ---
 
-  private GraphicsContext gc;
+  // Target coordinates for each piece, extracted from your FXML's solved state.
+  private static final double TARGET_X_TOP_LEFT = 431.0;
+  private static final double TARGET_Y_TOP_LEFT = 135.0;
+  private static final double TARGET_X_TOP_RIGHT = 555.0;
+  private static final double TARGET_Y_TOP_RIGHT = 135.0;
+  private static final double TARGET_X_BOTTOM_LEFT = 431.0;
+  private static final double TARGET_Y_BOTTOM_LEFT = 349.0;
+  private static final double TARGET_X_BOTTOM_RIGHT = 524.0;
+  private static final double TARGET_Y_BOTTOM_RIGHT = 330.0;
+  private static final double TARGET_ROTATION = 0.0; // All pieces are upright.
 
-  private AnimationTimer waveTimer;
+  // A tolerance for how close the piece must be to snap into place.
+  private static final double SNAP_TOLERANCE = 35.0;
 
-  private double amplitude = 20;
-  private double frequency = 0.05;
-  private double positionX = 0;
+  // Ensure we only notify AI once when puzzle is solved
+  private boolean puzzleSolvedNotified = false;
 
-  private boolean waveStarted = false;
-
-  // Track whether we've notified the AI that the tablet is unscrambled
-  private boolean tabletUnscrambledNotified = false;
-
-  // Lock timer and state: if slider stays in sweet spot for this duration, lock it
-  private PauseTransition lockTimer;
-  private boolean sliderLocked = false;
-
-  // Real values
-  private final String tempValue = "512";
-  private final String pressureValue = "2870";
-  private final String flowValue = "15.3";
-  private final String stressValue = "92.4";
-
-  // Slider sweet spot
-  private final double sweetSpot = 50;
-  private final double tolerance = 2;
+  /** A small helper class to store the mouse's position relative to the image's top-left corner. */
+  private static class DragContext {
+    double x;
+    double y;
+  }
 
   @FXML
   @Override
   public void initialize() throws ApiProxyException {
     super.initialize();
-    gc = sinGraphCanvas.getGraphicsContext2D();
 
-    // Initialize lock timer (1 second)
-    lockTimer = new PauseTransition(Duration.millis(1000));
-    lockTimer.setOnFinished(
-        e -> {
-          if (!sliderLocked) {
-            slider.setDisable(true);
-            sliderLocked = true;
-
-            // Notify AI that the tablet is unscrambled (only when locked)
-            if (!tabletUnscrambledNotified && getChatCompletionRequest() != null) {
-              ChatMessage sysMsg =
-                  new ChatMessage(
-                      "system", "The tablet interface is now unscrambled and readable.");
-
-              if (getTarget() != null) {
-                ChatHistoryManager.getInstance().addMessage(getTarget(), sysMsg);
-              }
-              getChatCompletionRequest().addMessage(sysMsg);
-              tabletUnscrambledNotified = true;
-              displayInteractionDialogue();
-
-              // Mark interactable as completed
-              ChatHistoryManager.getInstance().markInteractableComplete("Evan");
-            }
-          }
-        });
-
-    // AnimationTimer for sine wave
-    waveTimer =
-        new AnimationTimer() {
-          @Override
-          public void handle(long now) {
-            double width = sinGraphCanvas.getWidth();
-            double height = sinGraphCanvas.getHeight();
-
-            gc.setStroke(javafx.scene.paint.Color.LIME);
-            gc.setLineWidth(2);
-
-            double y = height / 2 + amplitude * Math.sin(positionX * frequency);
-
-            if (positionX > 0) {
-              double prevY = height / 2 + amplitude * Math.sin((positionX - 1) * frequency);
-              gc.strokeLine(positionX - 1, prevY, positionX, y);
-            }
-
-            positionX += 1;
-
-            if (positionX >= width) {
-              stop(); // Stop animation when the wave finishes
-              waveStarted = false;
-            }
-          }
-        };
-
-    slider
-        .valueProperty()
-        .addListener(
-            (obs, oldVal, newVal) -> {
-              double distance = Math.abs(newVal.doubleValue() - sweetSpot);
-
-              if (distance <= tolerance) {
-                // Fully reveal values
-                errorImage.setVisible(true);
-                tempTxt.setText(tempValue);
-                pressureTxt.setText(pressureValue);
-                flowTxt.setText(flowValue);
-                stressTxt.setText(stressValue);
-                if (!waveStarted) {
-                  resetWave();
-                  waveTimer.start();
-                  waveStarted = true;
-                }
-                // Start lock timer: only lock the slider and notify the AI if the slider
-                // remains in the sweet spot for 1 second.
-                if (!sliderLocked) {
-                  lockTimer.playFromStart();
-                }
-              } else {
-                // Gradually scramble values
-                double scrambleFactor = Math.min(distance / (slider.getMax() / 2), 1.0);
-                tempTxt.setText(scramble(tempValue, scrambleFactor));
-                pressureTxt.setText(scramble(pressureValue, scrambleFactor));
-                flowTxt.setText(scramble(flowValue, scrambleFactor));
-                stressTxt.setText(scramble(stressValue, scrambleFactor));
-                errorImage.setVisible(false);
-                if (waveStarted) {
-                  resetWave();
-                  waveTimer.stop();
-                  waveStarted = false;
-                }
-                // Cancel lock timer and unlock slider if they move away before it fires
-                lockTimer.stop();
-                if (sliderLocked) {
-                  slider.setDisable(false);
-                  sliderLocked = false;
-                }
-                // Reset notification flag so we can notify again when the user returns to
-                // the sweet spot later
-                tabletUnscrambledNotified = false;
-              }
-            });
+    // Set up the newspaper jigsaw puzzle
+    setupNewspaperPuzzle();
   }
 
-  private void resetWave() {
-    gc.clearRect(0, 0, sinGraphCanvas.getWidth(), sinGraphCanvas.getHeight());
-    positionX = 0;
+  /** Reflection helper: set superclass private field only if it's currently null. */
+
+  /** Sets up the newspaper puzzle by scattering the pieces and making them interactive. */
+  private void setupNewspaperPuzzle() {
+    // Scatter the pieces to random starting positions
+    scatterPieces();
+
+    // Make each piece draggable, rotatable, and snappable
+    makePieceInteractive(topLeftNewsPaper, TARGET_X_TOP_LEFT, TARGET_Y_TOP_LEFT);
+    makePieceInteractive(topRightNewsPaper, TARGET_X_TOP_RIGHT, TARGET_Y_TOP_RIGHT);
+    makePieceInteractive(bottomLeftNewspaper, TARGET_X_BOTTOM_LEFT, TARGET_Y_BOTTOM_LEFT);
+    makePieceInteractive(bottomRightNewsPaper, TARGET_X_BOTTOM_RIGHT, TARGET_Y_BOTTOM_RIGHT);
+
+    // Ensure the overlay is visible while the player is solving the puzzle so
+    // clicks are constrained to the interactable area.
+    if (rectOverlay != null) {
+      rectOverlay.setVisible(true);
+      rectOverlay.setDisable(false);
+    }
+
+    // Ensure the interactable pane is visible and enabled at the start of the
+    // interaction. The user said all interactable nodes are already placed in
+    // this pane so we only need to toggle its visibility/disable state.
+    if (interactablePane != null) {
+      interactablePane.setVisible(true);
+      interactablePane.setDisable(false);
+    }
+  }
+
+  /** Moves the newspaper pieces to random locations on the screen to start the puzzle. */
+  private void scatterPieces() {
+    Random random = new Random();
+
+    // Scatter pieces within the window bounds, avoiding the central puzzle area initially.
+    topLeftNewsPaper.setLayoutX(random.nextDouble() * 200); // Left side
+    topLeftNewsPaper.setLayoutY(random.nextDouble() * 500);
+    // Start upright
+    topLeftNewsPaper.setRotate(0);
+
+    topRightNewsPaper.setLayoutX(900 + random.nextDouble() * 200); // Right side
+    topRightNewsPaper.setLayoutY(random.nextDouble() * 500);
+    // Start upright
+    topRightNewsPaper.setRotate(0);
+
+    bottomLeftNewspaper.setLayoutX(random.nextDouble() * 200); // Left side
+    bottomLeftNewspaper.setLayoutY(100 + random.nextDouble() * 500);
+    // Start upright
+    bottomLeftNewspaper.setRotate(0);
+
+    bottomRightNewsPaper.setLayoutX(900 + random.nextDouble() * 200); // Right side
+    bottomRightNewsPaper.setLayoutY(100 + random.nextDouble() * 500);
+    // Start upright
+    bottomRightNewsPaper.setRotate(0);
   }
 
   /**
-   * Scrambles a string by replacing characters with random symbols based on a scramble factor.
+   * Applies all necessary event handlers to a puzzle piece to make it interactive.
    *
-   * @param input the original string to scramble
-   * @param scrambleFactor a value between 0 and 1 indicating the degree of scrambling
-   * @return the scrambled string
+   * @param piece The ImageView of the puzzle piece.
+   * @param targetX The final correct X position.
+   * @param targetY The final correct Y position.
    */
-  private String scramble(String input, double scrambleFactor) {
-    // Create a StringBuilder to hold the scrambled string
-    StringBuilder sb = new StringBuilder();
+  private void makePieceInteractive(ImageView piece, double targetX, double targetY) {
+    final DragContext dragContext = new DragContext();
 
-    // Iterate through each character in the input string
-    for (char c : input.toCharArray()) {
-      // Decide whether to scramble this character based on the scramble factor
-      if (Character.isWhitespace(c)
-          || Character.isDigit(c)
-          || c == '.'
-          || c == '°'
-          || c == '/'
-          || c == 'k'
-          || c == 'P'
-          || c == 'a'
-          || c == 'm') {
-        // Only scramble non-whitespace, non-digit, and non-special characters
-        if (Math.random() < scrambleFactor) {
-          // Replace with a random symbol
-          sb.append(randomChar());
-        } else {
-          // Keep the original character
-          sb.append(c);
-        }
-      } else {
-        sb.append(randomChar());
-      }
-    }
-    return sb.toString();
+    // Event handler for when the mouse button is pressed
+    piece.setOnMousePressed(
+        event -> {
+          // Prevent other nodes from processing the event
+          event.consume();
+
+          // Bring the clicked piece to the front to see it clearly
+          piece.toFront();
+
+          // Record the starting mouse position relative to the piece's corner
+          dragContext.x = event.getSceneX() - piece.getLayoutX();
+          dragContext.y = event.getSceneY() - piece.getLayoutY();
+        });
+
+    // Event handler for when the mouse is dragged
+    piece.setOnMouseDragged(
+        event -> {
+          event.consume();
+          // Update the piece's position based on mouse movement
+          piece.setLayoutX(event.getSceneX() - dragContext.x);
+          piece.setLayoutY(event.getSceneY() - dragContext.y);
+        });
+
+    // Event handler for when the mouse is clicked (for rotation)
+    piece.setOnMouseClicked(
+        event -> {
+          event.consume();
+          // Check for a right-click to rotate the piece
+          if (event.getButton() == MouseButton.SECONDARY) {
+            // Rotate by 90 degrees clockwise
+            piece.setRotate((piece.getRotate() + 90) % 360);
+          }
+        });
+
+    // Event handler for when the mouse button is released
+    piece.setOnMouseReleased(
+        event -> {
+          event.consume();
+          // Check if the piece is in the correct final position
+          checkPlacement(piece, targetX, targetY);
+        });
   }
 
-  private char randomChar() {
-    String symbols = "#$%&*@?";
-    return symbols.charAt((int) (Math.random() * symbols.length()));
+  /**
+   * Checks if a puzzle piece has been moved to its correct location. If so, it snaps the piece into
+   * place and disables it.
+   *
+   * @param piece The piece that was just released.
+   * @param targetX The target X coordinate for the piece.
+   * @param targetY The target Y coordinate for the piece.
+   */
+  private void checkPlacement(ImageView piece, double targetX, double targetY) {
+    // Calculate the distance between the piece's center and its target's center
+    double distance =
+        Math.sqrt(
+            Math.pow(piece.getLayoutX() - targetX, 2) + Math.pow(piece.getLayoutY() - targetY, 2));
+
+    // Check if the piece is close enough to the target and has the correct rotation
+    if (distance < SNAP_TOLERANCE && piece.getRotate() == TARGET_ROTATION) {
+      // Snap to the exact position and rotation
+      piece.setLayoutX(targetX);
+      piece.setLayoutY(targetY);
+      piece.setRotate(TARGET_ROTATION);
+
+      // Lock the piece in place by disabling it
+      piece.setDisable(true);
+
+      // Check if this was the last piece to solve the puzzle
+      checkWinCondition();
+    }
+  }
+
+  /** Checks if all puzzle pieces are in their correct, disabled state. */
+  private void checkWinCondition() {
+    if (topLeftNewsPaper.isDisabled()
+        && topRightNewsPaper.isDisabled()
+        && bottomLeftNewspaper.isDisabled()
+        && bottomRightNewsPaper.isDisabled()) {
+
+      // All pieces are correctly placed. Puzzle is solved.
+      // Hide the guide image if present. No popup notification is shown.
+      if (newsPaperGuide != null) {
+        newsPaperGuide.setVisible(false);
+      }
+
+      // The puzzle is solved. Keep the overlay visible so the user must click
+      // it to close the interactable. This mirrors your requested UX: the
+      // interactable will only be hidden/disabled when the overlay is clicked.
+      if (rectOverlay != null) {
+        rectOverlay.setVisible(true);
+        rectOverlay.setDisable(false);
+      }
+
+      // Notify AI and mark interactable complete once
+      if (!puzzleSolvedNotified && getChatCompletionRequest() != null) {
+        ChatMessage sysMsg =
+            new ChatMessage(
+                "system",
+                "The newspaper article has been reassembled and is now readable by the judge.");
+
+        if (getTarget() != null) {
+          ChatHistoryManager.getInstance().addMessage(getTarget(), sysMsg);
+        }
+        getChatCompletionRequest().addMessage(sysMsg);
+
+        // Mark interactable complete (use the appropriate id — 'Evan' preserved from old code)
+        ChatHistoryManager.getInstance().markInteractableComplete("Evan");
+
+        puzzleSolvedNotified = true;
+        // Optionally display interaction dialogue that may be attached to this event
+        displayInteractionDialogue();
+      }
+    }
+  }
+
+  /**
+   * Handler for clicking the overlay area to close the interaction. Matches
+   * onMouseClicked="#onCloseInteraction" in the FXML.
+   */
+  @FXML
+  public void onCloseInteraction(MouseEvent event) {
+    // Safely hide the overlay rectangle if it's present
+    if (rectOverlay != null) {
+      rectOverlay.setVisible(false);
+      rectOverlay.setDisable(true);
+    }
+
+    // The user wanted the entire interactable pane to be disabled and hidden
+    // when the overlay is closed — do that directly.
+    if (interactablePane != null) {
+      interactablePane.setVisible(false);
+      interactablePane.setDisable(true);
+    }
+
+    // Consume the event so it doesn't propagate further
+    if (event != null) {
+      event.consume();
+    }
   }
 }
