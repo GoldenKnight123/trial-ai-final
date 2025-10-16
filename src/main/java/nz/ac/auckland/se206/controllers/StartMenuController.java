@@ -19,6 +19,7 @@ import javafx.scene.text.Font;
 import javafx.util.Duration;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
 import nz.ac.auckland.se206.App;
+import nz.ac.auckland.se206.AudioPlayer;
 
 public class StartMenuController extends Controller {
   @FXML private Button btnStartGame;
@@ -38,6 +39,8 @@ public class StartMenuController extends Controller {
   private ScaleTransition currentScaleTransition;
   private TranslateTransition currentTranslateTransition;
   private Timeline currentDelayTimeline;
+
+  private AudioPlayer audioPlayer = AudioPlayer.getInstance();
 
   File startFile = new File("src/main/resources/sounds/startButtonAppear.wav");
   Media startMedia = new Media(startFile.toURI().toString());
@@ -186,6 +189,7 @@ public class StartMenuController extends Controller {
         e -> {
           isFading = false; // Reset flag when fade completes
           zoomIn();
+          audioPlayer.playSound("zoomIn", 0.5);
         });
 
     currentFadeTransition.play();
@@ -193,11 +197,7 @@ public class StartMenuController extends Controller {
 
   @FXML
   private void onStart() throws ApiProxyException, IOException {
-    if (isFading) {
-      return; // Exit if a fade is already in progress
-    }
-
-    if (!introFinished) {
+    if (isFading || !introFinished) {
       skipToEndState();
       return;
     }

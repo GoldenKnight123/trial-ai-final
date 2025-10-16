@@ -33,6 +33,7 @@ import nz.ac.auckland.apiproxy.chat.openai.Choice;
 import nz.ac.auckland.apiproxy.config.ApiProxyConfig;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
 import nz.ac.auckland.se206.App;
+import nz.ac.auckland.se206.AudioPlayer;
 import nz.ac.auckland.se206.ChatHistoryManager;
 import nz.ac.auckland.se206.GameTimer;
 import nz.ac.auckland.se206.prompts.PromptEngineering;
@@ -69,6 +70,8 @@ public class ChatController extends Controller {
   private boolean isAnimating = false; // Track if history animation is playing
   private boolean isFading = false; // Track if fade animation is playing
   private Timeline thinkingAnimation; // Track thinking animation
+
+  private AudioPlayer audioPlayer = AudioPlayer.getInstance();
 
   /**
    * Initializes the chat view.
@@ -346,6 +349,9 @@ public class ChatController extends Controller {
       return;
     }
 
+    // Play button sound
+    audioPlayer.playSound("sendMessage", 0.5);
+
     // Clear input and disable controls to prevent multiple requests
     txtInput.clear();
     btnSend.setVisible(false);
@@ -429,6 +435,9 @@ public class ChatController extends Controller {
       return;
     }
 
+    // Play button click sound
+    audioPlayer.playSound("buttonClick", 0.5);
+
     fadeOut(event);
   }
 
@@ -445,6 +454,9 @@ public class ChatController extends Controller {
     if (isAnimating) {
       return;
     }
+
+    // Play button click sound
+    audioPlayer.playSound("buttonClick", 0.5);
 
     if (!historyView) {
       isAnimating = true; // Set flag to prevent further clicks

@@ -105,6 +105,7 @@ public abstract class Controller {
    */
   private void playTalkingSound(String speaker) {
     float randomRate = random.nextFloat() * 0.2f + 0.9f;
+    audioPlayer.setRate("playerTalk", randomRate);
     double volume = 0.5;
 
     switch (speaker) {

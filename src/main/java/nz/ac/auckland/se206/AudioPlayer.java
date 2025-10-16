@@ -53,7 +53,10 @@ public class AudioPlayer {
       "src/main/resources/sounds/evanTalk.wav",
       "src/main/resources/sounds/computerTalk.wav",
       "src/main/resources/sounds/computerTalk2.wav",
-      "src/main/resources/sounds/background.mp3"
+      "src/main/resources/sounds/background.mp3",
+      "src/main/resources/sounds/buttonClick.mp3",
+      "src/main/resources/sounds/zoomIn.mp3",
+      "src/main/resources/sounds/sendMessage.wav"
     };
 
     String[] soundKeys = {
@@ -75,7 +78,10 @@ public class AudioPlayer {
       "evanTalk",
       "computerTalk",
       "computerTalk2",
-      "background"
+      "background",
+      "buttonClick",
+      "zoomIn",
+      "sendMessage"
     };
 
     for (int i = 0; i < soundFiles.length; i++) {
@@ -184,6 +190,19 @@ public class AudioPlayer {
     MediaPlayer player = soundCache.get(soundKey);
     if (player != null) {
       player.setVolume(volume);
+    }
+  }
+
+  /**
+   * Sets the playback rate for a specific sound.
+   *
+   * @param soundKey the key identifying the sound
+   * @param rate the playback rate (1.0 is normal speed)
+   */
+  public void setRate(String soundKey, double rate) {
+    MediaPlayer player = soundCache.get(soundKey);
+    if (player != null) {
+      player.setRate(rate);
     }
   }
 }
