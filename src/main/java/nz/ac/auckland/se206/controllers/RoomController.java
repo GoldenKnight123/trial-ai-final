@@ -21,6 +21,7 @@ import javafx.scene.shape.Arc;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import nz.ac.auckland.se206.App;
+import nz.ac.auckland.se206.AudioPlayer;
 import nz.ac.auckland.se206.ChatHistoryManager;
 import nz.ac.auckland.se206.GameStateContext;
 import nz.ac.auckland.se206.GameTimer;
@@ -97,6 +98,8 @@ public class RoomController extends Controller {
 
   private boolean isFading = false;
   private boolean isGuessing = false;
+
+  private AudioPlayer audioPlayer = AudioPlayer.getInstance();
 
   private HashMap<String, Boolean> flashbackMap =
       new HashMap<>() {
@@ -341,6 +344,9 @@ public class RoomController extends Controller {
               () -> {
                 App.forceReturnToRoom();
               });
+
+      // Play background music
+      audioPlayer.playSound("background", 0.25);
 
       // Reset flashback map
       flashbackMap.put("LOGOS-09", false);

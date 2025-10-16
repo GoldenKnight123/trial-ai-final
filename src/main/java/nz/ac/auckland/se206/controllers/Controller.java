@@ -1,13 +1,11 @@
 package nz.ac.auckland.se206.controllers;
 
-import java.io.File;
 import java.util.Random;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.control.TextArea;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
+import nz.ac.auckland.se206.AudioPlayer;
 
 /**
  * Abstract base class for all controllers. Provides common functionality including typewriter
@@ -20,30 +18,12 @@ public abstract class Controller {
   private String currentFullText = ""; // Store the full text being displayed
   private TextArea currentTextArea = null; // Store the current TextArea being used
   private Random random = new Random();
+  private AudioPlayer audioPlayer;
 
-  File playerTalkFile = new File("src/main/resources/sounds/playerTalk.wav");
-  Media playerTalkMedia = new Media(playerTalkFile.toURI().toString());
-  MediaPlayer playerTalk = new MediaPlayer(playerTalkMedia);
-
-  File logos09File = new File("src/main/resources/sounds/logos09Talk.wav");
-  Media logos09Media = new Media(logos09File.toURI().toString());
-  MediaPlayer logos09Talk = new MediaPlayer(logos09Media);
-
-  File indus07File = new File("src/main/resources/sounds/indus07Talk.wav");
-  Media indus07Media = new Media(indus07File.toURI().toString());
-  MediaPlayer indus07Talk = new MediaPlayer(indus07Media);
-
-  File evanTalkFile = new File("src/main/resources/sounds/evanTalk.wav");
-  Media evanTalkMedia = new Media(evanTalkFile.toURI().toString());
-  MediaPlayer evanTalk = new MediaPlayer(evanTalkMedia);
-
-  File computerTalkFile = new File("src/main/resources/sounds/computerTalk.wav");
-  Media computerTalkMedia = new Media(computerTalkFile.toURI().toString());
-  MediaPlayer computerTalk = new MediaPlayer(computerTalkMedia);
-
-  File computerTalk2File = new File("src/main/resources/sounds/computerTalk2.wav");
-  Media computerTalk2Media = new Media(computerTalk2File.toURI().toString());
-  MediaPlayer computerTalk2 = new MediaPlayer(computerTalk2Media);
+  public Controller() {
+    // Get the universal audio player instance
+    audioPlayer = AudioPlayer.getInstance();
+  }
 
   /**
    * Creates a typewriter effect for displaying text in a TextArea.
@@ -102,46 +82,7 @@ public abstract class Controller {
                 if (addSound && charIndex > 0 && charIndex <= textToDisplay.length()) {
                   char currentChar = textToDisplay.charAt(charIndex - 1);
                   if (!Character.isWhitespace(currentChar)) {
-                    switch (speaker) {
-                      case "user":
-                        playerTalk.stop();
-                        playerTalk.setVolume(0.5);
-                        playerTalk.setRate(random.nextFloat() * 0.1f + 0.95f);
-                        playerTalk.play();
-                        break;
-                      case "LOGOS-09":
-                        logos09Talk.stop();
-                        logos09Talk.setVolume(0.5);
-                        logos09Talk.setRate(random.nextFloat() * 0.2f + 0.9f);
-                        logos09Talk.play();
-                        break;
-                      case "INDUS-07":
-                        indus07Talk.stop();
-                        indus07Talk.setVolume(0.5);
-                        indus07Talk.setRate(random.nextFloat() * 0.2f + 0.9f);
-                        indus07Talk.play();
-                        break;
-                      case "Evan":
-                        evanTalk.stop();
-                        evanTalk.setVolume(0.5);
-                        evanTalk.setRate(random.nextFloat() * 0.1f + 0.95f);
-                        evanTalk.play();
-                        break;
-                      case "computer":
-                        computerTalk.stop();
-                        computerTalk.setVolume(0.5);
-                        computerTalk.play();
-                        break;
-                      case "computer2":
-                        computerTalk2.stop();
-                        computerTalk2.setVolume(0.5);
-                        evanTalk.setRate(random.nextFloat() * 0.1f + 0.95f);
-                        computerTalk2.play();
-                        break;
-                      default:
-                        // No sound for empty or unrecognized speaker
-                        break;
-                    }
+                    playTalkingSound(speaker);
                   }
                 }
 
@@ -155,6 +96,40 @@ public abstract class Controller {
     }
 
     typewriterTimeline.play();
+  }
+
+  /**
+   * Plays the appropriate talking sound for the given speaker.
+   *
+   * @param speaker the current speaker
+   */
+  private void playTalkingSound(String speaker) {
+    float randomRate = random.nextFloat() * 0.2f + 0.9f;
+    double volume = 0.5;
+
+    switch (speaker) {
+      case "user":
+        audioPlayer.playSound("playerTalk", volume);
+        break;
+      case "LOGOS-09":
+        audioPlayer.playSound("logos09Talk", volume);
+        break;
+      case "INDUS-07":
+        audioPlayer.playSound("indus07Talk", volume);
+        break;
+      case "Evan":
+        audioPlayer.playSound("evanTalk", volume);
+        break;
+      case "computer":
+        audioPlayer.playSound("computerTalk", volume);
+        break;
+      case "computer2":
+        audioPlayer.playSound("computerTalk2", volume);
+        break;
+      default:
+        // No sound for empty or unrecognized speaker
+        break;
+    }
   }
 
   /**

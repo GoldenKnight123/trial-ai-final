@@ -1,7 +1,5 @@
 package nz.ac.auckland.se206.controllers;
 
-import java.io.File;
-import java.util.Random;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -11,11 +9,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.scene.shape.Rectangle;
 import nz.ac.auckland.apiproxy.chat.openai.ChatMessage;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
+import nz.ac.auckland.se206.AudioPlayer;
 import nz.ac.auckland.se206.ChatHistoryManager;
 
 public class AiWitnessController extends ChatController {
@@ -33,32 +30,14 @@ public class AiWitnessController extends ChatController {
   private boolean interactableComplete = false;
   private boolean interactionDialoguePlayed = false;
 
-  // Load 7 sounds
-  private MediaPlayer[] keyboardSounds = new MediaPlayer[8];
-  private int lastKeyboardSoundIndex = -1;
-  private final int MAX_KEYBOARD_SOUNDS = 5;
-  private final String[] keyboardSoundFiles = {
-    "src/main/resources/sounds/keyboard1.wav",
-    "src/main/resources/sounds/keyboard2.wav",
-    "src/main/resources/sounds/keyboard3.wav",
-    "src/main/resources/sounds/keyboard4.wav",
-    "src/main/resources/sounds/keyboard5.wav",
-    "src/main/resources/sounds/error.wav",
-    "src/main/resources/sounds/computerOpen.wav",
-    "src/main/resources/sounds/computerClose.wav"
-  };
-  private final Random random = new Random();
+  private AudioPlayer audioPlayer;
 
   @Override
   public void initialize() throws ApiProxyException {
     super.initialize();
 
-    // Initialize keyboard sounds
-    for (int i = 0; i < 8; i++) {
-      File soundFile = new File(keyboardSoundFiles[i]);
-      Media soundMedia = new Media(soundFile.toURI().toString());
-      keyboardSounds[i] = new MediaPlayer(soundMedia);
-    }
+    // Get the universal audio player instance
+    audioPlayer = AudioPlayer.getInstance();
 
     // Cap txtTerminal to 26 characters
     txtTerminal
@@ -67,17 +46,7 @@ public class AiWitnessController extends ChatController {
             (observable, oldValue, newValue) -> {
               // Play a typing sound
               if (newValue.length() > oldValue.length()) {
-                int soundIndex;
-                do {
-                  soundIndex = random.nextInt(MAX_KEYBOARD_SOUNDS);
-                } while (soundIndex
-                    == lastKeyboardSoundIndex); // Ensure a different sound is played
-                lastKeyboardSoundIndex = soundIndex;
-
-                MediaPlayer keyboardSound = keyboardSounds[soundIndex];
-                keyboardSound.stop(); // Stop if it's already playing
-                keyboardSound.setVolume(0.5);
-                keyboardSound.play();
+                audioPlayer.playRandomKeyboardSound(0.5);
               }
               if (newValue.length() > 26) {
                 txtTerminal.setText(oldValue);
@@ -119,10 +88,7 @@ public class AiWitnessController extends ChatController {
       interactableState = true;
 
       // Play computer open sound
-      MediaPlayer computerOpenSound = keyboardSounds[6];
-      computerOpenSound.stop(); // Stop if it's already playing
-      computerOpenSound.setVolume(0.5);
-      computerOpenSound.play();
+      audioPlayer.playSound("computerOpen", 0.5);
     }
   }
 
@@ -147,10 +113,7 @@ public class AiWitnessController extends ChatController {
     interactableState = false;
 
     // Play computer close sound
-    MediaPlayer computerCloseSound = keyboardSounds[7];
-    computerCloseSound.stop(); // Stop if it's already playing
-    computerCloseSound.setVolume(0.5);
-    computerCloseSound.play();
+    audioPlayer.playSound("computerClose", 0.5);
 
     // Display interaction if interaction is complete and dialogue if not already played
     if (interactableComplete && !interactionDialoguePlayed) {
@@ -218,10 +181,7 @@ public class AiWitnessController extends ChatController {
         // Mark interactable as complete
         ChatHistoryManager.getInstance().markInteractableComplete("LOGOS-09");
       } else {
-        MediaPlayer keyboardSound = keyboardSounds[5];
-        keyboardSound.stop(); // Stop if it's already playing
-        keyboardSound.setVolume(0.5);
-        keyboardSound.play();
+        audioPlayer.playSound("error", 0.5);
         lblTerminalError.setVisible(true);
       }
     }
