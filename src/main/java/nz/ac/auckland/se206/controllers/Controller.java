@@ -1,9 +1,12 @@
 package nz.ac.auckland.se206.controllers;
 
+import java.io.File;
+import java.util.Random;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.control.TextArea;
-import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 
 /**
@@ -16,8 +19,27 @@ public abstract class Controller {
   private boolean isTyping = false;
   private String currentFullText = ""; // Store the full text being displayed
   private TextArea currentTextArea = null; // Store the current TextArea being used
-  private AudioClip userTalkSound =
-      new AudioClip(getClass().getResource("/sounds/userTalk.wav").toString());
+  private Random random = new Random();
+
+  File playerTalkFile = new File("src/main/resources/sounds/playerTalk.wav");
+  Media playerTalkMedia = new Media(playerTalkFile.toURI().toString());
+  MediaPlayer playerTalk = new MediaPlayer(playerTalkMedia);
+
+  File logos09File = new File("src/main/resources/sounds/logos09Talk.wav");
+  Media logos09Media = new Media(logos09File.toURI().toString());
+  MediaPlayer logos09Talk = new MediaPlayer(logos09Media);
+
+  File indus07File = new File("src/main/resources/sounds/indus07Talk.wav");
+  Media indus07Media = new Media(indus07File.toURI().toString());
+  MediaPlayer indus07Talk = new MediaPlayer(indus07Media);
+
+  File evanTalkFile = new File("src/main/resources/sounds/evanTalk.wav");
+  Media evanTalkMedia = new Media(evanTalkFile.toURI().toString());
+  MediaPlayer evanTalk = new MediaPlayer(evanTalkMedia);
+
+  File computerTalkFile = new File("src/main/resources/sounds/computerTalk.wav");
+  Media computerTalkMedia = new Media(computerTalkFile.toURI().toString());
+  MediaPlayer computerTalk = new MediaPlayer(computerTalkMedia);
 
   /**
    * Creates a typewriter effect for displaying text in a TextArea.
@@ -27,13 +49,15 @@ public abstract class Controller {
    * @param delayPerCharacter delay between each character in milliseconds
    * @param clearFirst whether to clear the TextArea before starting the effect
    * @param addSound whether to play the user talk sound effect
+   * @param speaker the current speaker (for sound effect control)
    */
   protected void displayTextWithTypewriterEffect(
       TextArea textArea,
       String textToDisplay,
       double delayPerCharacter,
       boolean clearFirst,
-      boolean addSound) {
+      boolean addSound,
+      String speaker) {
     // Stop any existing typewriter animation
     if (typewriterTimeline != null) {
       typewriterTimeline.stop();
@@ -67,13 +91,49 @@ public abstract class Controller {
                   textArea.setText(existingText + textToDisplay.substring(0, charIndex));
                 }
 
-                // Play user talk sound if enabled
-                if (addSound) {
-                  userTalkSound.play();
-                }
-
                 // Auto-scroll to bottom after each character is added
                 textArea.setScrollTop(Double.MAX_VALUE);
+
+                // Play sound for non-space characters
+                if (addSound && charIndex > 0 && charIndex <= textToDisplay.length()) {
+                  char currentChar = textToDisplay.charAt(charIndex - 1);
+                  if (!Character.isWhitespace(currentChar)) {
+                    switch (speaker) {
+                      case "user":
+                        playerTalk.stop();
+                        playerTalk.setVolume(0.5);
+                        playerTalk.setRate(random.nextFloat() * 0.1f + 0.95f);
+                        playerTalk.play();
+                        break;
+                      case "LOGOS-09":
+                        logos09Talk.stop();
+                        logos09Talk.setVolume(0.5);
+                        logos09Talk.setRate(random.nextFloat() * 0.2f + 0.9f);
+                        logos09Talk.play();
+                        break;
+                      case "INDUS-07":
+                        indus07Talk.stop();
+                        indus07Talk.setVolume(0.5);
+                        indus07Talk.setRate(random.nextFloat() * 0.2f + 0.9f);
+                        indus07Talk.play();
+                        break;
+                      case "Evan":
+                        evanTalk.stop();
+                        evanTalk.setVolume(0.5);
+                        evanTalk.setRate(random.nextFloat() * 0.1f + 0.95f);
+                        evanTalk.play();
+                        break;
+                      case "computer":
+                        computerTalk.stop();
+                        computerTalk.setVolume(0.5);
+                        computerTalk.play();
+                        break;
+                      default:
+                        // No sound for empty or unrecognized speaker
+                        break;
+                    }
+                  }
+                }
 
                 // Check if this is the last character being displayed
                 if (charIndex == textToDisplay.length()) {
@@ -96,7 +156,7 @@ public abstract class Controller {
    */
   protected void displayTextWithTypewriterEffect(
       TextArea textArea, String textToDisplay, double delayPerCharacter) {
-    displayTextWithTypewriterEffect(textArea, textToDisplay, delayPerCharacter, true, false);
+    displayTextWithTypewriterEffect(textArea, textToDisplay, delayPerCharacter, true, false, "");
   }
 
   /**
@@ -107,7 +167,7 @@ public abstract class Controller {
    * @param textToDisplay the text to display with typewriter effect
    */
   protected void displayTextWithTypewriterEffect(TextArea textArea, String textToDisplay) {
-    displayTextWithTypewriterEffect(textArea, textToDisplay, 50, true, false);
+    displayTextWithTypewriterEffect(textArea, textToDisplay, 50, true, false, "");
   }
 
   /**
@@ -119,7 +179,7 @@ public abstract class Controller {
    */
   protected void appendTextWithTypewriterEffect(
       TextArea textArea, String textToAppend, double delayPerCharacter) {
-    displayTextWithTypewriterEffect(textArea, textToAppend, delayPerCharacter, false, false);
+    displayTextWithTypewriterEffect(textArea, textToAppend, delayPerCharacter, false, false, "");
   }
 
   /**
