@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
@@ -19,7 +18,7 @@
             <Image url="@../images/indus07-background.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="723.0" fitWidth="1414.0" layoutX="5.0" layoutY="-124.0" onMouseClicked="#onSkipText" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="lblEmail" fitHeight="723.0" fitWidth="1414.0" layoutX="5.0" layoutY="-124.0" onMouseClicked="#onSkipText" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/indus07-memory.png" />
          </image>
@@ -72,9 +71,37 @@
       <Pane fx:id="paneInteractable" prefHeight="720.0" prefWidth="1280.0">
          <children>
             <Rectangle fx:id="rectOverlay" arcHeight="5.0" arcWidth="5.0" height="720.0" onMouseClicked="#onCloseInteraction" opacity="0.7" stroke="BLACK" strokeType="INSIDE" width="1280.0" />
-            <TextArea fx:id="txtaTerminalFixed" layoutX="330.0" layoutY="180.0" prefHeight="100.0" prefWidth="668.0" stylesheets="@../css/interactable.css" text="Recovered Memory Log [Access Restricted]" wrapText="true" />
-            <TextArea fx:id="txtMemoryLogFixed" layoutX="398.0" layoutY="288.0" prefHeight="200.0" prefWidth="524.0" styleClass="text-area" stylesheets="@../css/interactable.css" text="Upper management pressured the AI to order the installation of the new technology. Despite the AI expressing its concerns, the upper management overrode the decision, and installation proceeded." wrapText="true" />
-            <Canvas height="200.0" layoutX="400.0" layoutY="270.0" width="530.0" />
+            <ImageView fitHeight="800.0" fitWidth="1400.0" layoutX="-50.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/computer-defendant.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="imgClose" fitHeight="127.0" fitWidth="60.0" layoutX="1162.0" layoutY="85.0" onMouseClicked="#onCloseInteraction" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/close-interaction.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="94.0" fitWidth="156.0" layoutX="163.0" layoutY="124.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/email-icon.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="483.0" fitWidth="757.0" layoutX="514.0" layoutY="163.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/email-box.png" />
+               </image>
+            </ImageView>
+            <Rectangle fx:id="rectAiCore" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="66.0" layoutX="269.0" layoutY="236.0" onKeyPressed="#onAiCore" stroke="BLACK" strokeType="INSIDE" width="373.0" />
+            <Rectangle fx:id="rectManager" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="66.0" layoutX="269.0" layoutY="338.0" onKeyPressed="#onManager" stroke="BLACK" strokeType="INSIDE" width="373.0" />
+            <Label fx:id="lblEmail" layoutX="288.0" layoutY="245.0" stylesheets="@../css/interactable.css" text="AI Core" />
+            <Label fx:id="lblEmailSubject" layoutX="288.0" layoutY="270.0" stylesheets="@../css/interactable.css" text="Safety Concerns: Installation Risks" />
+            <Label fx:id="lblEmail1" layoutX="289.0" layoutY="349.0" stylesheets="@../css/interactable.css" text="Manager" />
+            <Label fx:id="lblEmailSubject1" layoutX="288.0" layoutY="372.0" stylesheets="@../css/interactable.css" text="[URGENT] RE: Safety Concerns" />
+            <Rectangle fx:id="rectSystem" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="66.0" layoutX="269.0" layoutY="438.0" onKeyPressed="#onSystem" stroke="BLACK" strokeType="INSIDE" width="373.0" />
+            <Label fx:id="lblEmail2" layoutX="287.0" layoutY="447.0" stylesheets="@../css/interactable.css" text="System" />
+            <Label fx:id="lblEmailSubject2" layoutX="287.0" layoutY="471.0" stylesheets="@../css/interactable.css" text="NOTICE: AI Autonomy Restrictions" />
+            <TextArea fx:id="txtaEmail" layoutX="711.0" layoutY="230.0" prefHeight="326.0" prefWidth="363.0" promptText="Email Here" wrapText="true" />
+            <Label fx:id="lblRecipient" layoutX="726.0" layoutY="194.0" stylesheets="@../css/interactable.css" text="Label" />
          </children>
       </Pane>
    </children>

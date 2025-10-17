@@ -1,88 +1,35 @@
-#txtMemoryLogFixed {
-  font-family: "Orbitron";
-  -fx-font-family: "Orbitron";
-  font-size: 25px;
-  -fx-font-size: 25px;
-  -fx-text-fill: #00fcfc;
-  background-color: transparent;
-  -fx-background-color: transparent;
-}
-
-#txtMemoryLogFixed {
-  font-family: "Orbitron";
-  -fx-font-family: "Orbitron";
-  font-size: 25px;
-  -fx-font-size: 25px;
-  -fx-text-fill: #00fcfc;
-  background-color: transparent;
-  -fx-background-color: transparent;
-  -fx-text-alignment: center;
-}
-
-.text-area {
-  font-family: "Orbitron";
-  -fx-font-family: "Orbitron";
-  font-size: 35px;
-  -fx-font-size: 35px;
-  -fx-text-fill: #00fcfc;
+#lblEmail, #lblEmail1, #lblEmail2 {
+  font-family: "VT323";
+  -fx-font-family: "VT323";
+  font-size: 20px;
+  -fx-font-size: 20px;
+  -fx-text-fill: #88ff00;
   background-color: transparent;
   -fx-background-color: transparent;
   cursor: default;
   -fx-cursor: default;
 }
 
-.text-area .content {
+#lblEmailSubject, #lblEmailSubject1, #lblEmailSubject2 {
+  font-family: "VT323";
+  -fx-font-family: "VT323";
+  font-size: 15px;
+  -fx-font-size: 15px;
+  -fx-text-fill: #88ff00;
   background-color: transparent;
   -fx-background-color: transparent;
-  border-color: transparent;
-  -fx-border-color: transparent;
-  border-width: 1px;
-  -fx-border-width: 1px;
-  padding: 5px;
-  -fx-padding: 5px;
+  cursor: default;
+  -fx-cursor: default;
 }
 
-.text-area .viewport {
-  background-color: transparent;
-  -fx-background-color: transparent;
-}
-
-.text-area .scroll-pane {
-  background-color: transparent;
-  -fx-background-color: transparent;
-}
-
-.text-field {
-  font-family: "Orbitron";
-  -fx-font-family: "Orbitron";
+#lblRecipient {
+  font-family: "VT323";
+  -fx-font-family: "VT323";
   font-size: 20px;
   -fx-font-size: 20px;
-  -fx-text-fill: #00fcfc;
+  -fx-text-fill: #000000;
   background-color: transparent;
   -fx-background-color: transparent;
-}
-
-.text-field .content {
-  background-color: transparent;
-  -fx-background-color: transparent;
-  border-color: transparent;
-  -fx-border-color: transparent;
-  border-width: 1px;
-  -fx-border-width: 1px;
-  padding: 5px;
-  -fx-padding: 5px;
-}
-
-.text-field .viewport {
-  background-color: transparent;
-  -fx-background-color: transparent;
-}
-
-.text-field .scroll-pane {
-  background-color: transparent;
-  -fx-background-color: transparent;
-}
-
-.text-area .content, .text-area .content .text {
-  -fx-text-alignment: center; 
+  cursor: default;
+  -fx-cursor: default;
 }

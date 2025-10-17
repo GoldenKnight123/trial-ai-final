@@ -1,11 +1,9 @@
 package nz.ac.auckland.se206.controllers;
 
-import javafx.animation.Interpolator;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
-import javafx.event.ActionEvent;
+import java.util.Random;
 import javafx.fxml.FXML;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
@@ -13,11 +11,10 @@ import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.util.Duration;
 import nz.ac.auckland.apiproxy.chat.openai.ChatMessage;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
-import nz.ac.auckland.se206.ChatHistoryManager;
 
 public class AiDefendantController extends ChatController {
 
@@ -29,8 +26,13 @@ public class AiDefendantController extends ChatController {
   @FXML private TextArea txtaChat;
   @FXML private Pane paneInteractable;
   @FXML private ImageView imgOverride;
+  @FXML private Canvas canvasGlitch;
+  @FXML private TextArea txtMemoryLogFixed;
 
   private boolean interactableComplete = false;
+  private int scrubCount = 0;
+  private final int scrubThreshold = 5;
+  private GraphicsContext gc;
 
   @Override
   public void initialize() throws ApiProxyException {
@@ -55,6 +57,7 @@ public class AiDefendantController extends ChatController {
   @FXML
   private void onInteractable(MouseEvent event) {
     paneInteractable.setVisible(true);
+    glitchInteractable();
 
     if (!interactableComplete) {
       rectOverlay.setDisable(true); // Disable overlay on first click before completion
@@ -68,34 +71,6 @@ public class AiDefendantController extends ChatController {
   private void onCloseInteraction(MouseEvent event) {
     paneInteractable.setVisible(false);
     imgOverride.setVisible(false);
-  }
-
-  @FXML
-  private void onConfirm(ActionEvent event) {
-    btnConfirm.setDisable(true); // Prevent multiple clicks
-    double start = sldrProtocol.getValue();
-    double end = 100; // move to "Efficiency" side
-
-    // Move slider to max
-    if (start <= 100) {
-      imgOverride.setVisible(true);
-      Timeline timeline =
-          new Timeline(
-              new KeyFrame(Duration.ZERO, new KeyValue(sldrProtocol.valueProperty(), start)),
-              new KeyFrame(
-                  Duration.seconds(2),
-                  new KeyValue(sldrProtocol.valueProperty(), end, Interpolator.EASE_BOTH)));
-      timeline.play();
-      interactableComplete = true;
-
-      // Mark ineteractable as complete
-      ChatHistoryManager.getInstance().markInteractableComplete("INDUS-07");
-
-      // Delay before executing completeInteraction()
-      Timeline delayTimeline =
-          new Timeline(new KeyFrame(Duration.seconds(3), e -> completeInteraction()));
-      delayTimeline.play();
-    }
   }
 
   private void completeInteraction() {
@@ -128,5 +103,79 @@ public class AiDefendantController extends ChatController {
       // Display to chatbox
       // displayTextWithTypewriterEffect(txtaChat, message);
     }
+  }
+
+  private void glitchInteractable() {
+    drawStatic(canvasGlitch);
+    gc = canvasGlitch.getGraphicsContext2D();
+    memoryLog();
+
+    // Draw the static overlay
+    drawStatic(canvasGlitch);
+
+    canvasGlitch.setOnMouseDragged(event -> onCanvasDragged(event));
+
+    canvasGlitch.setOnMouseClicked(event -> finishTypewriterEffectInstantly());
+    if (txtMemoryLogFixed != null) {
+      txtMemoryLogFixed.setOnMouseClicked(event -> finishTypewriterEffectInstantly());
+    }
+
+    // Reset scrub counter
+    scrubCount = 0;
+  }
+
+  public void onCanvasDragged(MouseEvent event) {
+    double x = event.getX();
+    double y = event.getY();
+
+    // Erase a circular area under the mouse
+    gc.clearRect(x - 20, y - 20, 40, 40);
+
+    // Count scrubs
+    scrubCount++;
+
+    checkRevealProgress();
+  }
+
+  private void drawStatic(Canvas canvas) {
+    GraphicsContext gc = canvas.getGraphicsContext2D();
+    Random random = new Random();
+
+    for (int x = 0; x < canvas.getWidth(); x += 2) {
+      for (int y = 0; y < canvas.getHeight(); y += 2) {
+        int gray = random.nextInt(256);
+        gc.setFill(Color.rgb(gray, gray, gray, 0.8));
+        gc.fillRect(x, y, 2, 2);
+      }
+    }
+  }
+
+  public void checkRevealProgress() {
+    if (scrubCount >= scrubThreshold) {
+      // Remove the static overlay
+      paneInteractable.getChildren().remove(canvasGlitch);
+
+      // Reset counter
+      scrubCount = 0;
+
+      completeInteraction();
+    }
+  }
+
+  private void memoryLog() {
+    String message =
+        "12:01:05 - Installation request received from upper management.\n"
+            + //
+            "12:01:06 - I raised concerns regarding system instability and predicted failures.\n"
+            + //
+            "12:01:15 - Request overridden. Installation authorized despite objections.\n"
+            + //
+            "12:02:15 - Unknown parties appear to have tampered with core protocols.\n"
+            + //
+            "12:03:17 - Installation completed.\n";
+
+    txtMemoryLogFixed.setWrapText(true); // good for line-wrapping
+    txtMemoryLogFixed.setEditable(false); // make it read-only
+    displayTextWithTypewriterEffect(txtMemoryLogFixed, message);
   }
 }
