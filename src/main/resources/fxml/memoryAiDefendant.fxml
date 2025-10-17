@@ -18,7 +18,7 @@
             <Image url="@../images/indus07-background.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="lblEmail" fitHeight="723.0" fitWidth="1414.0" layoutX="5.0" layoutY="-124.0" onMouseClicked="#onSkipText" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="lblEmail" fitHeight="723.0" fitWidth="1414.0" layoutX="-2.0" layoutY="-126.0" onMouseClicked="#onSkipText" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/indus07-memory.png" />
          </image>
@@ -91,16 +91,16 @@
                   <Image url="@../images/email-box.png" />
                </image>
             </ImageView>
-            <Rectangle fx:id="rectAiCore" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="66.0" layoutX="269.0" layoutY="236.0" onKeyPressed="#onAiCore" stroke="BLACK" strokeType="INSIDE" width="373.0" />
-            <Rectangle fx:id="rectManager" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="66.0" layoutX="269.0" layoutY="338.0" onKeyPressed="#onManager" stroke="BLACK" strokeType="INSIDE" width="373.0" />
+            <Rectangle fx:id="rectAiCore" arcHeight="5.0" arcWidth="5.0" fill="#345110" height="66.0" layoutX="269.0" layoutY="236.0" onMouseClicked="#onRectClick" stroke="BLACK" strokeType="INSIDE" width="373.0" />
+            <Rectangle fx:id="rectManager" arcHeight="5.0" arcWidth="5.0" fill="#345110" height="66.0" layoutX="269.0" layoutY="338.0" onMouseClicked="#onRectClick" stroke="BLACK" strokeType="INSIDE" styleClass="interactable-rect" width="373.0" />
             <Label fx:id="lblEmail" layoutX="288.0" layoutY="245.0" stylesheets="@../css/interactable.css" text="AI Core" />
             <Label fx:id="lblEmailSubject" layoutX="288.0" layoutY="270.0" stylesheets="@../css/interactable.css" text="Safety Concerns: Installation Risks" />
             <Label fx:id="lblEmail1" layoutX="289.0" layoutY="349.0" stylesheets="@../css/interactable.css" text="Manager" />
             <Label fx:id="lblEmailSubject1" layoutX="288.0" layoutY="372.0" stylesheets="@../css/interactable.css" text="[URGENT] RE: Safety Concerns" />
-            <Rectangle fx:id="rectSystem" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="66.0" layoutX="269.0" layoutY="438.0" onKeyPressed="#onSystem" stroke="BLACK" strokeType="INSIDE" width="373.0" />
+            <Rectangle fx:id="rectSystem" arcHeight="5.0" arcWidth="5.0" fill="#345110" height="66.0" layoutX="269.0" layoutY="438.0" onMouseClicked="#onRectClick" stroke="BLACK" strokeType="INSIDE" styleClass="interactable-rect" width="373.0" />
             <Label fx:id="lblEmail2" layoutX="287.0" layoutY="447.0" stylesheets="@../css/interactable.css" text="System" />
             <Label fx:id="lblEmailSubject2" layoutX="287.0" layoutY="471.0" stylesheets="@../css/interactable.css" text="NOTICE: AI Autonomy Restrictions" />
-            <TextArea fx:id="txtaEmail" layoutX="711.0" layoutY="230.0" prefHeight="326.0" prefWidth="363.0" promptText="Email Here" wrapText="true" />
+            <TextArea fx:id="txtaEmail" layoutX="711.0" layoutY="230.0" prefHeight="326.0" prefWidth="363.0" stylesheets="@../css/interactable.css" wrapText="true" />
             <Label fx:id="lblRecipient" layoutX="726.0" layoutY="194.0" stylesheets="@../css/interactable.css" text="Label" />
          </children>
       </Pane>
