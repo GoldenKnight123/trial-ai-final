@@ -21,6 +21,8 @@ public class HumanController extends ChatController {
   @FXML private ImageView bottomRightNewsPaper;
   @FXML private Rectangle rectOverlay;
   @FXML private Pane interactablePane;
+  @FXML private ImageView pileInteractiveImg;
+  @FXML private ImageView pilePopUpImg;
 
   // --- Puzzle Logic ---
 
@@ -68,21 +70,6 @@ public class HumanController extends ChatController {
     makePieceInteractive(topRightNewsPaper, TARGET_X_TOP_RIGHT, TARGET_Y_TOP_RIGHT);
     makePieceInteractive(bottomLeftNewspaper, TARGET_X_BOTTOM_LEFT, TARGET_Y_BOTTOM_LEFT);
     makePieceInteractive(bottomRightNewsPaper, TARGET_X_BOTTOM_RIGHT, TARGET_Y_BOTTOM_RIGHT);
-
-    // Ensure the overlay is visible while the player is solving the puzzle so
-    // clicks are constrained to the interactable area.
-    if (rectOverlay != null) {
-      rectOverlay.setVisible(true);
-      rectOverlay.setDisable(false);
-    }
-
-    // Ensure the interactable pane is visible and enabled at the start of the
-    // interaction. The user said all interactable nodes are already placed in
-    // this pane so we only need to toggle its visibility/disable state.
-    if (interactablePane != null) {
-      interactablePane.setVisible(true);
-      interactablePane.setDisable(false);
-    }
   }
 
   /** Moves the newspaper pieces to random locations on the screen to start the puzzle. */
@@ -256,6 +243,58 @@ public class HumanController extends ChatController {
     }
 
     // Consume the event so it doesn't propagate further
+    if (event != null) {
+      event.consume();
+    }
+  }
+
+  /** Sets up the hover and click handlers for the pile of newspapers. */
+  @FXML
+  private void pileEntered(MouseEvent event) {
+    System.out.println("Pile entered");
+    if (pileInteractiveImg != null) {
+      pileInteractiveImg.setVisible(false);
+    }
+    if (pilePopUpImg != null) {
+      pilePopUpImg.setVisible(true);
+    }
+    if (event != null) {
+      event.consume();
+    }
+  }
+
+  @FXML
+  private void pileExited(MouseEvent event) {
+    System.out.println("Pile exited");
+    if (pileInteractiveImg != null) {
+      pileInteractiveImg.setVisible(true);
+    }
+    if (pilePopUpImg != null) {
+      pilePopUpImg.setVisible(false);
+    }
+    if (event != null) {
+      event.consume();
+    }
+  }
+
+  @FXML
+  private void pileClicked(MouseEvent event) {
+    System.out.println("Pile clicked");
+    // Enable the interactable pane when the pile is clicked
+    if (interactablePane != null) {
+      interactablePane.setVisible(true);
+      interactablePane.setDisable(false);
+      // Ensure the interactable pane is on top so the overlay is visible
+      interactablePane.toFront();
+    }
+
+    // Explicitly show and enable the overlay, and bring it to the front so
+    // it blocks the underlying UI while the player interacts with the puzzle.
+    if (rectOverlay != null) {
+      rectOverlay.setVisible(true);
+      rectOverlay.setDisable(false);
+    }
+
     if (event != null) {
       event.consume();
     }
