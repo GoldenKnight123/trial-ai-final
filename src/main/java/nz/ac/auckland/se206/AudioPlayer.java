@@ -56,8 +56,10 @@ public class AudioPlayer {
       "src/main/resources/sounds/computerTalk2.wav",
       "src/main/resources/sounds/background.mp3",
       "src/main/resources/sounds/buttonClick.mp3",
-      "src/main/resources/sounds/zoomIn.mp3",
-      "src/main/resources/sounds/sendMessage.wav"
+      "src/main/resources/sounds/zoomIn.wav",
+      "src/main/resources/sounds/sendMessage.wav",
+      "src/main/resources/sounds/timesUp.wav",
+      "src/main/resources/sounds/hover.wav"
     };
 
     String[] soundKeys = {
@@ -82,7 +84,9 @@ public class AudioPlayer {
       "background",
       "buttonClick",
       "zoomIn",
-      "sendMessage"
+      "sendMessage",
+      "timesUp",
+      "hover"
     };
 
     for (int i = 0; i < soundFiles.length; i++) {

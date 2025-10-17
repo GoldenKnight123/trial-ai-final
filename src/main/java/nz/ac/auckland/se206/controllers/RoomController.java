@@ -4,7 +4,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
+import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.ParallelTransition;
+import javafx.animation.ScaleTransition;
+import javafx.animation.Timeline;
+import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -17,7 +24,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
@@ -76,9 +85,15 @@ public class RoomController extends Controller {
             + " come to a conclusion of whether or not the defendant is guilty or innocent.");
   }
 
-  @FXML private ImageView imgWitnessAi;
-  @FXML private ImageView imgDefendant;
-  @FXML private ImageView imgWitnessHuman;
+  @FXML private ImageView imgWitnessAiBody;
+  @FXML private ImageView imgWitnessAiStand;
+  @FXML private ImageView imgDefendantBody;
+  @FXML private ImageView imgDefendantStand;
+  @FXML private ImageView imgWitnessHumanBody;
+  @FXML private ImageView imgWitnessHumanStand;
+  @FXML private Rectangle rectWitnessAi;
+  @FXML private Rectangle rectDefendant;
+  @FXML private Rectangle rectWitnessHuman;
   @FXML private TextArea txtaDialogue;
   @FXML private ImageView imgContinueArrow;
   @FXML private ImageView imgTextArea;
@@ -97,6 +112,15 @@ public class RoomController extends Controller {
   @FXML private Button btnNotGuilty;
   @FXML private Arc arcTimer;
   @FXML private Pane room;
+
+  // Rain effect variables
+  private Timeline rainTimeline;
+  private Random random = new Random();
+  private List<Line> rainDrops = new ArrayList<>();
+
+  // AI Witness idle animation variables
+  private Timeline aiIdleTimeline;
+  private Timeline defendantIdleTimeline;
 
   private boolean isFading = false;
   private boolean isGuessing = false;
@@ -174,6 +198,11 @@ public class RoomController extends Controller {
     // Ensure the room itself is fully visible first
     room.setOpacity(1.0);
 
+    // Restart rain effect if it's not running
+    if (rainTimeline == null || rainTimeline.getStatus() != Animation.Status.RUNNING) {
+      createRainEffect();
+    }
+
     FadeTransition fadeTransition = new FadeTransition();
     fadeTransition.setDuration(Duration.millis(1000));
     fadeTransition.setNode(room);
@@ -220,14 +249,57 @@ public class RoomController extends Controller {
 
     isFading = true; // Set flag to prevent further fade operations
 
+    // Create fade transition for the room
     FadeTransition fadeTransition = new FadeTransition();
     fadeTransition.setDuration(Duration.millis(1000));
     fadeTransition.setNode(room);
     fadeTransition.setFromValue(1.0);
     fadeTransition.setToValue(0.0);
 
-    fadeTransition.setOnFinished(
+    // Create zoom transition for the entire room to simulate diving into the mind
+    ScaleTransition zoomTransition = new ScaleTransition();
+    zoomTransition.setDuration(Duration.millis(800));
+    zoomTransition.setNode(room);
+    zoomTransition.setFromX(1.0);
+    zoomTransition.setFromY(1.0);
+    zoomTransition.setToX(3);
+    zoomTransition.setToY(3);
+
+    // Create translation transition to move towards the clicked individual
+    TranslateTransition translateTransition = new TranslateTransition();
+    translateTransition.setDuration(Duration.millis(800));
+    translateTransition.setNode(room);
+    translateTransition.setFromX(0);
+    translateTransition.setFromY(0);
+
+    // Set translation based on which character was clicked
+    switch (target) {
+      case "LOGOS-09": // AI Witness (left side)
+        translateTransition.setToX(1000);
+        translateTransition.setToY(200);
+        break;
+      case "INDUS-07": // Defendant (center)
+        translateTransition.setToX(-50);
+        translateTransition.setToY(300);
+        break;
+      case "Evan": // Human Witness (right side)
+        translateTransition.setToX(-1200);
+        translateTransition.setToY(200);
+        break;
+    }
+
+    // Combine fade, zoom, and translation animations
+    ParallelTransition parallelTransition =
+        new ParallelTransition(fadeTransition, zoomTransition, translateTransition);
+
+    parallelTransition.setOnFinished(
         e -> {
+          // Reset the scale and translation of the room after animation
+          room.setScaleX(1.0);
+          room.setScaleY(1.0);
+          room.setTranslateX(0);
+          room.setTranslateY(0);
+
           isFading = false; // Reset flag when fade completes
           try {
             if (flashbackMap.get(target)) {
@@ -243,7 +315,7 @@ public class RoomController extends Controller {
             ex.printStackTrace();
           }
         });
-    fadeTransition.play();
+    parallelTransition.play();
   }
 
   /**
@@ -253,6 +325,10 @@ public class RoomController extends Controller {
   @FXML
   public void initialize() {
     context.setRoomController(this); // Set reference to this controller
+
+    createIdleAnimation(imgWitnessAiBody);
+    createIdleAnimation(imgDefendantBody);
+    createIdleAnimation(imgWitnessHumanBody);
 
     isGuessing = false;
 
@@ -265,61 +341,64 @@ public class RoomController extends Controller {
     highlight.setBrightness(0.3);
 
     // Setup hover effects of images
-    Image logos09 = imgWitnessAi.getImage();
+    Image logos09 = imgWitnessAiBody.getImage();
     Image logos09Hover = new Image("images/logos-09-hover.png");
 
-    imgWitnessAi.setOnMouseEntered(
+    rectWitnessAi.setOnMouseEntered(
         event -> {
           if (currentDialogueIndex >= fixedDialogue.size() && !isFading) {
-            imgWitnessAi.setEffect(highlight);
-            imgWitnessAi.setImage(logos09Hover);
-            imgWitnessAi.setCursor(Cursor.HAND);
+            imgWitnessAiBody.setEffect(highlight);
+            imgWitnessAiBody.setImage(logos09Hover);
+            imgWitnessAiBody.setCursor(Cursor.HAND);
+            audioPlayer.playSound("hover");
           }
         });
 
-    imgWitnessAi.setOnMouseExited(
+    rectWitnessAi.setOnMouseExited(
         event -> {
-          imgWitnessAi.setEffect(null);
-          imgWitnessAi.setImage(logos09);
-          imgWitnessAi.setCursor(Cursor.DEFAULT);
+          imgWitnessAiBody.setEffect(null);
+          imgWitnessAiBody.setImage(logos09);
+          imgWitnessAiBody.setCursor(Cursor.DEFAULT);
         });
 
-    Image indus07 = imgDefendant.getImage();
+    Image indus07 = imgDefendantBody.getImage();
     Image indus07Hover = new Image("images/indus-07-hover.png");
 
-    imgDefendant.setOnMouseEntered(
+    rectDefendant.setOnMouseEntered(
         event -> {
           if (currentDialogueIndex >= fixedDialogue.size() && !isFading) {
-            imgDefendant.setEffect(highlight);
-            imgDefendant.setImage(indus07Hover);
-            imgDefendant.setCursor(Cursor.HAND);
+            imgDefendantBody.setEffect(highlight);
+            imgDefendantBody.setImage(indus07Hover);
+            imgDefendantBody.setCursor(Cursor.HAND);
+            audioPlayer.playSound("hover");
           }
         });
 
-    imgDefendant.setOnMouseExited(
+    rectDefendant.setOnMouseExited(
         event -> {
-          imgDefendant.setEffect(null);
-          imgDefendant.setImage(indus07);
-          imgDefendant.setCursor(Cursor.DEFAULT);
+          imgDefendantBody.setEffect(null);
+          imgDefendantBody.setImage(indus07);
+          imgDefendantBody.setCursor(Cursor.DEFAULT);
         });
 
-    Image evan = imgWitnessHuman.getImage();
+    Image evan = imgWitnessHumanBody.getImage();
     Image evanHover = new Image("images/evan-hover.png");
 
-    imgWitnessHuman.setOnMouseEntered(
+    rectWitnessHuman.setOnMouseEntered(
         event -> {
           if (currentDialogueIndex >= fixedDialogue.size() && !isFading) {
-            imgWitnessHuman.setEffect(highlight);
-            imgWitnessHuman.setImage(evanHover);
-            imgWitnessHuman.setCursor(Cursor.HAND);
+            imgWitnessHumanBody.setEffect(highlight);
+            imgWitnessHumanBody.setImage(evanHover);
+            imgWitnessHumanBody.setCursor(Cursor.HAND);
+            audioPlayer.playSound("hover");
           }
         });
 
-    imgWitnessHuman.setOnMouseExited(
+    rectWitnessHuman.setOnMouseExited(
         event -> {
-          imgWitnessHuman.setEffect(null);
-          imgWitnessHuman.setImage(evan);
-          imgWitnessHuman.setCursor(Cursor.DEFAULT);
+          imgWitnessHumanBody.setEffect(null);
+          imgWitnessHumanBody.setImage(evan);
+          imgWitnessHumanBody.setCursor(Cursor.DEFAULT);
         });
 
     txtaDialogue.setVisible(true);
@@ -339,11 +418,16 @@ public class RoomController extends Controller {
 
     if (isFirstTimeInit) {
       System.out.println("Initializing RoomController");
+
+      // Start rain effect
+      createRainEffect();
+
       GameTimer.getInstance().start();
       // Set up timer expired callback to force return to room
       GameTimer.getInstance()
           .setOnTimerExpired(
               () -> {
+                audioPlayer.playSound("timesUp", 0.5);
                 App.forceReturnToRoom();
               });
 
@@ -404,6 +488,9 @@ public class RoomController extends Controller {
       return;
     }
 
+    audioPlayer.playSound("buttonClick", 0.5);
+    audioPlayer.playSound("zoomIn", 0.5);
+
     // Take the user to the chat scene with the clicked individual as the flashback focus
     RoomController roomController = context.getRoomController();
     roomController.fadeOut(event, "LOGOS-09");
@@ -425,6 +512,9 @@ public class RoomController extends Controller {
       return;
     }
 
+    audioPlayer.playSound("buttonClick", 0.5);
+    audioPlayer.playSound("zoomIn", 0.5);
+
     // Take the user to the chat scene with the clicked individual as the flashback focus
     RoomController roomController = context.getRoomController();
     roomController.fadeOut(event, "INDUS-07");
@@ -445,6 +535,9 @@ public class RoomController extends Controller {
     if (GameTimer.getInstance().getTimeLeft() <= 2) {
       return;
     }
+
+    audioPlayer.playSound("buttonClick", 0.5);
+    audioPlayer.playSound("zoomIn", 0.5);
 
     // Take the user to the chat scene with the clicked individual as the flashback focus
     RoomController roomController = context.getRoomController();
@@ -589,5 +682,103 @@ public class RoomController extends Controller {
       imgMute.setImage(new Image(getClass().getResourceAsStream("/images/muteOff.png")));
     }
     audioPlayer.playSound("buttonClick", 0.5);
+  }
+
+  /** Creates and starts the rain animation effect */
+  private void createRainEffect() {
+    // Clear any existing rain drops
+    rainDrops.clear();
+
+    // Create initial rain drops
+    for (int i = 0; i < 100; i++) {
+      Line rainDrop = createRainDrop();
+      rainDrops.add(rainDrop);
+      room.getChildren().add(0, rainDrop); // Add to back of scene
+    }
+
+    // Create timeline for rain animation - faster update rate
+    rainTimeline = new Timeline(new KeyFrame(Duration.millis(30), e -> updateRain()));
+    rainTimeline.setCycleCount(Animation.INDEFINITE);
+    rainTimeline.play();
+  }
+
+  /** Creates a single rain drop line */
+  private Line createRainDrop() {
+    Line rainDrop = new Line();
+
+    // Random position across the width of the room
+    double x = random.nextDouble() * room.getWidth();
+    double y = -random.nextDouble() * 800; // Start above the visible area
+
+    rainDrop.setStartX(x);
+    rainDrop.setStartY(y);
+    rainDrop.setEndX(x + 2); // Slight angle for more realistic look
+    rainDrop.setEndY(y + 15 + random.nextDouble() * 10); // Variable length
+
+    // Set rain drop appearance - black color with transparency
+    rainDrop.setStroke(Color.rgb(0, 0, 0, 0.7)); // Black with transparency
+    rainDrop.setStrokeWidth(0.5);
+
+    return rainDrop;
+  }
+
+  /** Updates all rain drops positions and recycles them when they fall off screen */
+  private void updateRain() {
+    for (Line rainDrop : rainDrops) {
+      // Move rain drop downwards
+      double speed = 12 + random.nextDouble() * 8;
+      rainDrop.setStartY(rainDrop.getStartY() + speed);
+      rainDrop.setEndY(rainDrop.getEndY() + speed);
+
+      // If rain drop has fallen off screen, reset it to the top
+      if (rainDrop.getStartY() > room.getHeight()) {
+        double x = random.nextDouble() * room.getWidth();
+        rainDrop.setStartX(x);
+        rainDrop.setStartY(-random.nextDouble() * 200);
+        rainDrop.setEndX(x + 2);
+        rainDrop.setEndY(rainDrop.getStartY() + 15 + random.nextDouble() * 10);
+
+        // Vary the opacity slightly for more natural look - black color
+        rainDrop.setStroke(Color.rgb(0, 0, 0, 0.5 + random.nextDouble() * 0.4));
+      }
+    }
+  }
+
+  private void createIdleAnimation(ImageView character) {
+    // Create a timeline that triggers animation changes every few seconds
+    aiIdleTimeline =
+        new Timeline(
+            new KeyFrame(Duration.seconds(0), e -> startIdleMovement(character)),
+            new KeyFrame(Duration.seconds(8), e -> startIdleMovement(character)),
+            new KeyFrame(Duration.seconds(16), e -> startIdleMovement(character)));
+
+    aiIdleTimeline.setCycleCount(Animation.INDEFINITE);
+    aiIdleTimeline.play();
+  }
+
+  /** Creates a subtle movement animation for the specified character */
+  private void startIdleMovement(ImageView character) {
+    // Random subtle movements - slightly different for each character
+    double translateX = -5 + Math.random() * 10; // Random value between -5 and 5
+    double translateY = -3 + Math.random() * 6; // Random value between -3 and 3
+    double scaleVariation = 0.95 + Math.random() * 0.1; // Random value between 0.95 and 1.05
+
+    // Create translation animation
+    TranslateTransition bodyTranslate = new TranslateTransition(Duration.seconds(4), character);
+    bodyTranslate.setToX(character.getTranslateX() + translateX);
+    bodyTranslate.setToY(character.getTranslateY() + translateY);
+    bodyTranslate.setAutoReverse(true);
+    bodyTranslate.setCycleCount(2);
+
+    // Create subtle scale animation for breathing effect
+    ScaleTransition bodyScale = new ScaleTransition(Duration.seconds(6), character);
+    bodyScale.setToX(scaleVariation);
+    bodyScale.setToY(scaleVariation);
+    bodyScale.setAutoReverse(true);
+    bodyScale.setCycleCount(2);
+
+    // Start animations
+    bodyTranslate.play();
+    bodyScale.play();
   }
 }
