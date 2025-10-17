@@ -12,6 +12,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Rectangle;
 import nz.ac.auckland.apiproxy.chat.openai.ChatMessage;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
+import nz.ac.auckland.se206.AudioPlayer;
 import nz.ac.auckland.se206.ChatHistoryManager;
 
 public class AiWitnessController extends ChatController {
@@ -29,15 +30,24 @@ public class AiWitnessController extends ChatController {
   private boolean interactableComplete = false;
   private boolean interactionDialoguePlayed = false;
 
+  private AudioPlayer audioPlayer;
+
   @Override
   public void initialize() throws ApiProxyException {
     super.initialize();
+
+    // Get the universal audio player instance
+    audioPlayer = AudioPlayer.getInstance();
 
     // Cap txtTerminal to 26 characters
     txtTerminal
         .textProperty()
         .addListener(
             (observable, oldValue, newValue) -> {
+              // Play a typing sound
+              if (newValue.length() > oldValue.length()) {
+                audioPlayer.playRandomKeyboardSound(0.5);
+              }
               if (newValue.length() > 26) {
                 txtTerminal.setText(oldValue);
               }
@@ -76,6 +86,9 @@ public class AiWitnessController extends ChatController {
       }
       txtaTerminalFixed.setVisible(true);
       interactableState = true;
+
+      // Play computer open sound
+      audioPlayer.playSound("computerOpen", 0.5);
     }
   }
 
@@ -98,6 +111,9 @@ public class AiWitnessController extends ChatController {
     txtaTerminalFixed.setVisible(false);
     lblTerminalError.setVisible(false);
     interactableState = false;
+
+    // Play computer close sound
+    audioPlayer.playSound("computerClose", 0.5);
 
     // Display interaction if interaction is complete and dialogue if not already played
     if (interactableComplete && !interactionDialoguePlayed) {
@@ -144,10 +160,14 @@ public class AiWitnessController extends ChatController {
             "Message Received at 6/7/2055 12:36PM\n"
                 + "[Status: Viewable]\n"
                 + "--------------------------------------------\n");
-        appendTextWithTypewriterEffect(
+        displayTextWithTypewriterEffect(
             txtaTerminalFixed,
             "Manager (sent to INDUS-07): \"Remember to install the new Helios system before the end"
-                + " of the week.\"");
+                + " of the week.\"",
+            50,
+            false,
+            true,
+            "computer2");
         // Clear and disable input field
         txtTerminal.setText("");
         txtTerminal.setEditable(false);
@@ -161,6 +181,7 @@ public class AiWitnessController extends ChatController {
         // Mark interactable as complete
         ChatHistoryManager.getInstance().markInteractableComplete("LOGOS-09");
       } else {
+        audioPlayer.playSound("error", 0.5);
         lblTerminalError.setVisible(true);
       }
     }

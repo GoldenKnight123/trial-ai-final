@@ -20,7 +20,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
 import nz.ac.auckland.se206.App;
+import nz.ac.auckland.se206.AudioPlayer;
 import nz.ac.auckland.se206.ChatHistoryManager;
 import nz.ac.auckland.se206.GameStateContext;
 import nz.ac.auckland.se206.GameTimer;
@@ -84,6 +86,7 @@ public class RoomController extends Controller {
   @FXML private ImageView imgInteractable1;
   @FXML private ImageView imgInteractable2;
   @FXML private ImageView imgInteractable3;
+  @FXML private ImageView imgMute;
   @FXML private Label lblWhoSpeaking;
   @FXML private Label lblInstructions;
   @FXML private Label lblTimer;
@@ -97,6 +100,8 @@ public class RoomController extends Controller {
 
   private boolean isFading = false;
   private boolean isGuessing = false;
+
+  private AudioPlayer audioPlayer = AudioPlayer.getInstance();
 
   private HashMap<String, Boolean> flashbackMap =
       new HashMap<>() {
@@ -342,6 +347,9 @@ public class RoomController extends Controller {
                 App.forceReturnToRoom();
               });
 
+      // Play background music
+      audioPlayer.playSound("background", 0.25);
+
       // Reset flashback map
       flashbackMap.put("LOGOS-09", false);
       flashbackMap.put("Evan", false);
@@ -570,5 +578,16 @@ public class RoomController extends Controller {
 
   public void setFirstTimeInit(Boolean value) {
     isFirstTimeInit = value;
+  }
+
+  @FXML
+  private void onMute(MouseEvent event) throws ApiProxyException, IOException {
+    boolean muted = audioPlayer.toggleBackgroundMuted();
+    if (muted) {
+      imgMute.setImage(new Image(getClass().getResourceAsStream("/images/muteOn.png")));
+    } else {
+      imgMute.setImage(new Image(getClass().getResourceAsStream("/images/muteOff.png")));
+    }
+    audioPlayer.playSound("buttonClick", 0.5);
   }
 }
