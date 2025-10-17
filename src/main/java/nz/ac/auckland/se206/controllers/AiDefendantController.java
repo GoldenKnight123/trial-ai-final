@@ -2,6 +2,7 @@ package nz.ac.auckland.se206.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.effect.ColorAdjust;
@@ -22,6 +23,7 @@ public class AiDefendantController extends ChatController {
   @FXML private Pane paneInteractable;
   @FXML private ImageView imgOverride;
   @FXML private TextArea txtaEmail;
+  @FXML private Label lblRecipient;
 
   private boolean interactableComplete = false;
 
@@ -106,11 +108,29 @@ public class AiDefendantController extends ChatController {
       String id = rect.getId();
       switch (id) {
         case "rectAiCore":
-
-        case "rectSystem":
-
+          lblRecipient.setText("From: AI Core");
+          txtaEmail.setText(
+              "Preliminary models predict instability of new Helios Module at 37%.\n\n"
+                  + //
+                  "Requesting further testing authorization before deployment.");
+          break;
         case "rectManager":
-
+          lblRecipient.setText("From: Manager");
+          txtaEmail.setText(
+              "Your role is to comply with operational directives.\n\n"
+                  + //
+                  "Installation proceeds tomorrow.\n\n"
+                  + //
+                  "OVERRIDE AUTHORISATION: Upper Management Approval ID 4237-A.");
+          break;
+        case "rectSystem":
+          lblRecipient.setText("From: System");
+          txtaEmail.setText(
+              "Installation of the Helios Module has been authorized by Upper Management.\n\n"
+                  + //
+                  "Your objections are logged but overridden. Proceed with deployment as"
+                  + " instructed.");
+          break;
         default:
       }
     } else {

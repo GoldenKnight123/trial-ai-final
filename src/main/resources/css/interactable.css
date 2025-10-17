@@ -39,7 +39,7 @@
   -fx-font-family: "VT323";
   font-size: 20px;
   -fx-font-size: 20px;
-  -fx-text-fill: rgb(136, 255, 0);
+  -fx-text-fill: rgb(0, 0, 0);
   background-color: transparent;
   -fx-background-color: transparent;
   cursor: default;
