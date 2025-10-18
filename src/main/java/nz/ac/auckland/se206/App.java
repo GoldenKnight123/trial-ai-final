@@ -22,6 +22,7 @@ import nz.ac.auckland.se206.controllers.AiWitnessController;
 import nz.ac.auckland.se206.controllers.ChatController;
 import nz.ac.auckland.se206.controllers.DebriefController;
 import nz.ac.auckland.se206.controllers.FlashbackController;
+import nz.ac.auckland.se206.controllers.GameOverController;
 import nz.ac.auckland.se206.controllers.HumanController;
 import nz.ac.auckland.se206.controllers.RoomController;
 import nz.ac.auckland.se206.controllers.StartMenuController;
@@ -253,25 +254,39 @@ public class App extends Application {
    * @param sendDirectlyGameOver whether to send the game over state directly
    * @throws IOException if the FXML file is not found
    */
-  public static void openVerdict(ActionEvent event, boolean sendDirectlyGameOver)
-      throws IOException {
+  public static void openVerdict(ActionEvent event) throws IOException {
+
     // Load and cache the verdict scene
     SceneControllerPair pair = loadAndCacheScene("verdict");
     VerdictController verdictController = (VerdictController) pair.getController();
-
-    // Show game over if specified
-    if (sendDirectlyGameOver) {
-      verdictController.setGameOverVisible();
-    }
     // Bind a timer-expired handler for the verdict scene so the controller can show a message
     try {
       verdictController.bindTimerExpired();
     } catch (Exception e) {
       // safe no-op if controller doesn't support it
     }
+    verdictController.fadeIn();
     currentId = "verdict";
 
     // Set the verdict text in the controller
+    scene = pair.getScene();
+    primaryStage.setScene(scene);
+    primaryStage.show();
+  }
+
+  /**
+   * Opens the game over scene using cached scenes.
+   *
+   * @param event the mouse event that triggered the method
+   * @param sendDirectlyGameOver whether to send the game over state directly
+   * @throws IOException if the FXML file is not found
+   */
+  public static void openGameOver(ActionEvent event, String message) throws IOException {
+
+    SceneControllerPair pair = loadAndCacheScene("gameOver");
+    GameOverController gameOverController = (GameOverController) pair.getController();
+    gameOverController.setGameOverMessage(message);
+    currentId = "gameOver";
     scene = pair.getScene();
     primaryStage.setScene(scene);
     primaryStage.show();

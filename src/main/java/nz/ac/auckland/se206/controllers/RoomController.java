@@ -138,7 +138,7 @@ public class RoomController extends Controller {
         .setOnTimerExpired(
             () -> {
               try {
-                App.openVerdict(null, true);
+                App.openGameOver(null, "Failed to make a verdict in time.");
               } catch (IOException e) {
                 e.printStackTrace();
               }
@@ -345,6 +345,7 @@ public class RoomController extends Controller {
           .setOnTimerExpired(
               () -> {
                 App.forceReturnToRoom();
+                audioPlayer.stopSound("background");
               });
 
       // Play background music
@@ -531,6 +532,10 @@ public class RoomController extends Controller {
     // If all fixed dialogue has been consumed and the user is guessing, transition to verdict scene
     // depending on whether all witnesses have been spoken to and interactions have been completed
     else {
+      if (isFading) {
+        return;
+      }
+
       imgContinueArrow.setVisible(false);
       txtaDialogue.setVisible(false);
       imgTextArea.setVisible(false);
@@ -538,7 +543,9 @@ public class RoomController extends Controller {
       // Fade out the room and then open the verdict scene. We always open the verdict scene;
       // the boolean below selects whether the verdict view should show the "game over" variant
       // (used when the player hasn't spoken to all required participants).
-      boolean showGameOverVariant = !ChatHistoryManager.getInstance().haveSpokenToAll();
+      boolean showGameOverVariant =
+          (!ChatHistoryManager.getInstance().haveSpokenToAll()
+              || !ChatHistoryManager.getInstance().interactablesComplete());
       FadeTransition fadeTransition = new FadeTransition(Duration.millis(1000), room);
       fadeTransition.setFromValue(1.0);
       fadeTransition.setToValue(0.0);
@@ -547,7 +554,14 @@ public class RoomController extends Controller {
       fadeTransition.setOnFinished(
           e -> {
             try {
-              App.openVerdict(null, showGameOverVariant);
+
+              if (showGameOverVariant) {
+                isFading = true;
+                App.openGameOver(null, "Failed to interact with all participants.");
+              } else {
+                isFading = true;
+                App.openVerdict(null);
+              }
             } catch (IOException ioEx) {
               ioEx.printStackTrace();
             }

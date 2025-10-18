@@ -1,16 +1,16 @@
 package nz.ac.auckland.se206.controllers;
 
 import java.io.IOException;
+import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.Pane;
-import javafx.scene.shape.Arc;
+import javafx.scene.shape.Rectangle;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
 import nz.ac.auckland.se206.App;
+import nz.ac.auckland.se206.AudioPlayer;
 import nz.ac.auckland.se206.ChatHistoryManager;
 import nz.ac.auckland.se206.GameTimer;
 
@@ -20,23 +20,21 @@ public class VerdictController extends Controller {
   @FXML private TextArea verdictTxt;
   @FXML private Button btnNotGuilty;
   @FXML private Button btnGuilty;
-  @FXML private Pane paneGameOver;
   @FXML private Label lblGameOverMessage;
-  @FXML private Button btnRestart;
-  @FXML private Pane paneBackground;
-  @FXML private ImageView imgTimer;
   @FXML private Label lblTimer;
-  @FXML private Arc arcTimer;
+  @FXML private Rectangle rectFade;
+
+  private AudioPlayer audioPlayer = AudioPlayer.getInstance();
 
   @FXML
   public void initialize() throws ApiProxyException {
     // Register timer label with GameTimer
     GameTimer.getInstance().registerTimerLabel(lblTimer);
-    GameTimer.getInstance().registerTimerArc(arcTimer);
 
-    imgTimer.setVisible(true);
+    // Unfocus text area to avoid auto-focusing keyboard on scene load
+    lblTimer.requestFocus();
+
     lblTimer.setVisible(true);
-    arcTimer.setVisible(true);
 
     // Disable verdict buttons until user enters non-whitespace text
     if (btnGuilty != null) {
@@ -61,6 +59,38 @@ public class VerdictController extends Controller {
                 }
               });
     }
+
+    btnGuilty.setOnMouseEntered(
+        event -> {
+          btnGuilty.setText("> Guilty");
+          audioPlayer.playSound("computerTalk2", 0.5);
+        });
+
+    btnGuilty.setOnMouseExited(
+        event -> {
+          btnGuilty.setText("Guilty");
+        });
+
+    btnNotGuilty.setOnMouseEntered(
+        event -> {
+          btnNotGuilty.setText("> Not Guilty");
+          audioPlayer.playSound("computerTalk2", 0.5);
+        });
+    btnNotGuilty.setOnMouseExited(
+        event -> {
+          btnNotGuilty.setText("Not Guilty");
+        });
+  }
+
+  public void fadeIn() {
+    rectFade.setVisible(true);
+    TranslateTransition tt = new TranslateTransition();
+    tt.setNode(rectFade);
+    tt.setFromY(0);
+    tt.setToY(740);
+    tt.setDuration(javafx.util.Duration.seconds(2));
+    tt.play();
+    audioPlayer.playSound("scan");
   }
 
   @FXML
@@ -68,7 +98,6 @@ public class VerdictController extends Controller {
     // Check if the player has asked each participant a question and has completed all interactables
     if (!ChatHistoryManager.getInstance().haveSpokenToAll()
         && !ChatHistoryManager.getInstance().interactablesComplete()) {
-      paneGameOver.setVisible(true); // game over
     } else {
       String text = verdictTxt.getText() == null ? "" : verdictTxt.getText();
       boolean wasCorrect = false; // guilty means incorrect in current game wiring
@@ -76,6 +105,8 @@ public class VerdictController extends Controller {
         // default to incorrect if no rationale provided
         wasCorrect = false;
       }
+
+      audioPlayer.playSound("computerTalk", 0.5);
 
       GameTimer.getInstance().stop();
       App.openDebrief(event, wasCorrect);
@@ -87,7 +118,6 @@ public class VerdictController extends Controller {
     // Check if the player has asked each participant a question
     if (!ChatHistoryManager.getInstance().haveSpokenToAll()
         && !ChatHistoryManager.getInstance().interactablesComplete()) {
-      paneGameOver.setVisible(true); // game over
     } else {
       String text = verdictTxt.getText() == null ? "" : verdictTxt.getText();
       boolean wasCorrect = true; // not guilty means correct in current game wiring
@@ -96,17 +126,11 @@ public class VerdictController extends Controller {
         wasCorrect = false;
       }
 
+      audioPlayer.playSound("computerTalk", 0.5);
+
       GameTimer.getInstance().stop();
       App.openDebrief(event, wasCorrect);
     }
-  }
-
-  public void setGameOverVisible() {
-    paneGameOver.setVisible(true);
-    GameTimer.getInstance().stop();
-    imgTimer.setVisible(false);
-    lblTimer.setVisible(false);
-    arcTimer.setVisible(false);
   }
 
   /**
@@ -117,13 +141,14 @@ public class VerdictController extends Controller {
     GameTimer.getInstance()
         .setOnTimerExpired(
             () -> {
-              // Show message indicating player didn't choose in time
-              paneGameOver.setVisible(true);
-              lblGameOverMessage.setText("You didn't choose in time");
+              try {
+                App.openGameOver(null, "Failed to make a verdict in time.");
+
+              } catch (IOException e) {
+                e.printStackTrace();
+              }
               GameTimer.getInstance().stop();
-              imgTimer.setVisible(false);
               lblTimer.setVisible(false);
-              arcTimer.setVisible(false);
             });
   }
 
@@ -134,8 +159,7 @@ public class VerdictController extends Controller {
   }
 
   @FXML
-  private void onRestart(ActionEvent event) throws IOException {
-    App.openStartScreen(null);
-    App.reinitialize();
+  private void onKeyTyped() {
+    audioPlayer.playRandomKeyboardSound(0.5);
   }
 }
