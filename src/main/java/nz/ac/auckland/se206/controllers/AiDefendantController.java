@@ -100,7 +100,8 @@ public class AiDefendantController extends ChatController {
   private void onRectClick(MouseEvent event) {
     Object source = event.getSource();
 
-    if (source instanceof Rectangle rect) {
+    if (source instanceof Rectangle) {
+      Rectangle rect = (Rectangle) source;
       String id = rect.getId();
       switch (id) {
         case "rectAiCore":
