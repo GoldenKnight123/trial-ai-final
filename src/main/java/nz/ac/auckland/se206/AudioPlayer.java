@@ -45,8 +45,6 @@ public class AudioPlayer {
       "src/main/resources/sounds/computerOpen.wav",
       "src/main/resources/sounds/computerClose.wav",
       "src/main/resources/sounds/messageSend.wav",
-      "src/main/resources/sounds/uiClick.wav",
-      "src/main/resources/sounds/uiBack.wav",
       "src/main/resources/sounds/computer2.wav",
       "src/main/resources/sounds/playerTalk.wav",
       "src/main/resources/sounds/logos09Talk.wav",
@@ -56,10 +54,12 @@ public class AudioPlayer {
       "src/main/resources/sounds/computerTalk2.wav",
       "src/main/resources/sounds/background.mp3",
       "src/main/resources/sounds/buttonClick.mp3",
-      "src/main/resources/sounds/zoomIn.mp3",
+      "src/main/resources/sounds/zoomIn.wav",
       "src/main/resources/sounds/sendMessage.wav",
       "src/main/resources/sounds/scan.wav",
-      "src/main/resources/sounds/scanLong.wav"
+      "src/main/resources/sounds/scanLong.wav",
+      "src/main/resources/sounds/timesUp.wav",
+      "src/main/resources/sounds/hover.wav"
     };
 
     String[] soundKeys = {
@@ -72,8 +72,6 @@ public class AudioPlayer {
       "computerOpen",
       "computerClose",
       "messageSend",
-      "uiClick",
-      "uiBack",
       "computer2",
       "playerTalk",
       "logos09Talk",
@@ -86,7 +84,9 @@ public class AudioPlayer {
       "zoomIn",
       "sendMessage",
       "scan",
-      "scanLong"
+      "scanLong",
+      "timesUp",
+      "hover"
     };
 
     for (int i = 0; i < soundFiles.length; i++) {

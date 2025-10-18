@@ -18,19 +18,34 @@
             <Image url="@../images/background.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="imgDefendant" fitHeight="359.0" fitWidth="445.0" layoutX="477.0" layoutY="145.0" onMouseClicked="#handleDefendantClick" preserveRatio="true">
+      <ImageView fx:id="imgWitnessAiBody" fitHeight="388.0" fitWidth="354.0" layoutX="133.0" layoutY="169.0" preserveRatio="true">
          <image>
-            <Image url="@../images/indus-07.png" />
+            <Image url="@../images/logos-09-body.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="imgWitnessAi" fitHeight="388.0" fitWidth="354.0" layoutX="133.0" layoutY="166.0" onMouseClicked="#handleWitnessAiClick" preserveRatio="true">
+      <ImageView fx:id="imgWitnessAiStand" fitHeight="388.0" fitWidth="354.0" layoutX="133.0" layoutY="163.0" preserveRatio="true">
          <image>
-            <Image url="@../images/logos-09.png" />
+            <Image url="@../images/logos-09-stand.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="imgWitnessHuman" fitHeight="388.0" fitWidth="271.0" layoutX="930.0" layoutY="160.0" onMouseClicked="#handleWitnessHumanClick" preserveRatio="true">
+      <ImageView fx:id="imgDefendantBody" fitHeight="388.0" fitWidth="354.0" layoutX="475.0" layoutY="147.0" onMouseClicked="#handleDefendantClick" preserveRatio="true">
          <image>
-            <Image url="@../images/evan.png" />
+            <Image url="@../images/indus-07-body.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="imgDefendantStand" fitHeight="388.0" fitWidth="354.0" layoutX="475.0" layoutY="141.0" preserveRatio="true">
+         <image>
+            <Image url="@../images/indus-07-stand.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="imgWitnessHumanBody" fitHeight="388.0" fitWidth="354.0" layoutX="930.0" layoutY="163.0" preserveRatio="true">
+         <image>
+            <Image url="@../images/evan-body.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="imgWitnessHumanStand" fitHeight="388.0" fitWidth="354.0" layoutX="930.0" layoutY="157.0" preserveRatio="true">
+         <image>
+            <Image url="@../images/evan-stand.png" />
          </image>
       </ImageView>
       <ImageView fx:id="imgTextArea" fitHeight="720.0" fitWidth="1537.0" layoutX="-2.0" layoutY="5.0" preserveRatio="true" visible="false">
@@ -134,5 +149,8 @@
          </image>
       </ImageView>
    <Button id="verdictBtn" fx:id="verdictBtn" layoutX="565.0" layoutY="20.0" mnemonicParsing="false" onAction="#onSkipToVerdict" prefHeight="44.0" prefWidth="175.0" stylesheets="@../css/memory.css" text="Skip to verdict" />
+      <Rectangle fx:id="rectWitnessAi" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff00" height="167.0" layoutX="172.0" layoutY="187.0" onMouseClicked="#handleWitnessAiClick" stroke="TRANSPARENT" strokeType="INSIDE" width="155.0" />
+      <Rectangle fx:id="rectDefendant" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff00" height="167.0" layoutX="563.0" layoutY="161.0" onMouseClicked="#handleDefendantClick" stroke="TRANSPARENT" strokeType="INSIDE" width="155.0" />
+      <Rectangle fx:id="rectWitnessHuman" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff00" height="167.0" layoutX="996.0" layoutY="187.0" onMouseClicked="#handleWitnessHumanClick" stroke="TRANSPARENT" strokeType="INSIDE" width="155.0" />
    </children>
 </Pane>
