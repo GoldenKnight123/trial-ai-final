@@ -110,3 +110,15 @@
   background-color: transparent;
   -fx-background-color: transparent;
 }
+
+#lblEmailInstruct {
+  font-family: "VT323";
+  -fx-font-family: "VT323";
+  font-size: 25px;
+  -fx-font-size: 25px;
+  -fx-text-fill: #000000;
+  background-color: transparent;
+  -fx-background-color: transparent;
+  cursor: default;
+  -fx-cursor: default;
+}

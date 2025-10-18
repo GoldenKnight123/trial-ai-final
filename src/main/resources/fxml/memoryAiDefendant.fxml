@@ -34,7 +34,7 @@
             <Image url="@../images/text-field.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="lblLocation" fitHeight="73.0" fitWidth="272.0" layoutY="82.0" pickOnBounds="true">
+      <ImageView fx:id="imgLocation" fitHeight="73.0" fitWidth="272.0" layoutY="82.0" pickOnBounds="true">
          <image>
             <Image url="@../images/locationIndicator.png" />
          </image>
@@ -81,7 +81,7 @@
                   <Image url="@../images/lock-icon.png" />
                </image></ImageView>
             <Label fx:id="lblHint" layoutX="577.0" layoutY="425.0" stylesheets="@../css/interactable.css" text="Hint: What is my name?" />
-            <TextField fx:id="txtFieldPassword" layoutX="559.0" layoutY="455.0" maxHeight="-Infinity" maxWidth="-Infinity" pickOnBounds="false" prefHeight="29.0" prefWidth="180.0" promptText="Enter Password" stylesheets="@../css/interactable.css" />
+            <TextField fx:id="txtFieldPassword" layoutX="559.0" layoutY="455.0" maxHeight="-Infinity" maxWidth="-Infinity" pickOnBounds="false" prefHeight="29.0" prefWidth="180.0" promptText="Enter Password" styleClass="text-field" stylesheets="@../css/interactable.css" />
             <ImageView fx:id="imgClose1" fitHeight="127.0" fitWidth="60.0" layoutX="1162.0" layoutY="85.0" onMouseClicked="#onCloseInteraction" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/close-interaction.png" />
@@ -89,7 +89,7 @@
             </ImageView>
          </children>
       </Pane>
-      <Pane fx:id="paneInteractable" prefHeight="720.0" prefWidth="1280.0">
+      <Pane fx:id="paneInteractable" prefHeight="720.0" prefWidth="1280.0" visible="false">
          <children>
             <Rectangle fx:id="rectOverlay" arcHeight="5.0" arcWidth="5.0" height="720.0" onMouseClicked="#onCloseInteraction" opacity="0.7" stroke="BLACK" strokeType="INSIDE" width="1280.0" />
             <ImageView fitHeight="800.0" fitWidth="1400.0" layoutX="-50.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
@@ -129,7 +129,7 @@
                   <Image url="@../images/instructionBox.png" />
                </image>
             </ImageView>
-            <TextArea fx:id="txtaInstruction" layoutX="331.0" layoutY="26.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="68.0" prefWidth="670.0" />
+            <Label fx:id="lblEmailInstruct" alignment="CENTER" contentDisplay="CENTER" layoutX="317.0" layoutY="44.0" prefWidth="700.0" stylesheets="@../css/interactable.css" text="Label" textAlignment="CENTER" />
          </children>
       </Pane>
    </children>

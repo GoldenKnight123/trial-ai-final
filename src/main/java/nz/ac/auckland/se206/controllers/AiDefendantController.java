@@ -2,9 +2,7 @@ package nz.ac.auckland.se206.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.ColorAdjust;
@@ -20,20 +18,21 @@ public class AiDefendantController extends ChatController {
 
   @FXML private Rectangle rectOverlay;
   @FXML private Rectangle rectComputer;
-  @FXML private ImageView imgTablet;
-  @FXML private Slider sldrProtocol;
-  @FXML private Button btnConfirm;
   @FXML private Pane paneInteractable;
   @FXML private ImageView imgOverride;
   @FXML private TextArea txtaEmail;
   @FXML private Label lblRecipient;
+  @FXML private Rectangle rectAiCore;
+  @FXML private Rectangle rectManager;
+  @FXML private Rectangle rectSystem;
   @FXML private Pane panePasswordScreen;
   @FXML private Rectangle rectOverlay1;
   @FXML private TextField txtFieldPassword;
+  @FXML private Label lblEmailInstruct;
   @FXML private Label lblHint;
-  @FXML private TextField txtaInstruction;
 
   private boolean interactableComplete = false;
+  private int interactableCompleteCount = 0;
   private boolean passwordScreenShown = false;
 
   // private boolean interactionDialoguePlayed = false;
@@ -79,13 +78,7 @@ public class AiDefendantController extends ChatController {
     }
 
     paneInteractable.setVisible(true);
-
-    if (!interactableComplete) {
-      rectOverlay.setDisable(true); // Disable overlay on first click before completion
-    } else {
-      rectOverlay.setDisable(false); // Enable overlay after interactable is completed
-      imgOverride.setVisible(true);
-    }
+    lblEmailInstruct.setText("Review the emails regarding the Helios Module deployment.");
   }
 
   @FXML
@@ -97,36 +90,94 @@ public class AiDefendantController extends ChatController {
     }
 
     paneInteractable.setVisible(false);
-    imgOverride.setVisible(false);
     completeInteraction();
   }
 
+  @FXML
+  private void onRectClick(MouseEvent event) {
+    Object source = event.getSource();
+
+    if (source instanceof Rectangle rect) {
+      String id = rect.getId();
+      switch (id) {
+        case "rectAiCore":
+          rect.setOpacity(1.0);
+          lblRecipient.setText("From: AI Core");
+          txtaEmail.setText(
+              "Preliminary models predict instability of new Helios Module at 37%.\n\n"
+                  + //
+                  "Requesting further testing authorization before deployment.");
+          interactableCompleteCount++;
+          break;
+        case "rectManager":
+          rect.setOpacity(1.0);
+          lblRecipient.setText("From: Manager");
+          txtaEmail.setText(
+              "Your role is to comply with operational directives.\n\n"
+                  + //
+                  "Installation proceeds tomorrow.\n\n"
+                  + //
+                  "OVERRIDE AUTHORISATION: Upper Management Approval ID 4237-A.");
+          interactableCompleteCount++;
+          break;
+        case "rectSystem":
+          rect.setOpacity(1.0);
+          lblRecipient.setText("From: System");
+          txtaEmail.setText(
+              "Installation of the Helios Module has been authorized by Upper Management.\n\n"
+                  + //
+                  "Your objections are logged but overridden. Proceed with deployment as"
+                  + " instructed.");
+          interactableCompleteCount++;
+          break;
+        default:
+      }
+    } else {
+      System.out.println("Clicked source is not a Rectangle: " + source);
+    }
+  }
+
+  /** Handle password submission from the password TextField. */
   private void handlePassword() {
     if (txtFieldPassword == null || panePasswordScreen == null) {
       return;
     }
 
     String entered = txtFieldPassword.getText() == null ? "" : txtFieldPassword.getText().trim();
-
     final String CORRECT = "indus";
 
     if (entered.equals(CORRECT)) {
       panePasswordScreen.setVisible(false);
       passwordScreenShown = true;
       paneInteractable.setVisible(true);
+      if (lblEmailInstruct != null) {
+        lblEmailInstruct.setText("Review the emails regarding the Helios Module deployment.");
+      }
       if (rectOverlay != null) {
         rectOverlay.setDisable(true);
       }
     } else {
+      // Clear the field and show an explicit hint label so the user sees the error
       txtFieldPassword.clear();
       txtFieldPassword.setPromptText("Incorrect password — try again");
+
+      // Move focus away from the text field so the prompt text (if set) is visible
+      if (panePasswordScreen != null) {
+        panePasswordScreen.requestFocus();
+      }
     }
   }
 
+  /** Called when the interactable has been completed (all emails viewed). */
   private void completeInteraction() {
-    if (interactableComplete) {
+    // Only run completion once when all three email rectangles have been viewed
+    if (interactableCompleteCount >= 3 && !interactableComplete) {
+      interactableComplete = true;
+
       paneInteractable.setVisible(false);
-      imgOverride.setVisible(false);
+      if (imgOverride != null) {
+        imgOverride.setVisible(false);
+      }
 
       getChatCompletionRequest()
           .addMessage(
@@ -144,55 +195,7 @@ public class AiDefendantController extends ChatController {
                       + " about the risks of the new technology, management has issued a direct"
                       + " override."));
 
-      // Add to chat history
-      // getChatCompletionRequest().addMessage(new ChatMessage("assistant", message));
-      // ChatHistoryManager.getInstance().addMessage(getTarget(), new ChatMessage("user", message));
-
       displayInteractionDialogue();
-
-      // Display to chatbox
-      // displayTextWithTypewriterEffect(txtaChat, message);
-    }
-  }
-
-  @FXML
-  private void onRectClick(MouseEvent event) {
-    Object source = event.getSource();
-
-    if (source instanceof Rectangle rect) {
-      String id = rect.getId();
-      switch (id) {
-        case "rectAiCore":
-          rect.setOpacity(1.0);
-          lblRecipient.setText("From: AI Core");
-          txtaEmail.setText(
-              "Preliminary models predict instability of new Helios Module at 37%.\n\n"
-                  + //
-                  "Requesting further testing authorization before deployment.");
-          break;
-        case "rectManager":
-          rect.setOpacity(1.0);
-          lblRecipient.setText("From: Manager");
-          txtaEmail.setText(
-              "Your role is to comply with operational directives.\n\n"
-                  + //
-                  "Installation proceeds tomorrow.\n\n"
-                  + //
-                  "OVERRIDE AUTHORISATION: Upper Management Approval ID 4237-A.");
-          break;
-        case "rectSystem":
-          rect.setOpacity(1.0);
-          lblRecipient.setText("From: System");
-          txtaEmail.setText(
-              "Installation of the Helios Module has been authorized by Upper Management.\n\n"
-                  + //
-                  "Your objections are logged but overridden. Proceed with deployment as"
-                  + " instructed.");
-          break;
-        default:
-      }
-    } else {
-      System.out.println("Clicked source is not a Rectangle: " + source);
     }
   }
 }
