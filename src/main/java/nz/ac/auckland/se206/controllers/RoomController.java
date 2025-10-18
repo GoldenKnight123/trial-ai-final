@@ -170,6 +170,40 @@ public class RoomController extends Controller {
     isGuessing = true;
   }
 
+  /**
+   * Forces a check of mouse hover states for all interactive elements. This is useful after fade
+   * transitions or dialogue completion.
+   */
+  private void forceHoverStateCheck() {
+    // Check if mouse is currently over any of the interactive images
+    if (imgWitnessAi.isHover() && canInteract && !isFading) {
+      // Trigger hover effect for LOGOS-09
+      ColorAdjust highlight = new ColorAdjust();
+      highlight.setBrightness(0.3);
+      imgWitnessAi.setEffect(highlight);
+      imgWitnessAi.setImage(new Image("images/logos-09-hover.png"));
+      imgWitnessAi.setCursor(Cursor.HAND);
+    }
+
+    if (imgDefendant.isHover() && canInteract && !isFading) {
+      // Trigger hover effect for INDUS-07
+      ColorAdjust highlight = new ColorAdjust();
+      highlight.setBrightness(0.3);
+      imgDefendant.setEffect(highlight);
+      imgDefendant.setImage(new Image("images/indus-07-hover.png"));
+      imgDefendant.setCursor(Cursor.HAND);
+    }
+
+    if (imgWitnessHuman.isHover() && canInteract && !isFading) {
+      // Trigger hover effect for Evan
+      ColorAdjust highlight = new ColorAdjust();
+      highlight.setBrightness(0.3);
+      imgWitnessHuman.setEffect(highlight);
+      imgWitnessHuman.setImage(new Image("images/evan-hover.png"));
+      imgWitnessHuman.setCursor(Cursor.HAND);
+    }
+  }
+
   public void fadeIn() {
     System.out.println("Fading in room");
     isFading = true; // Set flag to prevent interactions during fade
@@ -207,6 +241,7 @@ public class RoomController extends Controller {
     fadeTransition.setOnFinished(
         e -> {
           isFading = false; // Reset flag when fade completes
+          forceHoverStateCheck();
           if (GameTimer.getInstance().getTimeLeft() <= 0) {
             context.setState(context.getGuessingState());
           }
@@ -509,6 +544,7 @@ public class RoomController extends Controller {
       lblInstructions.setVisible(true);
       imgInstructionBox.setVisible(true);
       canInteract = true;
+      forceHoverStateCheck();
       context.setState(context.getGameStartedState());
     }
 
