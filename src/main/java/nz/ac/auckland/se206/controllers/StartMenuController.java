@@ -52,6 +52,8 @@ public class StartMenuController extends Controller {
     Font.loadFont(getClass().getResourceAsStream("/fonts/VT323-Regular.ttf"), 48);
     Font.loadFont(getClass().getResourceAsStream("/fonts/CONSOLA.TTF"), 48);
 
+    System.out.println("Initializing Start Menu Controller");
+
     fadeIn();
   }
 
