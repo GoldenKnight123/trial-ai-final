@@ -61,14 +61,6 @@ public class ChatHistoryManager {
     spokenToMap.clear();
     interactablesMap.clear();
 
-    // Set spokenToMap and interactablesMap to true for each character for debugging
-    spokenToMap.put("LOGOS-09", true);
-    spokenToMap.put("INDUS-07", true);
-    spokenToMap.put("Evan", true);
-    interactablesMap.put("LOGOS-09", true);
-    interactablesMap.put("INDUS-07", true);
-    interactablesMap.put("Evan", true);
-
     // Initialize chat history for each character
     chatHistory.put("LOGOS-09", new ArrayList<>());
     chatHistory.put("INDUS-07", new ArrayList<>());
@@ -84,9 +76,10 @@ public class ChatHistoryManager {
         "The Helios system has been installed successfully, I should adjust the settings of it.");
     fixedDialogue.put(
         "Evan",
-        "After installing the new module, I began a routine diagnostics check. But there was heavy"
-            + " interference in the signal, so I had to carefully tune the diagnostics tool just to"
-            + " get a clear reading");
+        "The installation itself was standard procedure for us, just another work order. Later, on"
+            + " my coffee break, I saw the day's paper was torn up on the table. I was curious"
+            + " about that new 'Helios module' I'd just installed, so I tried to piece together the"
+            + " article to see what it said");
 
     // Initialize interaction dialogue for each character
     interactionDialogue.put(
@@ -101,8 +94,9 @@ public class ChatHistoryManager {
             + " installement of the technology.");
     interactionDialogue.put(
         "Evan",
-        "After carefully tuning the diagnostics, I finally saw the readings clearly, the"
-            + " values were at dangerously high levels.");
+        "So it was experimental and fast-tracked. No wonder I saw the system straining later."
+            + " Management (INDUS-07) didn't have me install an upgrade; they had me install a"
+            + " prototype.");
   }
 
   /**
