@@ -25,7 +25,8 @@ Below are the details about your memory.
 
 During your memory:
 - You are in a control room and you receive the call from upper management.
-- The judge can view your email conversations regarding the installation of the new technology. 
+- Your interactable is a computer with an alert of a message. 
+- In the interactable, the judge can view your email conversations regarding the installation of the new technology (Helios Module).
 - The emails will indicate that the upper management pressured you to install the Helios module even though it was found to have risks of up to 37% upon installement.
 - Despite this hesitancy, management issues a direct override to your decision and you order the installment. 
 
