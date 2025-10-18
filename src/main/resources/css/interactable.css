@@ -1,53 +1,124 @@
-/* .slider .track {
-  -fx-background-color: linear-gradient(to right, #CEFEE5, #0a7e40);
-  -fx-background-radius: 5;
-} */
-
-/* .slider .track {
-  -fx-background-color: #CEFEE5;
-  -fx-border-color: rgb(0, 0, 0);
-  -fx-border-radius: 10px;
-} */
-
-.slider .thumb {
-  -fx-background-color: #1f5338;
-  -fx-background-radius: 15px;
-  -fx-padding: 10px;
+#lblEmail, #lblEmail1, #lblEmail2, #lblHeading {
+  font-family: "VT323";
+  -fx-font-family: "VT323";
+  font-size: 20px;
+  -fx-font-size: 20px;
+  -fx-text-fill: #88ff00;
+  background-color: transparent;
+  -fx-background-color: transparent;
+  cursor: default;
+  -fx-cursor: default;
 }
 
-.slider .track {
-  -fx-background-color: linear-gradient(to right, lightgreen, green);
-  -fx-background-insets: 0;
-  -fx-background-radius: 5px;
-  -fx-padding: 2px;
-}
-
-.slider {
-  -fx-pref-width: 400px;
-}
-
-#btnConfirm,
-#btnExitInteractable {
-  font-family: "Consolas";
-  -fx-font-family: "Consolas";
-  background-color: #FFF8E3;
-  -fx-background-color: #FFF8E3;
-  -fx-background-radius: 10px;
-  -fx-background-insets: 0;
-  border-color: black;
-  -fx-border-color: black;
-  border-radius: 10px;
-  -fx-border-radius: 10px;
-  -fx-border-insets: 0;
-  border-width: 3px;
-  -fx-border-width: 3px;
-  -fx-text-fill: black;
-  font-size: 12px;
+#lblEmailSubject, #lblEmailSubject1, #lblEmailSubject2 {
+  font-family: "VT323";
+  -fx-font-family: "VT323";
+  font-size: 15px;
   -fx-font-size: 15px;
+  -fx-text-fill: #88ff00;
+  background-color: transparent;
+  -fx-background-color: transparent;
+  cursor: default;
+  -fx-cursor: default;
 }
 
-#btnConfirm:hover,
-#btnExitInteractable:hover {
-  background-color: #b48700;
-  -fx-background-color: #b48700;
+#lblRecipient {
+  font-family: "VT323";
+  -fx-font-family: "VT323";
+  font-size: 20px;
+  -fx-font-size: 20px;
+  -fx-text-fill: #000000;
+  background-color: transparent;
+  -fx-background-color: transparent;
+  cursor: default;
+  -fx-cursor: default;
+}
+
+.text-area {
+  font-family: "VT323";
+  -fx-font-family: "VT323";
+  font-size: 20px;
+  -fx-font-size: 20px;
+  -fx-text-fill: rgb(0, 0, 0);
+  background-color: transparent;
+  -fx-background-color: transparent;
+  cursor: default;
+  -fx-cursor: default;
+}
+
+.text-area .content {
+  background-color: transparent;
+  -fx-background-color: transparent;
+  border-color: transparent;
+  -fx-border-color: transparent;
+  border-width: 1px;
+  -fx-border-width: 1px;
+  padding: 5px;
+  -fx-padding: 5px;
+}
+
+.text-area .viewport {
+  background-color: transparent;
+  -fx-background-color: transparent;
+}
+
+.text-area .scroll-pane {
+  background-color: transparent;
+  -fx-background-color: transparent;
+}
+
+#lblHint {
+  font-family: "VT323";
+  -fx-font-family: "VT323";
+  font-size: 15px;
+  -fx-font-size: 15px;
+  -fx-text-fill: #88ff00;
+  background-color: transparent;
+  -fx-background-color: transparent;
+  cursor: default;
+  -fx-cursor: default;
+}
+
+
+.text-field {
+  font-family: "VT323";
+  -fx-font-family: "VT323";
+  font-size: 15px;
+  -fx-font-size: 15px;
+  -fx-text-fill: #88ff00;
+  background-color:  #5a6b45;
+  -fx-background-color: #5a6b45;
+}
+
+.text-field .content {
+  background-color: #000000;
+  -fx-background-color: #000000;
+  border-color: #000000;
+  -fx-border-color: #000000;
+  border-width: 1px;
+  -fx-border-width: 1px;
+  padding: 5px;
+  -fx-padding: 5px;
+}
+
+.text-field .viewport {
+  background-color: #5a6b45;
+  -fx-background-color: #5a6b45;
+}
+
+.text-field .scroll-pane {
+  background-color: transparent;
+  -fx-background-color: transparent;
+}
+
+#lblEmailInstruct {
+  font-family: "VT323";
+  -fx-font-family: "VT323";
+  font-size: 25px;
+  -fx-font-size: 25px;
+  -fx-text-fill: #000000;
+  background-color: transparent;
+  -fx-background-color: transparent;
+  cursor: default;
+  -fx-cursor: default;
 }
