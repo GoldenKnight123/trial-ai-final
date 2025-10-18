@@ -1,4 +1,4 @@
-#lblEmail, #lblEmail1, #lblEmail2 {
+#lblEmail, #lblEmail1, #lblEmail2, #lblHeading {
   font-family: "VT323";
   -fx-font-family: "VT323";
   font-size: 20px;
@@ -67,3 +67,46 @@
   -fx-background-color: transparent;
 }
 
+#lblHint {
+  font-family: "VT323";
+  -fx-font-family: "VT323";
+  font-size: 15px;
+  -fx-font-size: 15px;
+  -fx-text-fill: #88ff00;
+  background-color: transparent;
+  -fx-background-color: transparent;
+  cursor: default;
+  -fx-cursor: default;
+}
+
+
+.text-field {
+  font-family: "VT323";
+  -fx-font-family: "VT323";
+  font-size: 15px;
+  -fx-font-size: 15px;
+  -fx-text-fill: #88ff00;
+  background-color:  #5a6b45;
+  -fx-background-color: #5a6b45;
+}
+
+.text-field .content {
+  background-color: #000000;
+  -fx-background-color: #000000;
+  border-color: #000000;
+  -fx-border-color: #000000;
+  border-width: 1px;
+  -fx-border-width: 1px;
+  padding: 5px;
+  -fx-padding: 5px;
+}
+
+.text-field .viewport {
+  background-color: #5a6b45;
+  -fx-background-color: #5a6b45;
+}
+
+.text-field .scroll-pane {
+  background-color: transparent;
+  -fx-background-color: transparent;
+}

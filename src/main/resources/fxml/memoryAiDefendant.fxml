@@ -68,7 +68,28 @@
       <Rectangle fx:id="rectHistory" arcHeight="5.0" arcWidth="5.0" height="720.0" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="1280.0" />
       <TextArea fx:id="txtaHistory" editable="false" layoutX="818.0" layoutY="82.0" prefHeight="620.0" prefWidth="444.0" stylesheets="@../css/memory.css" visible="false" wrapText="true" />
       <Button fx:id="btnHistory" layoutX="1126.0" layoutY="27.0" mnemonicParsing="false" onAction="#onToggleHistory" prefHeight="44.0" prefWidth="143.0" stylesheets="@../css/memory.css" text="Show History" />
-      <Pane fx:id="paneInteractable" prefHeight="720.0" prefWidth="1280.0" visible="false">
+      <Pane fx:id="panePasswordScreen" prefHeight="720.0" prefWidth="1280.0" visible="false">
+         <children>
+            <Rectangle fx:id="rectOverlay1" arcHeight="5.0" arcWidth="5.0" height="720.0" onMouseClicked="#onCloseInteraction" opacity="0.7" stroke="BLACK" strokeType="INSIDE" width="1280.0" />
+            <ImageView fitHeight="800.0" fitWidth="1400.0" layoutX="-50.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/computer-defendant.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="250.0" fitWidth="429.0" layoutX="435.0" layoutY="185.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/lock-icon.png" />
+               </image></ImageView>
+            <Label fx:id="lblHint" layoutX="577.0" layoutY="425.0" stylesheets="@../css/interactable.css" text="Hint: What is my name?" />
+            <TextField fx:id="txtFieldPassword" layoutX="559.0" layoutY="455.0" maxHeight="-Infinity" maxWidth="-Infinity" pickOnBounds="false" prefHeight="29.0" prefWidth="180.0" promptText="Enter Password" stylesheets="@../css/interactable.css" />
+            <ImageView fx:id="imgClose1" fitHeight="127.0" fitWidth="60.0" layoutX="1162.0" layoutY="85.0" onMouseClicked="#onCloseInteraction" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/close-interaction.png" />
+               </image>
+            </ImageView>
+         </children>
+      </Pane>
+      <Pane fx:id="paneInteractable" prefHeight="720.0" prefWidth="1280.0">
          <children>
             <Rectangle fx:id="rectOverlay" arcHeight="5.0" arcWidth="5.0" height="720.0" onMouseClicked="#onCloseInteraction" opacity="0.7" stroke="BLACK" strokeType="INSIDE" width="1280.0" />
             <ImageView fitHeight="800.0" fitWidth="1400.0" layoutX="-50.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
@@ -81,7 +102,7 @@
                   <Image url="@../images/close-interaction.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="94.0" fitWidth="156.0" layoutX="163.0" layoutY="124.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="94.0" fitWidth="156.0" layoutX="152.0" layoutY="121.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/email-icon.png" />
                </image>
@@ -91,17 +112,24 @@
                   <Image url="@../images/email-box.png" />
                </image>
             </ImageView>
-            <Rectangle fx:id="rectAiCore" arcHeight="5.0" arcWidth="5.0" fill="#345110" height="66.0" layoutX="269.0" layoutY="236.0" onMouseClicked="#onRectClick" stroke="BLACK" strokeType="INSIDE" styleClass="interactable-rect" width="373.0" />
-            <Rectangle fx:id="rectManager" arcHeight="5.0" arcWidth="5.0" fill="#345110" height="66.0" layoutX="269.0" layoutY="338.0" onMouseClicked="#onRectClick" stroke="BLACK" strokeType="INSIDE" styleClass="interactable-rect" width="373.0" />
-            <Rectangle fx:id="rectSystem" arcHeight="5.0" arcWidth="5.0" fill="#345110" height="66.0" layoutX="269.0" layoutY="438.0" onMouseClicked="#onRectClick" stroke="BLACK" strokeType="INSIDE" styleClass="interactable-rect" width="373.0" />
+            <Rectangle fx:id="rectAiCore" arcHeight="5.0" arcWidth="5.0" fill="#345110" height="66.0" layoutX="269.0" layoutY="236.0" onMouseClicked="#onRectClick" opacity="0.5" stroke="BLACK" strokeType="INSIDE" styleClass="interactable-rect" width="373.0" />
+            <Rectangle fx:id="rectManager" arcHeight="5.0" arcWidth="5.0" fill="#345110" height="66.0" layoutX="269.0" layoutY="338.0" onMouseClicked="#onRectClick" opacity="0.5" stroke="BLACK" strokeType="INSIDE" styleClass="interactable-rect" width="373.0" />
+            <Rectangle fx:id="rectSystem" arcHeight="5.0" arcWidth="5.0" fill="#345110" height="66.0" layoutX="269.0" layoutY="438.0" onMouseClicked="#onRectClick" opacity="0.5" stroke="BLACK" strokeType="INSIDE" styleClass="interactable-rect" width="373.0" />
             <Label fx:id="lblEmail" layoutX="288.0" layoutY="245.0" stylesheets="@../css/interactable.css" text="AI Core" />
             <Label fx:id="lblEmailSubject" layoutX="288.0" layoutY="270.0" stylesheets="@../css/interactable.css" text="Safety Concerns: Installation Risks" />
             <Label fx:id="lblEmail1" layoutX="289.0" layoutY="349.0" stylesheets="@../css/interactable.css" text="Manager" />
             <Label fx:id="lblEmailSubject1" layoutX="288.0" layoutY="372.0" stylesheets="@../css/interactable.css" text="[URGENT] RE: Safety Concerns" />
             <Label fx:id="lblEmail2" layoutX="287.0" layoutY="447.0" stylesheets="@../css/interactable.css" text="System" />
             <Label fx:id="lblEmailSubject2" layoutX="287.0" layoutY="471.0" stylesheets="@../css/interactable.css" text="NOTICE: Executive Override Confirmed" />
-            <TextArea fx:id="txtaEmail" layoutX="711.0" layoutY="230.0" prefHeight="326.0" prefWidth="363.0" styleClass="text-area" stylesheets="@../css/interactable.css" wrapText="true" />
+            <TextArea fx:id="txtaEmail" disable="true" layoutX="711.0" layoutY="230.0" prefHeight="326.0" prefWidth="363.0" styleClass="text-area" stylesheets="@../css/interactable.css" wrapText="true" />
             <Label fx:id="lblRecipient" layoutX="726.0" layoutY="184.0" stylesheets="@../css/interactable.css" text="From:" />
+            <Label fx:id="lblHeading" layoutX="274.0" layoutY="154.0" stylesheets="@../css/interactable.css" text="Emails" />
+            <ImageView fitHeight="150.0" fitWidth="700.0" layoutX="317.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/instructionBox.png" />
+               </image>
+            </ImageView>
+            <TextArea fx:id="txtaInstruction" layoutX="331.0" layoutY="26.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="68.0" prefWidth="670.0" />
          </children>
       </Pane>
    </children>

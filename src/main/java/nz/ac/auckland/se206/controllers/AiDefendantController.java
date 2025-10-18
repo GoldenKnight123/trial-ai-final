@@ -1,12 +1,15 @@
 package nz.ac.auckland.se206.controllers;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
@@ -24,8 +27,14 @@ public class AiDefendantController extends ChatController {
   @FXML private ImageView imgOverride;
   @FXML private TextArea txtaEmail;
   @FXML private Label lblRecipient;
+  @FXML private Pane panePasswordScreen;
+  @FXML private Rectangle rectOverlay1;
+  @FXML private TextField txtFieldPassword;
+  @FXML private Label lblHint;
+  @FXML private TextField txtaInstruction;
 
   private boolean interactableComplete = false;
+  private boolean passwordScreenShown = false;
 
   // private boolean interactionDialoguePlayed = false;
 
@@ -47,10 +56,28 @@ public class AiDefendantController extends ChatController {
         event -> {
           rectComputer.setEffect(null);
         });
+
+    if (txtFieldPassword != null) {
+      txtFieldPassword.setOnAction((ActionEvent e) -> handlePassword());
+      txtFieldPassword.setOnKeyPressed(
+          ke -> {
+            if (ke.getCode() == KeyCode.ENTER) {
+              handlePassword();
+            }
+          });
+    }
   }
 
   @FXML
   private void onInteractable(MouseEvent event) {
+    if (!passwordScreenShown) {
+      if (panePasswordScreen != null) {
+        panePasswordScreen.setVisible(true);
+      }
+      passwordScreenShown = true;
+      return;
+    }
+
     paneInteractable.setVisible(true);
 
     if (!interactableComplete) {
@@ -63,9 +90,37 @@ public class AiDefendantController extends ChatController {
 
   @FXML
   private void onCloseInteraction(MouseEvent event) {
+    // If password screen is visible, close it and do not trigger completion logic
+    if (panePasswordScreen != null && panePasswordScreen.isVisible()) {
+      panePasswordScreen.setVisible(false);
+      return;
+    }
+
     paneInteractable.setVisible(false);
     imgOverride.setVisible(false);
     completeInteraction();
+  }
+
+  private void handlePassword() {
+    if (txtFieldPassword == null || panePasswordScreen == null) {
+      return;
+    }
+
+    String entered = txtFieldPassword.getText() == null ? "" : txtFieldPassword.getText().trim();
+
+    final String CORRECT = "indus";
+
+    if (entered.equals(CORRECT)) {
+      panePasswordScreen.setVisible(false);
+      passwordScreenShown = true;
+      paneInteractable.setVisible(true);
+      if (rectOverlay != null) {
+        rectOverlay.setDisable(true);
+      }
+    } else {
+      txtFieldPassword.clear();
+      txtFieldPassword.setPromptText("Incorrect password — try again");
+    }
   }
 
   private void completeInteraction() {
@@ -108,6 +163,7 @@ public class AiDefendantController extends ChatController {
       String id = rect.getId();
       switch (id) {
         case "rectAiCore":
+          rect.setOpacity(1.0);
           lblRecipient.setText("From: AI Core");
           txtaEmail.setText(
               "Preliminary models predict instability of new Helios Module at 37%.\n\n"
@@ -115,6 +171,7 @@ public class AiDefendantController extends ChatController {
                   "Requesting further testing authorization before deployment.");
           break;
         case "rectManager":
+          rect.setOpacity(1.0);
           lblRecipient.setText("From: Manager");
           txtaEmail.setText(
               "Your role is to comply with operational directives.\n\n"
@@ -124,6 +181,7 @@ public class AiDefendantController extends ChatController {
                   "OVERRIDE AUTHORISATION: Upper Management Approval ID 4237-A.");
           break;
         case "rectSystem":
+          rect.setOpacity(1.0);
           lblRecipient.setText("From: System");
           txtaEmail.setText(
               "Installation of the Helios Module has been authorized by Upper Management.\n\n"
