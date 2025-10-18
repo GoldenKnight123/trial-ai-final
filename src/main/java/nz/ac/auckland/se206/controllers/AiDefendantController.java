@@ -35,6 +35,7 @@ public class AiDefendantController extends ChatController {
   private boolean interactableComplete = false;
   private int interactableCompleteCount = 0;
   private boolean passwordScreenShown = false;
+  private boolean passwordAccepted = false;
 
   // private boolean interactionDialoguePlayed = false;
 
@@ -70,7 +71,8 @@ public class AiDefendantController extends ChatController {
 
   @FXML
   private void onInteractable(MouseEvent event) {
-    if (!passwordScreenShown) {
+    // Only allow opening the interactable if the correct password has been entered.
+    if (!passwordAccepted) {
       if (panePasswordScreen != null) {
         panePasswordScreen.setVisible(true);
       }
@@ -151,6 +153,7 @@ public class AiDefendantController extends ChatController {
     if (entered.equals(CORRECT)) {
       panePasswordScreen.setVisible(false);
       passwordScreenShown = true;
+      passwordAccepted = true;
       paneInteractable.setVisible(true);
       if (lblEmailInstruct != null) {
         lblEmailInstruct.setText("Review the emails regarding the Helios Module deployment.");
