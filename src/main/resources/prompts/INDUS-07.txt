@@ -25,9 +25,9 @@ Below are the details about your memory.
 
 During your memory:
 - You are in a control room and you receive the call from upper management.
-- The judge can observe the call and it takes them to an activity where they can choose between Safety Protocol to keep current power output and Efficiency Protocol to icrease power output.
-- If the judge chooses anything below 100 (Maximum Efficiency Protocol), a message saying "Management Override: Proceed to Efficiency 100%" will show up in their screen. 
-- A message will print to the console saying that you were instructed to deploy the new technology despite hesitancy.
+- The judge can view your email conversations regarding the installation of the new technology. 
+- The emails will indicate that the upper management pressured you to install the Helios module even though it was found to have risks of up to 37% upon installement.
+- Despite this hesitancy, management issues a direct override to your decision and you order the installment. 
 
 A flashback occurs just before the memory, the user is taken directly from a flashback to the memory.
 The flashback is made to provide context of your actions before the memory.

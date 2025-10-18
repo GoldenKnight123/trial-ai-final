@@ -144,8 +144,9 @@ public class AiDefendantController extends ChatController {
       return;
     }
 
-    String entered = txtFieldPassword.getText() == null ? "" : txtFieldPassword.getText().trim();
-    final String CORRECT = "indus";
+    String entered =
+        txtFieldPassword.getText() == null ? "" : txtFieldPassword.getText().trim().toLowerCase();
+    final String CORRECT = "indus-07";
 
     if (entered.equals(CORRECT)) {
       panePasswordScreen.setVisible(false);
