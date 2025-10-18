@@ -18,7 +18,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Arc;
-import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
 import nz.ac.auckland.se206.App;
@@ -36,6 +35,7 @@ public class RoomController extends Controller {
   private static boolean isFirstTimeInit = true;
   private static List<String> fixedDialogue = new ArrayList<>();
   private static int currentDialogueIndex = 0;
+  private static boolean canInteract = false;
   private static GameStateContext context = new GameStateContext();
 
   /**
@@ -114,6 +114,9 @@ public class RoomController extends Controller {
 
   // Function to set variables and states for the guessing state
   public void initializeGuessingState() {
+    // Disable interactions during guessing state setup
+    canInteract = false;
+
     // Show text area to display dialogue
     txtaDialogue.setVisible(true);
     imgTextArea.setVisible(true);
@@ -270,7 +273,7 @@ public class RoomController extends Controller {
 
     imgWitnessAi.setOnMouseEntered(
         event -> {
-          if (currentDialogueIndex >= fixedDialogue.size() && !isFading) {
+          if (canInteract && !isFading) {
             imgWitnessAi.setEffect(highlight);
             imgWitnessAi.setImage(logos09Hover);
             imgWitnessAi.setCursor(Cursor.HAND);
@@ -289,7 +292,7 @@ public class RoomController extends Controller {
 
     imgDefendant.setOnMouseEntered(
         event -> {
-          if (currentDialogueIndex >= fixedDialogue.size() && !isFading) {
+          if (canInteract && !isFading) {
             imgDefendant.setEffect(highlight);
             imgDefendant.setImage(indus07Hover);
             imgDefendant.setCursor(Cursor.HAND);
@@ -308,7 +311,7 @@ public class RoomController extends Controller {
 
     imgWitnessHuman.setOnMouseEntered(
         event -> {
-          if (currentDialogueIndex >= fixedDialogue.size() && !isFading) {
+          if (canInteract && !isFading) {
             imgWitnessHuman.setEffect(highlight);
             imgWitnessHuman.setImage(evanHover);
             imgWitnessHuman.setCursor(Cursor.HAND);
@@ -368,27 +371,6 @@ public class RoomController extends Controller {
     }
   }
 
-  /**
-   * Handles mouse clicks on rectangles representing people in the room.
-   *
-   * @param event the mouse event triggered by clicking a rectangle
-   * @throws IOException if there is an I/O error
-   */
-  @FXML
-  private void handleRectangleClick(MouseEvent event) throws IOException {
-    // Prevent rectangle clicks if fade animation is playing
-    if (isFading) {
-      System.out.println("Cannot click rectangle: Fade animation is in progress");
-      return;
-    }
-
-    // If fixed dialogue is finished and the user clicks on a rectangle, take them to the chat scene
-    // with the clicked individual as the flashback focus
-    if (currentDialogueIndex >= fixedDialogue.size()) {
-      context.handleRectangleClick(event, ((Rectangle) event.getSource()).getId());
-    }
-  }
-
   @FXML
   public void handleWitnessAiClick(MouseEvent event) throws IOException {
     if (isFading) {
@@ -396,7 +378,7 @@ public class RoomController extends Controller {
       return;
     }
 
-    if (currentDialogueIndex < fixedDialogue.size()) {
+    if (!canInteract) {
       System.out.println("Cannot click rectangle: Fixed dialogue is still playing");
       return;
     }
@@ -417,7 +399,7 @@ public class RoomController extends Controller {
       return;
     }
 
-    if (currentDialogueIndex < fixedDialogue.size()) {
+    if (!canInteract) {
       System.out.println("Cannot click rectangle: Fixed dialogue is still playing");
       return;
     }
@@ -438,7 +420,7 @@ public class RoomController extends Controller {
       return;
     }
 
-    if (currentDialogueIndex < fixedDialogue.size()) {
+    if (!canInteract) {
       System.out.println("Cannot click rectangle: Fixed dialogue is still playing");
       return;
     }
@@ -526,6 +508,7 @@ public class RoomController extends Controller {
       lblWhoSpeaking.setVisible(false);
       lblInstructions.setVisible(true);
       imgInstructionBox.setVisible(true);
+      canInteract = true;
       context.setState(context.getGameStartedState());
     }
 
