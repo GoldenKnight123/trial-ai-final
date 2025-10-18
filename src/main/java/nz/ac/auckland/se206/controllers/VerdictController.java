@@ -7,7 +7,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
 import nz.ac.auckland.se206.App;
@@ -22,7 +21,6 @@ public class VerdictController extends Controller {
   @FXML private Button btnNotGuilty;
   @FXML private Button btnGuilty;
   @FXML private Label lblGameOverMessage;
-  @FXML private Pane paneBackground;
   @FXML private Label lblTimer;
   @FXML private Rectangle rectFade;
 
@@ -32,6 +30,9 @@ public class VerdictController extends Controller {
   public void initialize() throws ApiProxyException {
     // Register timer label with GameTimer
     GameTimer.getInstance().registerTimerLabel(lblTimer);
+
+    // Unfocus text area to avoid auto-focusing keyboard on scene load
+    lblTimer.requestFocus();
 
     lblTimer.setVisible(true);
 

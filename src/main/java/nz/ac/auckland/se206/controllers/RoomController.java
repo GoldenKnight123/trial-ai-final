@@ -532,6 +532,10 @@ public class RoomController extends Controller {
     // If all fixed dialogue has been consumed and the user is guessing, transition to verdict scene
     // depending on whether all witnesses have been spoken to and interactions have been completed
     else {
+      if (isFading) {
+        return;
+      }
+
       imgContinueArrow.setVisible(false);
       txtaDialogue.setVisible(false);
       imgTextArea.setVisible(false);
@@ -552,8 +556,10 @@ public class RoomController extends Controller {
             try {
 
               if (showGameOverVariant) {
+                isFading = true;
                 App.openGameOver(null, "Failed to interact with all participants.");
               } else {
+                isFading = true;
                 App.openVerdict(null);
               }
             } catch (IOException ioEx) {
