@@ -13,6 +13,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import nz.ac.auckland.apiproxy.chat.openai.ChatMessage;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
+import nz.ac.auckland.se206.ChatHistoryManager;
 
 public class AiDefendantController extends ChatController {
 
@@ -173,6 +174,9 @@ public class AiDefendantController extends ChatController {
     // Only run completion once when all three email rectangles have been viewed
     if (interactableCompleteCount >= 3 && !interactableComplete) {
       interactableComplete = true;
+
+      // Mark this interactable as completed
+      ChatHistoryManager.getInstance().markInteractableComplete("INDUS-07");
 
       paneInteractable.setVisible(false);
       if (imgOverride != null) {
