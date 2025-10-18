@@ -32,7 +32,7 @@ public class GameTimer {
   }
 
   private Timeline timeline;
-  private int secondsLeft = 5;
+  private int secondsLeft = 300;
   private int maxTime = 300;
   private boolean isRunning = false;
   private List<Label> timerLabels = new ArrayList<>();

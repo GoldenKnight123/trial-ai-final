@@ -62,7 +62,7 @@ public class VerdictController extends Controller {
     btnGuilty.setOnMouseEntered(
         event -> {
           btnGuilty.setText("> Guilty");
-          audioPlayer.playSound("hover", 0.5);
+          audioPlayer.playSound("computerTalk2", 0.5);
         });
 
     btnGuilty.setOnMouseExited(
@@ -73,7 +73,7 @@ public class VerdictController extends Controller {
     btnNotGuilty.setOnMouseEntered(
         event -> {
           btnNotGuilty.setText("> Not Guilty");
-          audioPlayer.playSound("hover", 0.5);
+          audioPlayer.playSound("computerTalk2", 0.5);
         });
     btnNotGuilty.setOnMouseExited(
         event -> {
@@ -105,6 +105,8 @@ public class VerdictController extends Controller {
         wasCorrect = false;
       }
 
+      audioPlayer.playSound("computerTalk", 0.5);
+
       GameTimer.getInstance().stop();
       App.openDebrief(event, wasCorrect);
     }
@@ -122,6 +124,8 @@ public class VerdictController extends Controller {
         // default to incorrect if no rationale provided
         wasCorrect = false;
       }
+
+      audioPlayer.playSound("computerTalk", 0.5);
 
       GameTimer.getInstance().stop();
       App.openDebrief(event, wasCorrect);

@@ -67,7 +67,7 @@ public class ChatHistoryManager {
     spokenToMap.put("Evan", true);
     interactablesMap.put("LOGOS-09", true);
     interactablesMap.put("INDUS-07", true);
-    interactablesMap.put("Evan", false);
+    interactablesMap.put("Evan", true);
 
     // Initialize chat history for each character
     chatHistory.put("LOGOS-09", new ArrayList<>());

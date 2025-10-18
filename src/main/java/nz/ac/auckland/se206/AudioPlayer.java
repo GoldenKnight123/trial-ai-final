@@ -58,7 +58,8 @@ public class AudioPlayer {
       "src/main/resources/sounds/buttonClick.mp3",
       "src/main/resources/sounds/zoomIn.mp3",
       "src/main/resources/sounds/sendMessage.wav",
-      "src/main/resources/sounds/scan.wav"
+      "src/main/resources/sounds/scan.wav",
+      "src/main/resources/sounds/scanLong.wav"
     };
 
     String[] soundKeys = {
@@ -84,7 +85,8 @@ public class AudioPlayer {
       "buttonClick",
       "zoomIn",
       "sendMessage",
-      "scan"
+      "scan",
+      "scanLong"
     };
 
     for (int i = 0; i < soundFiles.length; i++) {

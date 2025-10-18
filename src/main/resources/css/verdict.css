@@ -36,7 +36,8 @@
   -fx-font-size: 40px;
 }
 
-#verdictTxt {
+#verdictTxt,
+#txtaDebrief {
   -fx-padding: 10;
   -fx-border-color: rgb(136, 255, 0);
   -fx-border-width: 3;
@@ -47,7 +48,8 @@
   -fx-text-fill: rgb(136, 255, 0);
 }
 
-#lblVerdict {
+#lblVerdict,
+#lblCorrect {
   font-family: "Consolas";
   -fx-font-family: "Consolas";
   font-size: 48px;
@@ -87,8 +89,26 @@
   /* Makes the Content background transparent */
 }
 
-#btnRestart,
 #btnReturn {
+  font-family: "Consolas";
+  -fx-font-family: "Consolas";
+  background-color: transparent;
+  -fx-background-color: transparent;
+  -fx-background-radius: 10px;
+  -fx-background-insets: 0;
+  border-color: transparent;
+  -fx-border-color: transparent;
+  border-radius: 10px;
+  -fx-border-radius: 10px;
+  -fx-border-insets: 0;
+  border-width: 3px;
+  -fx-border-width: 3px;
+  -fx-text-fill: rgb(136, 255, 0);
+  font-size: 40px;
+  -fx-font-size: 40px;
+}
+
+#btnRestart {
   font-family: "Consolas";
   -fx-font-family: "Consolas";
   background-color: #fff8e3;
@@ -107,12 +127,6 @@
   -fx-font-size: 24px;
 }
 
-#btnRestart:hover,
-#btnReturn:hover {
-  background-color: #b48700;
-  -fx-background-color: #b48700;
-}
-
 #paneBackground {
   -fx-background-color: #fff6d6;
 }
@@ -122,5 +136,13 @@
   -fx-font-family: "Consolas";
   font-size: 48px;
   -fx-font-size: 48px;
+  -fx-text-fill: rgb(136, 255, 0);
+}
+
+#lblLoading {
+  font-family: "Consolas";
+  -fx-font-family: "Consolas";
+  font-size: 120px;
+  -fx-font-size: 120px;
   -fx-text-fill: rgb(136, 255, 0);
 }

@@ -14,7 +14,7 @@
             <Image url="@../images/game-over.png" />
          </image>
       </ImageView>
-      <Button fx:id="btnRestart" alignment="CENTER" contentDisplay="CENTER" layoutX="586.0" layoutY="310.0" mnemonicParsing="false" onAction="#onRestart" stylesheets="@../css/verdict.css" text="Restart" textAlignment="CENTER" />
+      <Button fx:id="btnRestart" alignment="CENTER" contentDisplay="CENTER" layoutX="575.0" layoutY="310.0" mnemonicParsing="false" onAction="#onRestart" stylesheets="@../css/verdict.css" text="Restart" textAlignment="CENTER" />
       <Label fx:id="lblGameOverMessage" alignment="CENTER" layoutX="51.0" layoutY="215.0" prefWidth="1200.0" text="Failed to interact with all participants.">
          <font>
             <Font size="36.0" />
