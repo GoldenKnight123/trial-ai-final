@@ -43,6 +43,7 @@ public class HumanController extends ChatController {
 
   // Ensure we only notify AI once when puzzle is solved
   private boolean puzzleSolvedNotified = false;
+  private boolean interactionDialoguePlayed = false;
 
   /** A small helper class to store the mouse's position relative to the image's top-left corner. */
   private static class DragContext {
@@ -230,8 +231,6 @@ public class HumanController extends ChatController {
         ChatHistoryManager.getInstance().markInteractableComplete("Evan");
 
         puzzleSolvedNotified = true;
-        // Optionally display interaction dialogue that may be attached to this event
-        displayInteractionDialogue();
       }
     }
   }
@@ -255,6 +254,12 @@ public class HumanController extends ChatController {
       interactablePane.setDisable(true);
     }
 
+    if (puzzleSolvedNotified && !interactionDialoguePlayed) {
+      // Optionally display interaction dialogue that may be attached to this event
+      displayInteractionDialogue();
+      interactionDialoguePlayed = true;
+    }
+
     // Consume the event so it doesn't propagate further
     if (event != null) {
       event.consume();
@@ -264,60 +269,66 @@ public class HumanController extends ChatController {
   /** Sets up the hover and click handlers for the pile of newspapers. */
   @FXML
   private void pileEntered(MouseEvent event) {
-    System.out.println("Pile entered");
-    if (pileInteractiveImg != null) {
-      pileInteractiveImg.setVisible(false);
-    }
-    if (pilePopUpImg != null) {
-      pilePopUpImg.setVisible(true);
-    }
-    try {
-      AudioPlayer.getInstance().playSound("paper_pile_interact", 0.3);
-    } catch (Exception ignored) {
-    }
-    if (event != null) {
-      event.consume();
+    if (getCurrentSpeaker() == "") {
+      System.out.println("Pile entered");
+      if (pileInteractiveImg != null) {
+        pileInteractiveImg.setVisible(false);
+      }
+      if (pilePopUpImg != null) {
+        pilePopUpImg.setVisible(true);
+      }
+      try {
+        AudioPlayer.getInstance().playSound("paper_pile_interact", 0.3);
+      } catch (Exception ignored) {
+      }
+      if (event != null) {
+        event.consume();
+      }
     }
   }
 
   @FXML
   private void pileExited(MouseEvent event) {
-    System.out.println("Pile exited");
-    if (pileInteractiveImg != null) {
-      pileInteractiveImg.setVisible(true);
-    }
-    if (pilePopUpImg != null) {
-      pilePopUpImg.setVisible(false);
-    }
-    if (event != null) {
-      event.consume();
+    if (getCurrentSpeaker() == "") {
+      System.out.println("Pile exited");
+      if (pileInteractiveImg != null) {
+        pileInteractiveImg.setVisible(true);
+      }
+      if (pilePopUpImg != null) {
+        pilePopUpImg.setVisible(false);
+      }
+      if (event != null) {
+        event.consume();
+      }
     }
   }
 
   @FXML
   private void pileClicked(MouseEvent event) {
-    System.out.println("Pile clicked");
-    try {
-      AudioPlayer.getInstance().playSound("paper_pile_interact", 0.6);
-    } catch (Exception ignored) {
-    }
-    // Enable the interactable pane when the pile is clicked
-    if (interactablePane != null) {
-      interactablePane.setVisible(true);
-      interactablePane.setDisable(false);
-      // Ensure the interactable pane is on top so the overlay is visible
-      interactablePane.toFront();
-    }
+    if (getCurrentSpeaker() == "") {
+      System.out.println("Pile clicked");
+      try {
+        AudioPlayer.getInstance().playSound("paper_pile_interact", 0.6);
+      } catch (Exception ignored) {
+      }
+      // Enable the interactable pane when the pile is clicked
+      if (interactablePane != null) {
+        interactablePane.setVisible(true);
+        interactablePane.setDisable(false);
+        // Ensure the interactable pane is on top so the overlay is visible
+        interactablePane.toFront();
+      }
 
-    // Explicitly show and enable the overlay, and bring it to the front so
-    // it blocks the underlying UI while the player interacts with the puzzle.
-    if (rectOverlay != null) {
-      rectOverlay.setVisible(true);
-      rectOverlay.setDisable(false);
-    }
+      // Explicitly show and enable the overlay, and bring it to the front so
+      // it blocks the underlying UI while the player interacts with the puzzle.
+      if (rectOverlay != null) {
+        rectOverlay.setVisible(true);
+        rectOverlay.setDisable(false);
+      }
 
-    if (event != null) {
-      event.consume();
+      if (event != null) {
+        event.consume();
+      }
     }
   }
 }
