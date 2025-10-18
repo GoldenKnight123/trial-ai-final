@@ -95,6 +95,7 @@ public class RoomController extends Controller {
   @FXML private Label lblSpokenTo3;
   @FXML private Button btnGuilty;
   @FXML private Button btnNotGuilty;
+  @FXML private Button verdictBtn;
   @FXML private Arc arcTimer;
   @FXML private Pane room;
 
@@ -137,6 +138,10 @@ public class RoomController extends Controller {
     GameTimer.getInstance()
         .setOnTimerExpired(
             () -> {
+              // Safeguard: hide the Skip to verdict button so it cannot be used after expiry
+              if (verdictBtn != null) {
+                verdictBtn.setVisible(false);
+              }
               try {
                 App.openGameOver(null, "Failed to make a verdict in time.");
               } catch (IOException e) {
@@ -344,6 +349,10 @@ public class RoomController extends Controller {
       GameTimer.getInstance()
           .setOnTimerExpired(
               () -> {
+                // Safeguard: hide the Skip to verdict button when the timer expiry sequence runs
+                if (verdictBtn != null) {
+                  verdictBtn.setVisible(false);
+                }
                 App.forceReturnToRoom();
                 audioPlayer.stopSound("background");
               });
@@ -603,5 +612,14 @@ public class RoomController extends Controller {
       imgMute.setImage(new Image(getClass().getResourceAsStream("/images/muteOff.png")));
     }
     audioPlayer.playSound("buttonClick", 0.5);
+  }
+
+  /**
+   * Handler for the "Skip to verdict" button. Sets the global timer to 0 so the expiry callback
+   * runs the normal verdict flow.
+   */
+  @FXML
+  private void onSkipToVerdict() {
+    GameTimer.getInstance().setTimeLeft(0);
   }
 }

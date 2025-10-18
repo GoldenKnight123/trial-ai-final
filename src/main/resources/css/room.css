@@ -104,3 +104,27 @@
   padding: 5px;
   -fx-padding: 5px;
 }
+
+#verdictBtn {
+  font-family: "Consolas";
+  -fx-font-family: "Consolas";
+  background-color: #fff8e3;
+  -fx-background-color: #fff8e3;
+  -fx-background-radius: 10px;
+  -fx-background-insets: 0;
+  border-color: black;
+  -fx-border-color: black;
+  border-radius: 10px;
+  -fx-border-radius: 10px;
+  -fx-border-insets: 0;
+  border-width: 3px;
+  -fx-border-width: 3px;
+  -fx-text-fill: black;
+  font-size: 12px;
+  -fx-font-size: 12px;
+}
+
+#verdictBtn:hover {
+  background-color: #9b9689;
+  -fx-background-color: #9b9689;
+}
