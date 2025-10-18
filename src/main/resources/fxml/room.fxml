@@ -11,7 +11,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="room" focusTraversable="true" onMouseClicked="#handleGeneralClick" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #FFF8E3;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.controllers.RoomController">
+<Pane fx:id="room" focusTraversable="true" onMouseClicked="#handleGeneralClick" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #FFF8E3;" stylesheets="@../css/room.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.controllers.RoomController">
    <children>
       <ImageView fx:id="imgTextArea1" fitHeight="720.0" fitWidth="1537.0" preserveRatio="true">
          <image>
@@ -133,5 +133,6 @@
             <Image url="@../images/muteOff.png" />
          </image>
       </ImageView>
+   <Button id="verdictBtn" fx:id="verdictBtn" layoutX="565.0" layoutY="20.0" mnemonicParsing="false" onAction="#onSkipToVerdict" prefHeight="44.0" prefWidth="175.0" stylesheets="@../css/memory.css" text="Skip to verdict" />
    </children>
 </Pane>
