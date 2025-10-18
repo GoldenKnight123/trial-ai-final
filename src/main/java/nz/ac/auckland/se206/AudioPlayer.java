@@ -57,7 +57,8 @@ public class AudioPlayer {
       "src/main/resources/sounds/background.mp3",
       "src/main/resources/sounds/buttonClick.mp3",
       "src/main/resources/sounds/zoomIn.mp3",
-      "src/main/resources/sounds/sendMessage.wav"
+      "src/main/resources/sounds/sendMessage.wav",
+      "src/main/resources/sounds/scan.wav"
     };
 
     String[] soundKeys = {
@@ -82,7 +83,8 @@ public class AudioPlayer {
       "background",
       "buttonClick",
       "zoomIn",
-      "sendMessage"
+      "sendMessage",
+      "scan"
     };
 
     for (int i = 0; i < soundFiles.length; i++) {
@@ -211,5 +213,12 @@ public class AudioPlayer {
     backgroundMuted = !backgroundMuted;
     setVolume("background", backgroundMuted ? 0 : 0.25);
     return backgroundMuted;
+  }
+
+  public void stopSound(String soundKey) {
+    MediaPlayer player = soundCache.get(soundKey);
+    if (player != null) {
+      player.stop();
+    }
   }
 }

@@ -345,6 +345,7 @@ public class RoomController extends Controller {
           .setOnTimerExpired(
               () -> {
                 App.forceReturnToRoom();
+                audioPlayer.stopSound("background");
               });
 
       // Play background music

@@ -128,10 +128,5 @@
       <Label fx:id="lblSpokenTo1" alignment="CENTER" contentDisplay="CENTER" layoutX="183.0" layoutY="152.0" prefWidth="119.0" stylesheets="@../css/room.css" text="Spoken To" visible="false" />
       <Label fx:id="lblSpokenTo2" alignment="CENTER" contentDisplay="CENTER" layoutX="585.0" layoutY="128.0" stylesheets="@../css/room.css" text="Spoken To" visible="false" />
       <Label fx:id="lblSpokenTo3" alignment="CENTER" contentDisplay="CENTER" layoutX="1012.0" layoutY="160.0" stylesheets="@../css/room.css" text="Spoken To" visible="false" />
-      <ImageView fx:id="imgMute" fitHeight="37.0" fitWidth="53.0" layoutX="1221.0" layoutY="10.0" onMouseClicked="#onMute" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../images/muteOff.png" />
-         </image>
-      </ImageView>
    </children>
 </Pane>

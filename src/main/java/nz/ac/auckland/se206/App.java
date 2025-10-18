@@ -269,6 +269,7 @@ public class App extends Application {
     } catch (Exception e) {
       // safe no-op if controller doesn't support it
     }
+    verdictController.fadeIn();
     currentId = "verdict";
 
     // Set the verdict text in the controller
