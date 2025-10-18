@@ -21,9 +21,7 @@ public class VerdictController extends Controller {
   @FXML private TextArea verdictTxt;
   @FXML private Button btnNotGuilty;
   @FXML private Button btnGuilty;
-  @FXML private Pane paneGameOver;
   @FXML private Label lblGameOverMessage;
-  @FXML private Button btnRestart;
   @FXML private Pane paneBackground;
   @FXML private Label lblTimer;
   @FXML private Rectangle rectFade;
@@ -99,7 +97,6 @@ public class VerdictController extends Controller {
     // Check if the player has asked each participant a question and has completed all interactables
     if (!ChatHistoryManager.getInstance().haveSpokenToAll()
         && !ChatHistoryManager.getInstance().interactablesComplete()) {
-      paneGameOver.setVisible(true); // game over
     } else {
       String text = verdictTxt.getText() == null ? "" : verdictTxt.getText();
       boolean wasCorrect = false; // guilty means incorrect in current game wiring
@@ -118,7 +115,6 @@ public class VerdictController extends Controller {
     // Check if the player has asked each participant a question
     if (!ChatHistoryManager.getInstance().haveSpokenToAll()
         && !ChatHistoryManager.getInstance().interactablesComplete()) {
-      paneGameOver.setVisible(true); // game over
     } else {
       String text = verdictTxt.getText() == null ? "" : verdictTxt.getText();
       boolean wasCorrect = true; // not guilty means correct in current game wiring
@@ -132,12 +128,6 @@ public class VerdictController extends Controller {
     }
   }
 
-  public void setGameOverVisible() {
-    paneGameOver.setVisible(true);
-    GameTimer.getInstance().stop();
-    lblTimer.setVisible(false);
-  }
-
   /**
    * Bind a timer-expired callback so when the GameTimer expires while on the verdict scene we
    * display an explicit message.
@@ -146,9 +136,12 @@ public class VerdictController extends Controller {
     GameTimer.getInstance()
         .setOnTimerExpired(
             () -> {
-              // Show message indicating player didn't choose in time
-              paneGameOver.setVisible(true);
-              lblGameOverMessage.setText("You didn't choose in time");
+              try {
+                App.openGameOver(null, "Failed to make a verdict in time.");
+
+              } catch (IOException e) {
+                e.printStackTrace();
+              }
               GameTimer.getInstance().stop();
               lblTimer.setVisible(false);
             });
@@ -158,12 +151,6 @@ public class VerdictController extends Controller {
     String text = verdictTxt.getText() == null ? "" : verdictTxt.getText();
     System.out.println(text);
     return text;
-  }
-
-  @FXML
-  private void onRestart(ActionEvent event) throws IOException {
-    App.openStartScreen(null);
-    App.reinitialize();
   }
 
   @FXML
