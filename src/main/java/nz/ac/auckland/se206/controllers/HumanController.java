@@ -9,6 +9,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import nz.ac.auckland.apiproxy.chat.openai.ChatMessage;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
+import nz.ac.auckland.se206.AudioPlayer;
 import nz.ac.auckland.se206.ChatHistoryManager;
 
 public class HumanController extends ChatController {
@@ -56,6 +57,12 @@ public class HumanController extends ChatController {
 
     // Set up the newspaper jigsaw puzzle
     setupNewspaperPuzzle();
+
+    // Register interactable sounds with the AudioPlayer singleton so they can be
+    // played by key. (Files should exist under src/main/resources/sounds/)
+    AudioPlayer audio = AudioPlayer.getInstance();
+    audio.addSound("paper_pile_interact", "src/main/resources/sounds/paper_pile_interact.mp3");
+    audio.addSound("paper_slide_human", "src/main/resources/sounds/paper_slide_human.mp3");
   }
 
   /** Reflection helper: set superclass private field only if it's currently null. */
@@ -146,6 +153,12 @@ public class HumanController extends ChatController {
     piece.setOnMouseReleased(
         event -> {
           event.consume();
+          // Play slide sound on piece release
+          try {
+            AudioPlayer.getInstance().playSound("paper_slide_human");
+          } catch (Exception ignored) {
+            // Don't let audio failures break puzzle logic
+          }
           // Check if the piece is in the correct final position
           checkPlacement(piece, targetX, targetY);
         });
@@ -258,6 +271,10 @@ public class HumanController extends ChatController {
     if (pilePopUpImg != null) {
       pilePopUpImg.setVisible(true);
     }
+    try {
+      AudioPlayer.getInstance().playSound("paper_pile_interact", 0.3);
+    } catch (Exception ignored) {
+    }
     if (event != null) {
       event.consume();
     }
@@ -280,6 +297,10 @@ public class HumanController extends ChatController {
   @FXML
   private void pileClicked(MouseEvent event) {
     System.out.println("Pile clicked");
+    try {
+      AudioPlayer.getInstance().playSound("paper_pile_interact", 0.6);
+    } catch (Exception ignored) {
+    }
     // Enable the interactable pane when the pile is clicked
     if (interactablePane != null) {
       interactablePane.setVisible(true);
