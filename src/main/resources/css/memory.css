@@ -126,6 +126,8 @@
 #btnHistory:hover {
   background-color: #9b9689;
   -fx-background-color: #9b9689;
+  cursor: hand;
+  -fx-cursor: hand;
 }
 
 /* Font-face for Open Sans (local resource) */

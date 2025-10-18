@@ -346,6 +346,7 @@ public class ChatController extends Controller {
   private void onSendMessage(ActionEvent event) throws ApiProxyException, IOException {
     String message = txtInput.getText().trim();
     if (message.isEmpty()) {
+      audioPlayer.playSound("error", 0.5);
       return;
     }
 

@@ -128,11 +128,14 @@
 }
 
 #btnRestart:hover {
-  background-color: #b48700;
-  -fx-background-color: #b48700;
+  background-color: #9b9689;
+  -fx-background-color: #9b9689;
+  cursor: hand;
+  -fx-cursor: hand;
 }
 
 #paneBackground {
+  background-color: #fff6d6;
   -fx-background-color: #fff6d6;
 }
 

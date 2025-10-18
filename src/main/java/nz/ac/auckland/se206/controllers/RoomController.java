@@ -120,9 +120,10 @@ public class RoomController extends Controller {
   private Random random = new Random();
   private List<Line> rainDrops = new ArrayList<>();
 
-  // AI Witness idle animation variables
+  // Idle animation timelines
   private Timeline aiIdleTimeline;
   private Timeline defendantIdleTimeline;
+  private Timeline humanIdleTimeline;
 
   private boolean isFading = false;
   private boolean isGuessing = false;
@@ -206,31 +207,34 @@ public class RoomController extends Controller {
    */
   private void forceHoverStateCheck() {
     // Check if mouse is currently over any of the interactive images
-    if (imgWitnessAi.isHover() && canInteract && !isFading) {
+    if (rectWitnessAi.isHover() && canInteract && !isFading) {
       // Trigger hover effect for LOGOS-09
       ColorAdjust highlight = new ColorAdjust();
       highlight.setBrightness(0.3);
-      imgWitnessAi.setEffect(highlight);
-      imgWitnessAi.setImage(new Image("images/logos-09-hover.png"));
-      imgWitnessAi.setCursor(Cursor.HAND);
+      imgWitnessAiBody.setEffect(highlight);
+      imgWitnessAiBody.setImage(new Image("images/logos-09-hover.png"));
+      rectWitnessAi.setCursor(Cursor.HAND);
+      audioPlayer.playSound("hover");
     }
 
-    if (imgDefendant.isHover() && canInteract && !isFading) {
+    if (rectDefendant.isHover() && canInteract && !isFading) {
       // Trigger hover effect for INDUS-07
       ColorAdjust highlight = new ColorAdjust();
       highlight.setBrightness(0.3);
-      imgDefendant.setEffect(highlight);
-      imgDefendant.setImage(new Image("images/indus-07-hover.png"));
-      imgDefendant.setCursor(Cursor.HAND);
+      imgDefendantBody.setEffect(highlight);
+      imgDefendantBody.setImage(new Image("images/indus-07-hover.png"));
+      rectDefendant.setCursor(Cursor.HAND);
+      audioPlayer.playSound("hover");
     }
 
-    if (imgWitnessHuman.isHover() && canInteract && !isFading) {
+    if (rectWitnessHuman.isHover() && canInteract && !isFading) {
       // Trigger hover effect for Evan
       ColorAdjust highlight = new ColorAdjust();
       highlight.setBrightness(0.3);
-      imgWitnessHuman.setEffect(highlight);
-      imgWitnessHuman.setImage(new Image("images/evan-hover.png"));
-      imgWitnessHuman.setCursor(Cursor.HAND);
+      imgWitnessHumanBody.setEffect(highlight);
+      imgWitnessHumanBody.setImage(new Image("images/evan-hover.png"));
+      rectWitnessHuman.setCursor(Cursor.HAND);
+      audioPlayer.playSound("hover");
     }
   }
 
@@ -370,9 +374,9 @@ public class RoomController extends Controller {
   public void initialize() {
     context.setRoomController(this); // Set reference to this controller
 
-    createIdleAnimation(imgWitnessAiBody);
-    createIdleAnimation(imgDefendantBody);
-    createIdleAnimation(imgWitnessHumanBody);
+    createIdleAnimation(aiIdleTimeline, imgWitnessAiBody);
+    createIdleAnimation(defendantIdleTimeline, imgDefendantBody);
+    createIdleAnimation(humanIdleTimeline, imgWitnessHumanBody);
 
     isGuessing = false;
 
@@ -393,7 +397,7 @@ public class RoomController extends Controller {
           if (canInteract && !isFading) {
             imgWitnessAiBody.setEffect(highlight);
             imgWitnessAiBody.setImage(logos09Hover);
-            imgWitnessAiBody.setCursor(Cursor.HAND);
+            rectWitnessAi.setCursor(Cursor.HAND);
             audioPlayer.playSound("hover");
           }
         });
@@ -402,7 +406,7 @@ public class RoomController extends Controller {
         event -> {
           imgWitnessAiBody.setEffect(null);
           imgWitnessAiBody.setImage(logos09);
-          imgWitnessAiBody.setCursor(Cursor.DEFAULT);
+          rectWitnessAi.setCursor(Cursor.DEFAULT);
         });
 
     Image indus07 = imgDefendantBody.getImage();
@@ -413,7 +417,7 @@ public class RoomController extends Controller {
           if (canInteract && !isFading) {
             imgDefendantBody.setEffect(highlight);
             imgDefendantBody.setImage(indus07Hover);
-            imgDefendantBody.setCursor(Cursor.HAND);
+            rectDefendant.setCursor(Cursor.HAND);
             audioPlayer.playSound("hover");
           }
         });
@@ -422,7 +426,7 @@ public class RoomController extends Controller {
         event -> {
           imgDefendantBody.setEffect(null);
           imgDefendantBody.setImage(indus07);
-          imgDefendantBody.setCursor(Cursor.DEFAULT);
+          rectDefendant.setCursor(Cursor.DEFAULT);
         });
 
     Image evan = imgWitnessHumanBody.getImage();
@@ -433,7 +437,7 @@ public class RoomController extends Controller {
           if (canInteract && !isFading) {
             imgWitnessHumanBody.setEffect(highlight);
             imgWitnessHumanBody.setImage(evanHover);
-            imgWitnessHumanBody.setCursor(Cursor.HAND);
+            rectWitnessHuman.setCursor(Cursor.HAND);
             audioPlayer.playSound("hover");
           }
         });
@@ -442,7 +446,7 @@ public class RoomController extends Controller {
         event -> {
           imgWitnessHumanBody.setEffect(null);
           imgWitnessHumanBody.setImage(evan);
-          imgWitnessHumanBody.setCursor(Cursor.DEFAULT);
+          rectWitnessHuman.setCursor(Cursor.DEFAULT);
         });
 
     txtaDialogue.setVisible(true);
@@ -796,16 +800,16 @@ public class RoomController extends Controller {
     }
   }
 
-  private void createIdleAnimation(ImageView character) {
+  private void createIdleAnimation(Timeline idleTimeline, ImageView character) {
     // Create a timeline that triggers animation changes every few seconds
-    aiIdleTimeline =
+    idleTimeline =
         new Timeline(
             new KeyFrame(Duration.seconds(0), e -> startIdleMovement(character)),
             new KeyFrame(Duration.seconds(8), e -> startIdleMovement(character)),
             new KeyFrame(Duration.seconds(16), e -> startIdleMovement(character)));
 
-    aiIdleTimeline.setCycleCount(Animation.INDEFINITE);
-    aiIdleTimeline.play();
+    idleTimeline.setCycleCount(Animation.INDEFINITE);
+    idleTimeline.play();
   }
 
   /** Creates a subtle movement animation for the specified character */
