@@ -1,73 +1,76 @@
 #btnGuilty {
   font-family: "Consolas";
   -fx-font-family: "Consolas";
-  background-color: #FF5757;
-  -fx-background-color: #FF5757;
+  background-color: transparent;
+  -fx-background-color: transparent;
   -fx-background-radius: 10px;
   -fx-background-insets: 0;
-  border-color: black;
-  -fx-border-color: black;
+  border-color: transparent;
+  -fx-border-color: transparent;
   border-radius: 10px;
   -fx-border-radius: 10px;
   -fx-border-insets: 0;
   border-width: 3px;
   -fx-border-width: 3px;
-  -fx-text-fill: black;
+  -fx-text-fill: rgb(136, 255, 0);
   font-size: 40px;
-  -fx-font-size: 20px;
+  -fx-font-size: 40px;
 }
 
 #btnNotGuilty {
   font-family: "Consolas";
   -fx-font-family: "Consolas";
-  background-color: #4FFFA3;
-  -fx-background-color: #4FFFA3;
+  background-color: transparent;
+  -fx-background-color: transparent;
   -fx-background-radius: 10px;
   -fx-background-insets: 0;
-  border-color: black;
-  -fx-border-color: black;
+  border-color: transparent;
+  -fx-border-color: transparent;
   border-radius: 10px;
   -fx-border-radius: 10px;
   -fx-border-insets: 0;
   border-width: 3px;
   -fx-border-width: 3px;
-  -fx-text-fill: black;
+  -fx-text-fill: rgb(136, 255, 0);
   font-size: 40px;
-  -fx-font-size: 20px;
+  -fx-font-size: 40px;
 }
 
-#verdictTxt {
+#verdictTxt,
+#txtaDebrief {
   -fx-padding: 10;
-  -fx-border-color: #000000;
+  -fx-border-color: rgb(136, 255, 0);
   -fx-border-width: 3;
   -fx-border-radius: 5;
-  -fx-background-color: #FFF8E3;
+  -fx-background-color: transparent;
   -fx-font-family: Consolas;
   -fx-font-size: 20;
-  -fx-text-fill: #333;
+  -fx-text-fill: rgb(136, 255, 0);
 }
 
-#lblVerdict {
+#lblVerdict,
+#lblCorrect {
   font-family: "Consolas";
   -fx-font-family: "Consolas";
-  font-size: 30px;
-  -fx-font-size: 30px;
-  -fx-text-fill: black;
+  font-size: 48px;
+  -fx-font-size: 48px;
+  -fx-text-fill: rgb(136, 255, 0);
   align-items: center;
 }
 
 #paneBackground {
-  -fx-background-color: #CEFEE5;
+  -fx-background-color: #cefee5;
   -fx-border-color: #a9ffd3;
   -fx-border-width: 2;
 }
 
 #paneGameOver {
-  -fx-background-color: #FFF6D6;
+  -fx-background-color: #fff6d6;
 }
 
 .text-area {
   -fx-background-color: transparent;
+  -fx-border-color: rgb(136, 255, 0);
   /* Makes the main TextArea background transparent */
 }
 
@@ -86,12 +89,30 @@
   /* Makes the Content background transparent */
 }
 
-#btnRestart,
 #btnReturn {
   font-family: "Consolas";
   -fx-font-family: "Consolas";
-  background-color: #FFF8E3;
-  -fx-background-color: #FFF8E3;
+  background-color: transparent;
+  -fx-background-color: transparent;
+  -fx-background-radius: 10px;
+  -fx-background-insets: 0;
+  border-color: transparent;
+  -fx-border-color: transparent;
+  border-radius: 10px;
+  -fx-border-radius: 10px;
+  -fx-border-insets: 0;
+  border-width: 3px;
+  -fx-border-width: 3px;
+  -fx-text-fill: rgb(136, 255, 0);
+  font-size: 40px;
+  -fx-font-size: 40px;
+}
+
+#btnRestart {
+  font-family: "Consolas";
+  -fx-font-family: "Consolas";
+  background-color: #fff8e3;
+  -fx-background-color: #fff8e3;
   -fx-background-radius: 10px;
   -fx-background-insets: 0;
   border-color: black;
@@ -106,12 +127,35 @@
   -fx-font-size: 24px;
 }
 
-#btnRestart:hover,
-#btnReturn:hover {
+#btnRestart:hover {
   background-color: #b48700;
   -fx-background-color: #b48700;
 }
 
 #paneBackground {
-  -fx-background-color: #FFF6D6;
+  -fx-background-color: #fff6d6;
+}
+
+#lblTimer {
+  font-family: "Consolas";
+  -fx-font-family: "Consolas";
+  font-size: 48px;
+  -fx-font-size: 48px;
+  -fx-text-fill: rgb(136, 255, 0);
+}
+
+#lblLoading {
+  font-family: "Consolas";
+  -fx-font-family: "Consolas";
+  font-size: 120px;
+  -fx-font-size: 120px;
+  -fx-text-fill: rgb(136, 255, 0);
+}
+
+#lblInstruction {
+  font-family: "Consolas";
+  -fx-font-family: "Consolas";
+  font-size: 16px;
+  -fx-font-size: 16px;
+  -fx-text-fill: rgb(136, 255, 0);
 }

@@ -2,11 +2,15 @@ package nz.ac.auckland.se206.controllers;
 
 import java.io.IOException;
 import java.net.URL;
+import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.Pane;
@@ -21,12 +25,15 @@ import nz.ac.auckland.apiproxy.chat.openai.Choice;
 import nz.ac.auckland.apiproxy.config.ApiProxyConfig;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
 import nz.ac.auckland.se206.App;
+import nz.ac.auckland.se206.AudioPlayer;
 
 public class DebriefController extends Controller {
   @FXML private TextArea txtaDebrief;
   @FXML private Label lblCorrect;
   @FXML private Pane debrief;
-  @FXML private Pane paneBackground;
+  @FXML private Pane paneLoading;
+  @FXML private Label lblLoading;
+  @FXML private Button btnReturn;
 
   // Tracks whether the decision was correct; set when runGptDebrief is invoked
   private Boolean wasCorrectFlag = null;
@@ -37,7 +44,12 @@ public class DebriefController extends Controller {
   // MediaPlayer used to play the result sound; keep a reference so we can stop/dispose
   private MediaPlayer resultPlayer = null;
 
+  // Loading animation timeline
+  private Timeline loadingAnimation;
+
   private ChatCompletionRequest chatCompletionRequest;
+
+  private AudioPlayer audioPlayer = AudioPlayer.getInstance();
 
   public void fadeIn() {
     FadeTransition fadeTransition = new FadeTransition();
@@ -64,7 +76,12 @@ public class DebriefController extends Controller {
 
     // change background colour depending on user verdict
     if (!wasCorrect) {
-      paneBackground.setStyle("-fx-background-color: #FF5757;"); // red incorrect
+      // Set incorrect color for incorrect answers
+      lblCorrect.setStyle("-fx-text-fill: #FF5757;");
+
+    } else {
+      // Set correct color for correct answers
+      lblCorrect.setStyle("-fx-text-fill: #00FF00;");
     }
 
     // Create a background task for GPT analysis
@@ -96,6 +113,9 @@ public class DebriefController extends Controller {
           String analysis = gptTask.getValue();
           Platform.runLater(
               () -> {
+                paneLoading.setVisible(false);
+                audioPlayer.stopSound("scanLong");
+                stopLoadingAnimation();
                 displayTextWithTypewriterEffect(txtaDebrief, analysis, 10);
               });
         });
@@ -227,11 +247,51 @@ public class DebriefController extends Controller {
     return prompt.toString();
   }
 
+  /** Starts the loading animation for the lblLoading label */
+  private void startLoadingAnimation() {
+    if (loadingAnimation != null) {
+      loadingAnimation.stop();
+    }
+
+    loadingAnimation =
+        new Timeline(
+            new KeyFrame(Duration.seconds(0), e -> lblLoading.setText("Analyzing")),
+            new KeyFrame(Duration.seconds(0.5), e -> lblLoading.setText("Analyzing.")),
+            new KeyFrame(Duration.seconds(1.0), e -> lblLoading.setText("Analyzing..")),
+            new KeyFrame(Duration.seconds(1.5), e -> lblLoading.setText("Analyzing...")),
+            new KeyFrame(Duration.seconds(2.0), e -> lblLoading.setText("Analyzing")));
+
+    loadingAnimation.setCycleCount(Animation.INDEFINITE);
+    loadingAnimation.play();
+  }
+
+  /** Stops the loading animation */
+  private void stopLoadingAnimation() {
+    if (loadingAnimation != null) {
+      loadingAnimation.stop();
+      loadingAnimation = null;
+    }
+  }
+
   /** Initializes the controller, setting up the chat completion request with desired parameters. */
   @FXML
   public void initialize() {
-    // Start with debrief pane invisible for fade-in effect
-    fadeIn();
+    paneLoading.setVisible(true);
+
+    startLoadingAnimation();
+
+    audioPlayer.playSound("scanLong", 0.5);
+
+    btnReturn.setOnMouseEntered(
+        event -> {
+          btnReturn.setText("> Restart");
+          audioPlayer.playSound("computerTalk2", 0.5);
+        });
+
+    btnReturn.setOnMouseExited(
+        event -> {
+          btnReturn.setText("Restart");
+        });
 
     // Initialize the chat completion request for GPT analysis
     try {
@@ -258,7 +318,8 @@ public class DebriefController extends Controller {
 
   @FXML
   private void onRestart(ActionEvent event) throws IOException {
-    App.openStartScreen(null);
+    audioPlayer.playSound("computerTalk", 0.5);
     App.reinitialize();
+    App.openStartScreen(null);
   }
 }

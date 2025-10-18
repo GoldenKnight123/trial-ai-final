@@ -45,6 +45,7 @@ public class RoomController extends Controller {
   private static boolean isFirstTimeInit = true;
   private static List<String> fixedDialogue = new ArrayList<>();
   private static int currentDialogueIndex = 0;
+  private static boolean canInteract = false;
   private static GameStateContext context = new GameStateContext();
 
   /**
@@ -110,6 +111,7 @@ public class RoomController extends Controller {
   @FXML private Label lblSpokenTo3;
   @FXML private Button btnGuilty;
   @FXML private Button btnNotGuilty;
+  @FXML private Button verdictBtn;
   @FXML private Arc arcTimer;
   @FXML private Pane room;
 
@@ -138,6 +140,9 @@ public class RoomController extends Controller {
 
   // Function to set variables and states for the guessing state
   public void initializeGuessingState() {
+    // Disable interactions during guessing state setup
+    canInteract = false;
+
     // Show text area to display dialogue
     txtaDialogue.setVisible(true);
     imgTextArea.setVisible(true);
@@ -161,8 +166,12 @@ public class RoomController extends Controller {
     GameTimer.getInstance()
         .setOnTimerExpired(
             () -> {
+              // Safeguard: hide the Skip to verdict button so it cannot be used after expiry
+              if (verdictBtn != null) {
+                verdictBtn.setVisible(false);
+              }
               try {
-                App.openVerdict(null, true);
+                App.openGameOver(null, "Failed to make a verdict in time.");
               } catch (IOException e) {
                 e.printStackTrace();
               }
@@ -189,6 +198,40 @@ public class RoomController extends Controller {
         txtaDialogue, fixedDialogue.get(currentDialogueIndex), 50, true, true, "user");
     currentDialogueIndex++;
     isGuessing = true;
+  }
+
+  /**
+   * Forces a check of mouse hover states for all interactive elements. This is useful after fade
+   * transitions or dialogue completion.
+   */
+  private void forceHoverStateCheck() {
+    // Check if mouse is currently over any of the interactive images
+    if (imgWitnessAi.isHover() && canInteract && !isFading) {
+      // Trigger hover effect for LOGOS-09
+      ColorAdjust highlight = new ColorAdjust();
+      highlight.setBrightness(0.3);
+      imgWitnessAi.setEffect(highlight);
+      imgWitnessAi.setImage(new Image("images/logos-09-hover.png"));
+      imgWitnessAi.setCursor(Cursor.HAND);
+    }
+
+    if (imgDefendant.isHover() && canInteract && !isFading) {
+      // Trigger hover effect for INDUS-07
+      ColorAdjust highlight = new ColorAdjust();
+      highlight.setBrightness(0.3);
+      imgDefendant.setEffect(highlight);
+      imgDefendant.setImage(new Image("images/indus-07-hover.png"));
+      imgDefendant.setCursor(Cursor.HAND);
+    }
+
+    if (imgWitnessHuman.isHover() && canInteract && !isFading) {
+      // Trigger hover effect for Evan
+      ColorAdjust highlight = new ColorAdjust();
+      highlight.setBrightness(0.3);
+      imgWitnessHuman.setEffect(highlight);
+      imgWitnessHuman.setImage(new Image("images/evan-hover.png"));
+      imgWitnessHuman.setCursor(Cursor.HAND);
+    }
   }
 
   public void fadeIn() {
@@ -233,6 +276,7 @@ public class RoomController extends Controller {
     fadeTransition.setOnFinished(
         e -> {
           isFading = false; // Reset flag when fade completes
+          forceHoverStateCheck();
           if (GameTimer.getInstance().getTimeLeft() <= 0) {
             context.setState(context.getGuessingState());
           }
@@ -346,7 +390,7 @@ public class RoomController extends Controller {
 
     rectWitnessAi.setOnMouseEntered(
         event -> {
-          if (currentDialogueIndex >= fixedDialogue.size() && !isFading) {
+          if (canInteract && !isFading) {
             imgWitnessAiBody.setEffect(highlight);
             imgWitnessAiBody.setImage(logos09Hover);
             imgWitnessAiBody.setCursor(Cursor.HAND);
@@ -366,7 +410,7 @@ public class RoomController extends Controller {
 
     rectDefendant.setOnMouseEntered(
         event -> {
-          if (currentDialogueIndex >= fixedDialogue.size() && !isFading) {
+          if (canInteract && !isFading) {
             imgDefendantBody.setEffect(highlight);
             imgDefendantBody.setImage(indus07Hover);
             imgDefendantBody.setCursor(Cursor.HAND);
@@ -386,7 +430,7 @@ public class RoomController extends Controller {
 
     rectWitnessHuman.setOnMouseEntered(
         event -> {
-          if (currentDialogueIndex >= fixedDialogue.size() && !isFading) {
+          if (canInteract && !isFading) {
             imgWitnessHumanBody.setEffect(highlight);
             imgWitnessHumanBody.setImage(evanHover);
             imgWitnessHumanBody.setCursor(Cursor.HAND);
@@ -427,8 +471,13 @@ public class RoomController extends Controller {
       GameTimer.getInstance()
           .setOnTimerExpired(
               () -> {
+                // Safeguard: hide the Skip to verdict button when the timer expiry sequence runs
+                if (verdictBtn != null) {
+                  verdictBtn.setVisible(false);
+                }
                 audioPlayer.playSound("timesUp", 0.5);
                 App.forceReturnToRoom();
+                audioPlayer.stopSound("background");
               });
 
       // Play background music
@@ -451,27 +500,6 @@ public class RoomController extends Controller {
     }
   }
 
-  /**
-   * Handles mouse clicks on rectangles representing people in the room.
-   *
-   * @param event the mouse event triggered by clicking a rectangle
-   * @throws IOException if there is an I/O error
-   */
-  @FXML
-  private void handleRectangleClick(MouseEvent event) throws IOException {
-    // Prevent rectangle clicks if fade animation is playing
-    if (isFading) {
-      System.out.println("Cannot click rectangle: Fade animation is in progress");
-      return;
-    }
-
-    // If fixed dialogue is finished and the user clicks on a rectangle, take them to the chat scene
-    // with the clicked individual as the flashback focus
-    if (currentDialogueIndex >= fixedDialogue.size()) {
-      context.handleRectangleClick(event, ((Rectangle) event.getSource()).getId());
-    }
-  }
-
   @FXML
   public void handleWitnessAiClick(MouseEvent event) throws IOException {
     if (isFading) {
@@ -479,7 +507,7 @@ public class RoomController extends Controller {
       return;
     }
 
-    if (currentDialogueIndex < fixedDialogue.size()) {
+    if (!canInteract) {
       System.out.println("Cannot click rectangle: Fixed dialogue is still playing");
       return;
     }
@@ -503,7 +531,7 @@ public class RoomController extends Controller {
       return;
     }
 
-    if (currentDialogueIndex < fixedDialogue.size()) {
+    if (!canInteract) {
       System.out.println("Cannot click rectangle: Fixed dialogue is still playing");
       return;
     }
@@ -527,7 +555,7 @@ public class RoomController extends Controller {
       return;
     }
 
-    if (currentDialogueIndex < fixedDialogue.size()) {
+    if (!canInteract) {
       System.out.println("Cannot click rectangle: Fixed dialogue is still playing");
       return;
     }
@@ -618,12 +646,18 @@ public class RoomController extends Controller {
       lblWhoSpeaking.setVisible(false);
       lblInstructions.setVisible(true);
       imgInstructionBox.setVisible(true);
+      canInteract = true;
+      forceHoverStateCheck();
       context.setState(context.getGameStartedState());
     }
 
     // If all fixed dialogue has been consumed and the user is guessing, transition to verdict scene
     // depending on whether all witnesses have been spoken to and interactions have been completed
     else {
+      if (isFading) {
+        return;
+      }
+
       imgContinueArrow.setVisible(false);
       txtaDialogue.setVisible(false);
       imgTextArea.setVisible(false);
@@ -631,7 +665,9 @@ public class RoomController extends Controller {
       // Fade out the room and then open the verdict scene. We always open the verdict scene;
       // the boolean below selects whether the verdict view should show the "game over" variant
       // (used when the player hasn't spoken to all required participants).
-      boolean showGameOverVariant = !ChatHistoryManager.getInstance().haveSpokenToAll();
+      boolean showGameOverVariant =
+          (!ChatHistoryManager.getInstance().haveSpokenToAll()
+              || !ChatHistoryManager.getInstance().interactablesComplete());
       FadeTransition fadeTransition = new FadeTransition(Duration.millis(1000), room);
       fadeTransition.setFromValue(1.0);
       fadeTransition.setToValue(0.0);
@@ -640,7 +676,14 @@ public class RoomController extends Controller {
       fadeTransition.setOnFinished(
           e -> {
             try {
-              App.openVerdict(null, showGameOverVariant);
+
+              if (showGameOverVariant) {
+                isFading = true;
+                App.openGameOver(null, "Failed to interact with all participants.");
+              } else {
+                isFading = true;
+                App.openVerdict(null);
+              }
             } catch (IOException ioEx) {
               ioEx.printStackTrace();
             }
@@ -682,6 +725,15 @@ public class RoomController extends Controller {
       imgMute.setImage(new Image(getClass().getResourceAsStream("/images/muteOff.png")));
     }
     audioPlayer.playSound("buttonClick", 0.5);
+  }
+
+  /**
+   * Handler for the "Skip to verdict" button. Sets the global timer to 0 so the expiry callback
+   * runs the normal verdict flow.
+   */
+  @FXML
+  private void onSkipToVerdict() {
+    GameTimer.getInstance().setTimeLeft(0);
   }
 
   /** Creates and starts the rain animation effect */

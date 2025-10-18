@@ -100,6 +100,17 @@ public class AiWitnessController extends ChatController {
    */
   @FXML
   public void onCloseInteraction(MouseEvent event) {
+    // Stop any ongoing typewriter effect and display full text instantly
+    if (interactableComplete) {
+      stopTypewriterEffect();
+      txtaTerminalFixed.setText(
+          "Message Received at 6/7/2055 12:36PM\n"
+              + "[Status: Viewable]\n"
+              + "--------------------------------------------\n"
+              + "Manager (sent to INDUS-07): \"Remember to install the new Helios system before the"
+              + " end of the week.\"");
+    }
+
     // Closes the overlay when clicked
     rectOverlay.setVisible(false);
     imgOverlay.setVisible(false);

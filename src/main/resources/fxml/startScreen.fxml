@@ -20,7 +20,7 @@
          </image>
       </ImageView>
       <Rectangle fx:id="rectBlack" arcHeight="5.0" arcWidth="5.0" height="734.0" stroke="BLACK" strokeType="INSIDE" visible="false" width="1317.0" />
-      <TextArea fx:id="txtaTitle" layoutX="370.0" layoutY="14.0" mouseTransparent="true" prefHeight="302.0" prefWidth="830.0" text="Trial AI" visible="false">
+      <TextArea fx:id="txtaTitle" editable="false" layoutX="370.0" layoutY="14.0" mouseTransparent="true" prefHeight="302.0" prefWidth="830.0" text="Trial AI" visible="false">
          <stylesheets>
             <URL value="@../css/memoryAiWitness.css" />
             <URL value="@../css/start.css" />

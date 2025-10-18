@@ -35,6 +35,8 @@ public class GameTimer {
   private int secondsLeft = 300;
   private int maxTime = 300;
   private boolean isRunning = false;
+  // Guard to ensure the expired callback only fires once per timer run
+  private boolean expiredFired = false;
   private List<Label> timerLabels = new ArrayList<>();
   private List<Arc> timerArcs = new ArrayList<>();
   private TimerExpiredCallback expiredCallback;
@@ -55,8 +57,9 @@ public class GameTimer {
                   updateTimerDisplay();
                   if (secondsLeft <= 0) {
                     stop();
-                    // Call the callback when timer expires
-                    if (expiredCallback != null) {
+                    // Call the callback when timer expires, but only once per run
+                    if (expiredCallback != null && !expiredFired) {
+                      expiredFired = true;
                       Platform.runLater(() -> expiredCallback.onTimerExpired());
                     }
                   }
@@ -68,6 +71,8 @@ public class GameTimer {
   public void start() {
     if (!isRunning) {
       timeline.play();
+      // Allow expiry callback to be fired again for this run
+      expiredFired = false;
       isRunning = true;
     }
   }
@@ -83,6 +88,32 @@ public class GameTimer {
   /** Get the time left */
   public int getTimeLeft() {
     return secondsLeft;
+  }
+
+  /**
+   * Sets the time left on the timer. If seconds is 0 or less this will invoke the same expiry
+   * behaviour as the natural countdown (stop timeline, update UI, and invoke the expired callback).
+   *
+   * @param seconds the number of seconds to set as remaining time
+   */
+  public void setTimeLeft(int seconds) {
+    this.secondsLeft = Math.max(0, seconds);
+    // Update UI immediately
+    updateTimerDisplay();
+
+    if (this.secondsLeft <= 0) {
+      // Stop the timeline if running
+      if (timeline != null && isRunning) {
+        timeline.stop();
+        isRunning = false;
+      }
+
+      // Trigger expiry callback on JavaFX thread, but only once per run
+      if (expiredCallback != null && !expiredFired) {
+        expiredFired = true;
+        Platform.runLater(() -> expiredCallback.onTimerExpired());
+      }
+    }
   }
 
   /** Get the maximum time */
