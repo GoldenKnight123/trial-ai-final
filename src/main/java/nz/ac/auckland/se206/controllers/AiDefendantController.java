@@ -5,11 +5,14 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.BlurType;
 import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
 import nz.ac.auckland.se206.AudioPlayer;
@@ -18,7 +21,6 @@ import nz.ac.auckland.se206.ChatHistoryManager;
 public class AiDefendantController extends ChatController {
 
   @FXML private Rectangle rectOverlay;
-  @FXML private Rectangle rectComputer;
   @FXML private Pane paneInteractable;
   @FXML private ImageView imgOverride;
   @FXML private TextArea txtaEmail;
@@ -34,6 +36,7 @@ public class AiDefendantController extends ChatController {
   @FXML private ImageView imgUnread;
   @FXML private ImageView imgUnread1;
   @FXML private ImageView imgUnread2;
+  @FXML private ImageView imgInteractable;
 
   private AudioPlayer audioPlayer;
   private boolean interactableComplete = false;
@@ -51,19 +54,36 @@ public class AiDefendantController extends ChatController {
 
     audioPlayer = AudioPlayer.getInstance();
 
-    // Create a highlight effect for hover
-    ColorAdjust highlight = new ColorAdjust();
-    highlight.setBrightness(0.5);
+    // Create a subtle red tint and glows: a persistent base glow and a stronger hover glow
+    ColorAdjust tint = new ColorAdjust();
+    tint.setBrightness(0.04);
+    tint.setSaturation(0.12);
 
-    rectComputer.setOnMouseEntered(
+    // Base (always-on) glow
+    DropShadow baseGlow =
+        new DropShadow(BlurType.GAUSSIAN, Color.web("#ff6b6b", 0.55), 10, 0.15, 0, 0);
+    baseGlow.setInput(tint);
+
+    // Hover (intensified) glow
+    DropShadow hoverGlow =
+        new DropShadow(BlurType.GAUSSIAN, Color.web("#ff6b6b", 0.85), 26, 0.45, 0, 0);
+    hoverGlow.setInput(tint);
+
+    // Apply the base glow by default so it always appears
+    imgInteractable.setEffect(baseGlow);
+
+    // Intensify glow on hover, but only if there's no current speaker (typing)
+    imgInteractable.setOnMouseEntered(
         event -> {
-          if (getCurrentSpeaker() == "") {
-            rectComputer.setEffect(highlight);
+          if (getCurrentSpeaker().isEmpty()) {
+            imgInteractable.setEffect(hoverGlow);
           }
         });
-    rectComputer.setOnMouseExited(
+
+    // Restore base glow when mouse leaves
+    imgInteractable.setOnMouseExited(
         event -> {
-          rectComputer.setEffect(null);
+          imgInteractable.setEffect(baseGlow);
         });
 
     if (txtFieldPassword != null) {
