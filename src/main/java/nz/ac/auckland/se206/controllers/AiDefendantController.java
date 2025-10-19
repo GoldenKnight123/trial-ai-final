@@ -11,7 +11,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
-import nz.ac.auckland.apiproxy.chat.openai.ChatMessage;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
 import nz.ac.auckland.se206.AudioPlayer;
 import nz.ac.auckland.se206.ChatHistoryManager;
@@ -230,22 +229,6 @@ public class AiDefendantController extends ChatController {
       if (imgOverride != null) {
         imgOverride.setVisible(false);
       }
-
-      getChatCompletionRequest()
-          .addMessage(
-              new ChatMessage(
-                  "system",
-                  "The judge is in the AI defendant's memory where the judge themselves is asked to"
-                      + " use a slider, choosing between the Safety Protocol which will hold the"
-                      + " current power output or the Efficiency Protocol which will increase the"
-                      + " power output. This places them in Indus-07 shoes when it was instructed"
-                      + " to deploy the new technology. However, when the user confirms their"
-                      + " choice, a message from the upper management that says (Management"
-                      + " Override: Proceed to 100% Efficiency) which gives the illusion that the"
-                      + " judge had a choice which relates to the fact that INDUS-07 was pressured "
-                      + " to implement the new technology. Convey that despite of your concerns of"
-                      + " about the risks of the new technology, management has issued a direct"
-                      + " override."));
 
       displayInteractionDialogue();
     }
