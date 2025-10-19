@@ -1,26 +1,29 @@
 package nz.ac.auckland.se206.controllers;
 
+import javafx.animation.PauseTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.BlurType;
 import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import nz.ac.auckland.apiproxy.chat.openai.ChatMessage;
+import javafx.util.Duration;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
+import nz.ac.auckland.se206.AudioPlayer;
 import nz.ac.auckland.se206.ChatHistoryManager;
 
 public class AiDefendantController extends ChatController {
 
   @FXML private Rectangle rectOverlay;
-  @FXML private Rectangle rectComputer;
   @FXML private Pane paneInteractable;
-  @FXML private ImageView imgOverride;
   @FXML private TextArea txtaEmail;
   @FXML private Label lblRecipient;
   @FXML private Rectangle rectAiCore;
@@ -31,11 +34,18 @@ public class AiDefendantController extends ChatController {
   @FXML private TextField txtFieldPassword;
   @FXML private Label lblEmailInstruct;
   @FXML private Label lblHint;
+  @FXML private ImageView imgUnread;
+  @FXML private ImageView imgUnread1;
+  @FXML private ImageView imgUnread2;
+  @FXML private ImageView imgInteractable;
 
+  private AudioPlayer audioPlayer;
   private boolean interactableComplete = false;
   private int interactableCompleteCount = 0;
-  private boolean passwordScreenShown = false;
   private boolean passwordAccepted = false;
+  private boolean reactAiCoreViewed = false;
+  private boolean reactManagerViewed = false;
+  private boolean reactSystemViewed = false;
 
   // private boolean interactionDialoguePlayed = false;
 
@@ -43,21 +53,41 @@ public class AiDefendantController extends ChatController {
   public void initialize() throws ApiProxyException {
     super.initialize();
 
-    // Create a highlight effect for hover
-    ColorAdjust highlight = new ColorAdjust();
-    highlight.setBrightness(0.5);
+    audioPlayer = AudioPlayer.getInstance();
 
-    rectComputer.setOnMouseEntered(
+    // Create a subtle red tint and glows: a persistent base glow and a stronger hover glow
+    ColorAdjust tint = new ColorAdjust();
+    tint.setBrightness(0.04);
+    tint.setSaturation(0.12);
+
+    // Base (always-on) glow
+    DropShadow baseGlow =
+        new DropShadow(BlurType.GAUSSIAN, Color.web("#ff6b6b", 0.55), 10, 0.15, 0, 0);
+    baseGlow.setInput(tint);
+
+    // Hover (intensified) glow
+    DropShadow hoverGlow =
+        new DropShadow(BlurType.GAUSSIAN, Color.web("#ff6b6b", 0.85), 26, 0.45, 0, 0);
+    hoverGlow.setInput(tint);
+
+    // Apply the base glow by default so it always appears
+    imgInteractable.setEffect(baseGlow);
+
+    // Intensify glow on hover, but only if there's no current speaker (typing)
+    imgInteractable.setOnMouseEntered(
         event -> {
-          if (getCurrentSpeaker() == "") {
-            rectComputer.setEffect(highlight);
+          if (getCurrentSpeaker().isEmpty()) {
+            imgInteractable.setEffect(hoverGlow);
           }
         });
-    rectComputer.setOnMouseExited(
+
+    // Restore base glow when mouse leaves
+    imgInteractable.setOnMouseExited(
         event -> {
-          rectComputer.setEffect(null);
+          imgInteractable.setEffect(baseGlow);
         });
 
+    // Handle password submission when Enter is pressed or action triggered
     if (txtFieldPassword != null) {
       txtFieldPassword.setOnAction((ActionEvent e) -> handlePassword());
       txtFieldPassword.setOnKeyPressed(
@@ -71,12 +101,14 @@ public class AiDefendantController extends ChatController {
 
   @FXML
   private void onInteractable(MouseEvent event) {
+
+    audioPlayer.playSound("computerOpen", 0.5);
+
     // Only allow opening the interactable if the correct password has been entered.
     if (!passwordAccepted) {
       if (panePasswordScreen != null) {
         panePasswordScreen.setVisible(true);
       }
-      passwordScreenShown = true;
       return;
     }
 
@@ -86,25 +118,34 @@ public class AiDefendantController extends ChatController {
 
   @FXML
   private void onCloseInteraction(MouseEvent event) {
+
+    audioPlayer.playSound("computerClose", 0.5);
+
     // If password screen is visible, close it and do not trigger completion logic
     if (panePasswordScreen != null && panePasswordScreen.isVisible()) {
       panePasswordScreen.setVisible(false);
       return;
     }
 
+    // If the interaction is not yet complete, check for completion
+    if (!interactableComplete) {
+      completeInteraction();
+    }
     paneInteractable.setVisible(false);
-    completeInteraction();
   }
 
   @FXML
   private void onRectClick(MouseEvent event) {
+    System.out.println("Rectangle clicked");
     Object source = event.getSource();
+    audioPlayer.playSound("emailOpen", 0.5);
 
     if (source instanceof Rectangle) {
       Rectangle rect = (Rectangle) source;
       String id = rect.getId();
       switch (id) {
         case "rectAiCore":
+          reactAiCoreViewed = markFirstView(reactAiCoreViewed, imgUnread);
           rect.setOpacity(1.0);
           lblRecipient.setText("From: AI Core");
           txtaEmail.setText(
@@ -114,6 +155,8 @@ public class AiDefendantController extends ChatController {
           interactableCompleteCount++;
           break;
         case "rectManager":
+          // Hide the unread icon the first time this email is viewed
+          reactManagerViewed = markFirstView(reactManagerViewed, imgUnread1);
           rect.setOpacity(1.0);
           lblRecipient.setText("From: Manager");
           txtaEmail.setText(
@@ -125,6 +168,8 @@ public class AiDefendantController extends ChatController {
           interactableCompleteCount++;
           break;
         case "rectSystem":
+          // Hide the unread icon the first time this email is viewed
+          reactSystemViewed = markFirstView(reactSystemViewed, imgUnread2);
           rect.setOpacity(1.0);
           lblRecipient.setText("From: System");
           txtaEmail.setText(
@@ -153,9 +198,9 @@ public class AiDefendantController extends ChatController {
 
     if (entered.equals(CORRECT)) {
       panePasswordScreen.setVisible(false);
-      passwordScreenShown = true;
       passwordAccepted = true;
       paneInteractable.setVisible(true);
+      audioPlayer.playSound("passwordAccepted", 0.5);
       if (lblEmailInstruct != null) {
         lblEmailInstruct.setText("Review the emails regarding the Helios Module deployment.");
       }
@@ -166,12 +211,34 @@ public class AiDefendantController extends ChatController {
       // Clear the field and show an explicit hint label so the user sees the error
       txtFieldPassword.clear();
       txtFieldPassword.setPromptText("Incorrect password — try again");
+      audioPlayer.playSound("error", 0.5);
 
       // Move focus away from the text field so the prompt text (if set) is visible
       if (panePasswordScreen != null) {
         panePasswordScreen.requestFocus();
       }
     }
+  }
+
+  /**
+   * Marks an item as viewed (hides unread icon) and returns the new viewed state.
+   *
+   * @param hasBeenViewed current viewed state
+   * @param unreadIcon icon to hide when first viewed
+   * @return true if the item is now considered viewed
+   */
+  private boolean markFirstView(boolean hasBeenViewed, ImageView unreadIcon) {
+    if (!hasBeenViewed) {
+      if (unreadIcon != null) {
+        try {
+          unreadIcon.setVisible(false);
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
+      return true;
+    }
+    return hasBeenViewed;
   }
 
   /** Called when the interactable has been completed (all emails viewed). */
@@ -184,27 +251,11 @@ public class AiDefendantController extends ChatController {
       ChatHistoryManager.getInstance().markInteractableComplete("INDUS-07");
 
       paneInteractable.setVisible(false);
-      if (imgOverride != null) {
-        imgOverride.setVisible(false);
-      }
 
-      getChatCompletionRequest()
-          .addMessage(
-              new ChatMessage(
-                  "system",
-                  "The judge is in the AI defendant's memory where the judge themselves is asked to"
-                      + " use a slider, choosing between the Safety Protocol which will hold the"
-                      + " current power output or the Efficiency Protocol which will increase the"
-                      + " power output. This places them in Indus-07 shoes when it was instructed"
-                      + " to deploy the new technology. However, when the user confirms their"
-                      + " choice, a message from the upper management that says (Management"
-                      + " Override: Proceed to 100% Efficiency) which gives the illusion that the"
-                      + " judge had a choice which relates to the fact that INDUS-07 was pressured "
-                      + " to implement the new technology. Convey that despite of your concerns of"
-                      + " about the risks of the new technology, management has issued a direct"
-                      + " override."));
-
-      displayInteractionDialogue();
+      // Small delay to avoid the same user click triggering a skip on the typewriter
+      PauseTransition pause = new PauseTransition(Duration.millis(300));
+      pause.setOnFinished(e -> displayInteractionDialogue());
+      pause.play();
     }
   }
 }

@@ -123,17 +123,17 @@
             <ColorAdjust />
          </effect>
       </ImageView>
-      <ImageView fx:id="imgInteractable2" fitHeight="77.0" fitWidth="131.0" layoutX="966.0" layoutY="48.0" opacity="0.5" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="imgInteractable2" fitHeight="70.0" fitWidth="119.0" layoutX="980.0" layoutY="54.0" opacity="0.5" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../images/tablet-defendant.png" />
+            <Image url="@../images/imgInteractable2.png" />
          </image>
          <effect>
             <ColorAdjust />
          </effect>
       </ImageView>
-      <ImageView fx:id="imgInteractable3" fitHeight="70.0" fitWidth="94.0" layoutX="1098.0" layoutY="52.0" opacity="0.5" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="imgInteractable3" fitHeight="85.0" fitWidth="79.0" layoutX="1115.0" layoutY="48.0" opacity="0.5" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../images/interactable2.png" />
+            <Image url="@../images/imgInteractable3.png" />
          </image>
          <effect>
             <ColorAdjust />
