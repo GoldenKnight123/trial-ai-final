@@ -52,7 +52,7 @@
             <Font name="System Bold" size="24.0" />
          </font>
       </Label>
-      <TextField fx:id="txtInput" layoutX="29.0" layoutY="664.0" onKeyPressed="#onKeyPressed" prefHeight="45.0" prefWidth="1072.0" promptText="Enter message here..." styleClass="text-field" stylesheets="@../css/memory.css" />
+      <TextField fx:id="txtInput" layoutX="29.0" layoutY="666.0" onKeyPressed="#onKeyPressed" prefHeight="45.0" prefWidth="1037.0" promptText="Enter message here..." styleClass="text-field" stylesheets="@../css/memory.css" />
       <TextArea fx:id="txtaChat" editable="false" focusTraversable="false" layoutX="45.0" layoutY="400.0" mouseTransparent="true" prefHeight="240.0" prefWidth="1189.0" style="-fx-background-color: transparent;" styleClass="text-area" stylesheets="@../css/memory.css" text="Text Here" wrapText="true" />
       <Label fx:id="lblWhoSpeaking" alignment="CENTER" contentDisplay="CENTER" layoutX="49.0" layoutY="352.0" prefHeight="29.0" prefWidth="131.0" stylesheets="@../css/memory.css" text="You:" textAlignment="CENTER">
          <font>
