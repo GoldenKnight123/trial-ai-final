@@ -3,6 +3,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
@@ -10,81 +11,146 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="room" focusTraversable="true" onMouseClicked="#handleGeneralClick" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #A9A9A9;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.controllers.RoomController">
+<Pane fx:id="room" focusTraversable="true" onMouseClicked="#handleGeneralClick" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #FFF8E3;" stylesheets="@../css/room.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.controllers.RoomController">
    <children>
-      <ImageView fitHeight="243.0" fitWidth="120.0" layoutX="608.0" layoutY="145.0" preserveRatio="true">
+      <ImageView fx:id="imgTextArea1" fitHeight="720.0" fitWidth="1537.0" preserveRatio="true">
          <image>
-            <Image url="@../images/Ai.png" />
+            <Image url="@../images/background.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="223.0" fitWidth="99.0" layoutX="211.0" layoutY="205.0" preserveRatio="true">
+      <ImageView fx:id="imgWitnessAiBody" fitHeight="388.0" fitWidth="354.0" layoutX="133.0" layoutY="169.0" preserveRatio="true">
          <image>
-            <Image url="@../images/Ai.png" />
+            <Image url="@../images/logos-09-body.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="200.0" fitWidth="99.0" layoutX="1046.0" layoutY="190.0" preserveRatio="true">
+      <ImageView fx:id="imgWitnessAiStand" fitHeight="388.0" fitWidth="354.0" layoutX="133.0" layoutY="163.0" preserveRatio="true">
          <image>
-            <Image url="@../images/person.png" />
+            <Image url="@../images/logos-09-stand.png" />
          </image>
       </ImageView>
-      <Rectangle fx:id="rectWitnessAi" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="216.0" layoutX="198.0" layoutY="163.0" onMouseClicked="#handleRectangleClick" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="99.0" />
-      <Rectangle fx:id="rectDefendant" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="240.0" layoutX="588.0" layoutY="105.0" onMouseClicked="#handleRectangleClick" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="120.0" />
-      <Rectangle fx:id="rectWitnessHuman" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff" focusTraversable="true" height="222.0" layoutX="1039.0" layoutY="142.0" onMouseClicked="#handleRectangleClick" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="99.0" />
-      <Label layoutX="14.0" layoutY="656.0" text="Courtroom">
+      <ImageView fx:id="imgDefendantBody" fitHeight="388.0" fitWidth="354.0" layoutX="475.0" layoutY="147.0" onMouseClicked="#handleDefendantClick" preserveRatio="true">
+         <image>
+            <Image url="@../images/indus-07-body.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="imgDefendantStand" fitHeight="388.0" fitWidth="354.0" layoutX="475.0" layoutY="141.0" preserveRatio="true">
+         <image>
+            <Image url="@../images/indus-07-stand.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="imgWitnessHumanBody" fitHeight="388.0" fitWidth="354.0" layoutX="930.0" layoutY="163.0" preserveRatio="true">
+         <image>
+            <Image url="@../images/evan-body.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="imgWitnessHumanStand" fitHeight="388.0" fitWidth="354.0" layoutX="930.0" layoutY="157.0" preserveRatio="true">
+         <image>
+            <Image url="@../images/evan-stand.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="imgTextArea" fitHeight="720.0" fitWidth="1537.0" layoutX="-2.0" layoutY="5.0" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@../images/textArea.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="70.0" fitWidth="233.0" layoutX="-23.0" layoutY="91.0" preserveRatio="true">
+         <image>
+            <Image url="@../images/locationIndicator.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="lblLocation" layoutX="14.0" layoutY="112.0" stylesheets="@../css/room.css" text="Courtroom">
          <font>
             <Font size="38.0" />
          </font>
       </Label>
-      <Label layoutX="602.0" layoutY="114.0" text="INDUS-07">
+      <Label fx:id="lblProfession" layoutX="508.0" layoutY="48.0" prefHeight="37.0" prefWidth="289.0" wrapText="true">
          <font>
             <Font size="21.0" />
          </font>
       </Label>
-      <Label fx:id="lblProfession" layoutX="503.0" layoutY="56.0" prefHeight="37.0" prefWidth="289.0" wrapText="true">
-         <font>
-            <Font size="21.0" />
-         </font>
-      </Label>
-      <Label layoutX="198.0" layoutY="174.0" text="LOGOS-09">
-         <font>
-            <Font size="21.0" />
-         </font>
-      </Label>
-      <Label layoutX="1060.0" layoutY="163.0" text="Evan">
-         <font>
-            <Font size="21.0" />
-         </font>
-      </Label>
-      <TextArea fx:id="txtaDialogue" editable="false" layoutX="27.0" layoutY="421.0" onMouseClicked="#handleGeneralClick" prefHeight="222.0" prefWidth="1226.0" text="Text Here" wrapText="true">
+      <TextArea fx:id="txtaDialogue" editable="false" layoutX="52.0" layoutY="436.0" onMouseClicked="#handleGeneralClick" prefHeight="245.0" prefWidth="1177.0" stylesheets="@../css/room.css" text="Text Here" visible="false" wrapText="true">
          <font>
             <Font size="24.0" />
          </font>
       </TextArea>
-      <Label fx:id="lblContinue" layoutX="1152.0" layoutY="620.0" prefHeight="17.0" prefWidth="99.0" text="Click to continue." />
-      <Label fx:id="lblInstructions" layoutX="168.0" layoutY="497.0" text="Click on an individual to view their memories." visible="false">
+      <ImageView fx:id="imgInstructionBox" fitHeight="137.0" fitWidth="951.0" layoutX="172.0" layoutY="456.0" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@../images/instructionBox.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="lblInstructions" layoutX="197.0" layoutY="500.0" stylesheets="@../css/room.css" text="Click on an individual to view their memories." visible="false">
          <font>
             <Font size="48.0" />
          </font>
       </Label>
-      <Label fx:id="lblTimer" alignment="CENTER" layoutX="5.0" layoutY="14.0" prefWidth="60.0" text="120" textFill="#000000">
+      <ImageView fitHeight="85.0" fitWidth="135.0" layoutX="9.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/clock.png" />
+         </image>
+      </ImageView>
+      <Arc fx:id="arcTimer" layoutX="52.0" layoutY="49.0" length="360.0" opacity="0.25" radiusX="34.0" radiusY="35.0" startAngle="90.0" stroke="BLACK" strokeType="INSIDE" type="ROUND" />
+      <Label fx:id="lblTimer" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="22.0" layoutY="37.0" prefWidth="60.0" stylesheets="@../css/room.css" text="99" textAlignment="CENTER" textFill="#000000" textOverrun="CLIP">
          <font>
             <Font name="System Bold" size="24.0" />
          </font>
       </Label>
-      <Arc fx:id="arcTimer" layoutX="35.0" layoutY="35.0" length="360.0" opacity="0.25" radiusX="30.0" radiusY="30.0" startAngle="90.0" stroke="BLACK" strokeType="INSIDE" type="ROUND" />
-      <Button fx:id="btnGuilty" layoutX="367.0" layoutY="504.0" mnemonicParsing="false" onAction="#onChooseGuilty" prefHeight="70.0" prefWidth="165.0" text="GUILTY">
+      <Button fx:id="btnGuilty" layoutX="367.0" layoutY="504.0" mnemonicParsing="false" onAction="#onChooseGuilty" prefHeight="70.0" prefWidth="165.0" text="GUILTY" visible="false">
          <font>
             <Font size="18.0" />
          </font></Button>
-      <Button fx:id="btnNotGuilty" layoutX="748.0" layoutY="504.0" mnemonicParsing="false" onAction="#onChooseNotGuilty" prefHeight="70.0" prefWidth="165.0" text="NOT GUILTY">
+      <Button fx:id="btnNotGuilty" layoutX="748.0" layoutY="504.0" mnemonicParsing="false" onAction="#onChooseNotGuilty" prefHeight="70.0" prefWidth="165.0" text="NOT GUILTY" visible="false">
          <font>
             <Font size="18.0" />
          </font>
       </Button>
-      <Label fx:id="lblWhoSpeaking" layoutX="27.0" layoutY="384.0" text="You:">
+      <Label fx:id="lblWhoSpeaking" layoutX="99.0" layoutY="398.0" stylesheets="@../css/room.css" text="You:" visible="false">
          <font>
             <Font size="24.0" />
          </font>
       </Label>
+      <Rectangle fx:id="rectFade" arcHeight="5.0" arcWidth="5.0" fill="BLACK" height="795.0" layoutX="-23.0" layoutY="-52.0" opacity="0.0" stroke="BLACK" strokeType="INSIDE" visible="false" width="1341.0" />
+      <ImageView fx:id="imgContinueArrow" fitHeight="37.0" fitWidth="153.0" layoutX="1142.0" layoutY="644.0" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@../images/continueArrow.png" />
+         </image>
+      </ImageView>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#e5fff6" height="146.0" layoutX="848.0" layoutY="6.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="3.0" width="361.0" />
+      <ImageView fx:id="imgInteractable1" fitHeight="58.0" fitWidth="109.0" layoutX="862.0" layoutY="56.0" opacity="0.5" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/computer2.png" />
+         </image>
+         <effect>
+            <ColorAdjust />
+         </effect>
+      </ImageView>
+      <ImageView fx:id="imgInteractable2" fitHeight="77.0" fitWidth="131.0" layoutX="966.0" layoutY="48.0" opacity="0.5" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/tablet-defendant.png" />
+         </image>
+         <effect>
+            <ColorAdjust />
+         </effect>
+      </ImageView>
+      <ImageView fx:id="imgInteractable3" fitHeight="70.0" fitWidth="94.0" layoutX="1098.0" layoutY="52.0" opacity="0.5" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/interactable2.png" />
+         </image>
+         <effect>
+            <ColorAdjust />
+         </effect>
+      </ImageView>
+      <Label fx:id="lblEvidence" layoutX="913.0" layoutY="14.0" stylesheets="@../css/room.css" text="Evidence Gathered:" />
+      <Label fx:id="lblSpokenTo1" alignment="CENTER" contentDisplay="CENTER" layoutX="183.0" layoutY="152.0" prefWidth="119.0" stylesheets="@../css/room.css" text="Spoken To" visible="false" />
+      <Label fx:id="lblSpokenTo2" alignment="CENTER" contentDisplay="CENTER" layoutX="585.0" layoutY="128.0" stylesheets="@../css/room.css" text="Spoken To" visible="false" />
+      <Label fx:id="lblSpokenTo3" alignment="CENTER" contentDisplay="CENTER" layoutX="1012.0" layoutY="160.0" stylesheets="@../css/room.css" text="Spoken To" visible="false" />
+      <ImageView fx:id="imgMute" fitHeight="37.0" fitWidth="53.0" layoutX="1221.0" layoutY="10.0" onMouseClicked="#onMute" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/muteOff.png" />
+         </image>
+      </ImageView>
+   <Button id="verdictBtn" fx:id="verdictBtn" layoutX="565.0" layoutY="20.0" mnemonicParsing="false" onAction="#onSkipToVerdict" prefHeight="44.0" prefWidth="175.0" stylesheets="@../css/memory.css" text="Skip to verdict" />
+      <Rectangle fx:id="rectWitnessAi" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff00" height="167.0" layoutX="172.0" layoutY="187.0" onMouseClicked="#handleWitnessAiClick" stroke="TRANSPARENT" strokeType="INSIDE" width="155.0" />
+      <Rectangle fx:id="rectDefendant" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff00" height="167.0" layoutX="563.0" layoutY="161.0" onMouseClicked="#handleDefendantClick" stroke="TRANSPARENT" strokeType="INSIDE" width="155.0" />
+      <Rectangle fx:id="rectWitnessHuman" arcHeight="5.0" arcWidth="5.0" fill="#1f93ff00" height="167.0" layoutX="996.0" layoutY="187.0" onMouseClicked="#handleWitnessHumanClick" stroke="TRANSPARENT" strokeType="INSIDE" width="155.0" />
    </children>
 </Pane>

@@ -1,0 +1,223 @@
+.text-area {
+  font-family: "Consolas";
+  -fx-font-family: "Consolas";
+  font-size: 24px;
+  -fx-font-size: 24px;
+  -fx-text-fill: black;
+  background-color: transparent;
+  -fx-background-color: transparent;
+  cursor: default;
+  -fx-cursor: default;
+}
+
+.text-area .content {
+  background-color: transparent;
+  -fx-background-color: transparent;
+  border-color: transparent;
+  -fx-border-color: transparent;
+  border-width: 1px;
+  -fx-border-width: 1px;
+  padding: 5px;
+  -fx-padding: 5px;
+}
+
+.text-area .viewport {
+  background-color: transparent;
+  -fx-background-color: transparent;
+}
+
+.text-area .scroll-pane {
+  background-color: transparent;
+  -fx-background-color: transparent;
+}
+
+.text-input {
+  font-family: "Consolas";
+  -fx-font-family: "Consolas";
+  font-size: 24px;
+  -fx-font-size: 24px;
+  -fx-text-fill: black;
+  background-color: transparent;
+  -fx-background-color: transparent;
+  cursor: text;
+  -fx-cursor: text;
+}
+
+.text-input .content {
+  background-color: transparent;
+  -fx-background-color: transparent;
+  border-color: transparent;
+  -fx-border-color: transparent;
+  border-width: 1px;
+  -fx-border-width: 1px;
+  padding: 5px;
+  -fx-padding: 5px;
+}
+
+.text-input .viewport {
+  background-color: transparent;
+  -fx-background-color: transparent;
+}
+
+.text-input .scroll-pane {
+  background-color: transparent;
+  -fx-background-color: transparent;
+}
+
+#lblLocation {
+  font-family: "Consolas";
+  -fx-font-family: "Consolas";
+  font-size: 24px;
+  -fx-font-size: 24px;
+  -fx-text-fill: black;
+  align-items: flex-start;
+}
+
+#lblWhoSpeaking {
+  font-family: "Consolas";
+  -fx-font-family: "Consolas";
+  font-size: 24px;
+  -fx-font-size: 24px;
+  -fx-text-fill: black;
+  align-items: center;
+}
+
+#btnSend {
+  font-family: "Consolas";
+  -fx-font-family: "Consolas";
+  background-color: #fff8e3;
+  -fx-background-color: #fff8e3;
+  -fx-background-radius: 10px;
+  -fx-background-insets: 0;
+  border-color: black;
+  -fx-border-color: black;
+  border-radius: 10px;
+  -fx-border-radius: 10px;
+  -fx-border-insets: 0;
+  border-width: 3px;
+  -fx-border-width: 3px;
+  -fx-text-fill: black;
+  font-size: 24px;
+  -fx-font-size: 24px;
+}
+
+#btnReturn,
+#btnHistory {
+  font-family: "Consolas";
+  -fx-font-family: "Consolas";
+  background-color: #fff8e3;
+  -fx-background-color: #fff8e3;
+  -fx-background-radius: 10px;
+  -fx-background-insets: 0;
+  border-color: black;
+  -fx-border-color: black;
+  border-radius: 10px;
+  -fx-border-radius: 10px;
+  -fx-border-insets: 0;
+  border-width: 3px;
+  -fx-border-width: 3px;
+  -fx-text-fill: black;
+  font-size: 12px;
+  -fx-font-size: 12px;
+}
+
+#btnSend:hover,
+#btnReturn:hover,
+#btnHistory:hover {
+  background-color: #9b9689;
+  -fx-background-color: #9b9689;
+  cursor: hand;
+  -fx-cursor: hand;
+}
+
+/* Font-face for Open Sans (local resource) */
+@font-face {
+  font-family: "Open Sans";
+  src: url("../fonts/OpenSans-Regular.ttf");
+}
+
+/* Class for scrambled/unscrambled tablet display text only */
+.unscrambled-text {
+  -fx-font-family: "Open Sans", "Consolas", sans-serif;
+  font-family: "Open Sans", "Consolas", sans-serif;
+  -fx-font-size: 18px;
+  font-size: 18px;
+  -fx-fill: black;
+  fill: black;
+}
+
+#txtaHistory {
+  background-color: #fff8e3;
+  -fx-background-color: #fff8e3;
+  -fx-background-radius: 10px;
+  border-color: black;
+  -fx-border-color: black;
+  border-width: 4px;
+  -fx-border-width: 4px;
+  border-radius: 10px;
+  -fx-border-radius: 10px;
+  font-size: 12px;
+  -fx-font-size: 12px;
+}
+
+#txtaHistory .content {
+  background-color: #fff8e3;
+  -fx-background-color: #fff8e3;
+  -fx-background-radius: 6px;
+  padding: 5px;
+  -fx-padding: 5px;
+  border-color: transparent;
+  -fx-border-color: transparent;
+  border-width: 0;
+  -fx-border-width: 0;
+}
+
+#txtaHistory .viewport {
+  background-color: #fff8e3;
+  -fx-background-color: #fff8e3;
+  -fx-background-radius: 6px;
+}
+
+#txtaHistory .scroll-pane {
+  background-color: #fff8e3;
+  -fx-background-color: #fff8e3;
+  -fx-background-radius: 6px;
+}
+
+#txtaHistory .scroll-bar {
+  background-color: #fff8e3;
+  -fx-background-color: #fff8e3;
+  -fx-background-radius: 0 6px 6px 0;
+}
+
+#txtaHistory .scroll-bar .track {
+  background-color: #fff8e3;
+  -fx-background-color: #fff8e3;
+  -fx-background-radius: 6px;
+}
+
+#txtaHistory .scroll-bar .thumb {
+  background-color: #cccccc;
+  -fx-background-color: #cccccc;
+  -fx-background-radius: 6px;
+}
+
+#lblThinking {
+  font-family: "Consolas";
+  -fx-font-family: "Consolas";
+  font-size: 24px;
+  -fx-font-size: 24px;
+  -fx-text-fill: black;
+  align-items: center;
+  -fx-alignment: center;
+}
+
+#lblInstruction {
+  font-family: "Consolas";
+  -fx-font-family: "Consolas";
+  font-size: 24px;
+  -fx-font-size: 24px;
+  -fx-text-fill: black;
+  align-items: center;
+  -fx-alignment: center;
+}

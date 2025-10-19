@@ -2,9 +2,7 @@ package nz.ac.auckland.se206.controllers;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
@@ -22,13 +20,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.media.AudioClip;
+import javafx.scene.layout.Pane;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 import javazoom.jl.decoder.JavaLayerException;
-import javazoom.jl.player.Player;
 import nz.ac.auckland.apiproxy.chat.openai.ChatCompletionRequest;
 import nz.ac.auckland.apiproxy.chat.openai.ChatCompletionRequest.Model;
 import nz.ac.auckland.apiproxy.chat.openai.ChatCompletionResult;
@@ -37,6 +33,8 @@ import nz.ac.auckland.apiproxy.chat.openai.Choice;
 import nz.ac.auckland.apiproxy.config.ApiProxyConfig;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
 import nz.ac.auckland.se206.App;
+import nz.ac.auckland.se206.AudioPlayer;
+import nz.ac.auckland.se206.ChatHistoryManager;
 import nz.ac.auckland.se206.GameTimer;
 import nz.ac.auckland.se206.prompts.PromptEngineering;
 
@@ -48,14 +46,13 @@ public class ChatController extends Controller {
 
   @FXML private TextArea txtaChat;
   @FXML private TextField txtInput;
+  @FXML private ImageView imgInput;
   @FXML private Button btnSend;
   @FXML private Button btnReturn;
   @FXML private Label lblSceneName;
   @FXML private Label lblWhoSpeaking;
   @FXML private Label lblThinking;
-  @FXML private Label lblComputer;
-  @FXML private ImageView imgComputer;
-  @FXML private AnchorPane chatRoom;
+  @FXML private Pane chatRoom;
   @FXML private Button btnHistory;
   @FXML private TextArea txtaHistory;
   @FXML private Rectangle rectHistory;
@@ -64,20 +61,17 @@ public class ChatController extends Controller {
 
   private ChatCompletionRequest chatCompletionRequest;
   private String target;
-  private HashMap<String, String> fixedDialogue = new HashMap<>();
   private long userMessageFinishTime = 0;
   private boolean waitingForGptResponse = false;
   private ChatMessage pendingGptResponse = null;
-  private Player storedTts = null;
-  private Thread ttsThread = null;
   private String currentSpeaker = ""; // Track who is currently displaying text ("user" or "gpt")
-  private HashMap<String, List<ChatMessage>> chatHistory = new HashMap<>();
-  private String chatHistoryText = ""; // Store chat history text
   private String chatHistoryTextSnapShot = ""; // Store chat history text snapshot
   private boolean historyView = false;
   private boolean isAnimating = false; // Track if history animation is playing
   private boolean isFading = false; // Track if fade animation is playing
   private Timeline thinkingAnimation; // Track thinking animation
+
+  private AudioPlayer audioPlayer = AudioPlayer.getInstance();
 
   /**
    * Initializes the chat view.
@@ -91,30 +85,12 @@ public class ChatController extends Controller {
     GameTimer.getInstance().registerTimerArc(arcTimer);
 
     txtInput.setVisible(false);
+    imgInput.setVisible(false);
     btnSend.setVisible(false);
     txtaHistory.setVisible(false);
     rectHistory.setVisible(false);
     rectHistory.setOpacity(0);
     rectHistory.setDisable(true);
-
-    imgComputer.setVisible(false);
-    lblComputer.setVisible(false);
-
-    fixedDialogue.put(
-        "LOGOS-09",
-        "Greetings, Judge. I am LOGOS-09, an AI tasked with overseeing the operations and"
-            + " communications within Greenhill Power Plant.");
-    fixedDialogue.put(
-        "INDUS-07",
-        "Greetings, Judge. I am INDUS-07, an AI responsible for managing the industrial"
-            + " operations and worker safety at Greenhill Power Plant.");
-    fixedDialogue.put(
-        "Evan",
-        "Hello, Judge. I am Evan, the lead human engineer overseeing the technological"
-            + " systems at Greenhill Power Plant.");
-    chatHistory.put("LOGOS-09", new ArrayList<>());
-    chatHistory.put("INDUS-07", new ArrayList<>());
-    chatHistory.put("Evan", new ArrayList<>());
   }
 
   /**
@@ -138,6 +114,11 @@ public class ChatController extends Controller {
     fadeTransition.setFromValue(0.0);
     fadeTransition.setToValue(1.0);
     fadeTransition.play();
+  }
+
+  /** Sets the initial opacity of the chat room to prevent flash before fade-in animation. */
+  public void setInitialOpacity() {
+    chatRoom.setOpacity(0.0);
   }
 
   public void fadeOut(ActionEvent event) {
@@ -183,17 +164,10 @@ public class ChatController extends Controller {
    * @param target the target to set
    */
   public void setTarget(String target) {
-    this.target = target;
-    lblSceneName.setText("Flashback - " + target);
-
-    if (target.equals("LOGOS-09")) {
-      imgComputer.setVisible(true);
-      lblComputer.setVisible(true);
-    } else {
-      imgComputer.setVisible(false);
-      lblComputer.setVisible(false);
-    }
-    chatHistoryTextSnapShot = chatHistoryText; // Store a snapshot of the chat history
+    this.target = target; // Assign the parameter to the instance field
+    chatHistoryTextSnapShot =
+        ChatHistoryManager.getInstance()
+            .getChatHistorySnapshot(); // Store a snapshot of the chat history
     try {
       ApiProxyConfig config = ApiProxyConfig.readConfig();
       chatCompletionRequest =
@@ -202,36 +176,29 @@ public class ChatController extends Controller {
               .setTemperature(0.8)
               .setTopP(0.5)
               .setModel(Model.GPT_4o_MINI)
-              .setMaxTokens(200);
+              .setMaxTokens(500);
 
       // Add the system prompt and chat history snapshot with all "You" replaced with "Judge"
       chatCompletionRequest.addMessage(
           new ChatMessage(
               "system", getSystemPrompt(target) + chatHistoryTextSnapShot.replace("You", "Judge")));
 
-      currentSpeaker = "gpt";
-      lblWhoSpeaking.setText(target + ":");
-
       // If the chatHistorySnapshot does not contain the targets fixed dialogue display it
-      if (!chatHistoryTextSnapShot.contains(fixedDialogue.get(target))) {
+      String fixedDialogue = ChatHistoryManager.getInstance().getFixedDialogue(target);
+      if (!ChatHistoryManager.getInstance().containsDialogue(target, fixedDialogue)) {
         txtInput.setVisible(false);
+        imgInput.setVisible(false);
         btnSend.setVisible(false);
-        String message = fixedDialogue.get(target);
-        // get the audio file and play it using the target name in sounds folder
-        AudioClip voiceLine =
-            new AudioClip(
-                App.class.getResource("/sounds/" + target + "_flashback.mp3").toExternalForm());
-        voiceLine.play();
-        chatHistory.get(target).add(new ChatMessage("assistant", message));
-        chatHistoryText += target + ": " + message + "\n\n"; // Update chat history text
+        currentSpeaker = "gpt";
+        lblWhoSpeaking.setText(target + ":");
+        ChatHistoryManager.getInstance()
+            .addMessage(target, new ChatMessage("assistant", fixedDialogue));
         btnReturn.setDisable(true);
-        displayTextWithTypewriterEffect(txtaChat, message);
+        System.out.println("Displaying fixed dialogue for " + target + ": " + fixedDialogue);
+        displayTextWithTypewriterEffect(txtaChat, fixedDialogue, 50, true, true, target);
       } else {
         // Find the last message sent by target in chatHistoryTextSnapShot
-        String lastMessage =
-            chatHistoryTextSnapShot.substring(
-                chatHistoryTextSnapShot.lastIndexOf(target + ": ") + (target + ": ").length());
-        lastMessage = lastMessage.substring(0, lastMessage.indexOf("\n\n"));
+        String lastMessage = ChatHistoryManager.getInstance().getLastMessage(target);
         txtaChat.setText(lastMessage);
       }
     } catch (ApiProxyException e) {
@@ -259,13 +226,8 @@ public class ChatController extends Controller {
       Platform.runLater(
           () -> {
             // Add message to history
-            chatHistory.get(target).add(result.getChatMessage());
+            ChatHistoryManager.getInstance().addMessage(target, result.getChatMessage());
             chatCompletionRequest.addMessage(result.getChatMessage());
-            chatHistoryText +=
-                target
-                    + ": "
-                    + result.getChatMessage().getContent()
-                    + "\n\n"; // Update chat history text
 
             if (userMessageFinishTime > 0) {
               System.out.println("User message has finished, displaying with delay");
@@ -307,7 +269,8 @@ public class ChatController extends Controller {
                     currentSpeaker = "gpt";
                     lblWhoSpeaking.setText(target + ":");
                     stopThinkingAnimation();
-                    displayTextWithTypewriterEffect(txtaChat, message.getContent());
+                    displayTextWithTypewriterEffect(
+                        txtaChat, message.getContent(), 50, true, true, target);
                     waitingForGptResponse = false;
                   }));
       timeline.play();
@@ -316,8 +279,37 @@ public class ChatController extends Controller {
       currentSpeaker = "gpt";
       lblWhoSpeaking.setText(target + ":");
       stopThinkingAnimation();
-      displayTextWithTypewriterEffect(txtaChat, message.getContent());
+      displayTextWithTypewriterEffect(txtaChat, message.getContent(), 50, true, true, target);
       waitingForGptResponse = false;
+    }
+  }
+
+  /**
+   * Displays the corresponding interaction dialogue for the target once their interaction is
+   * complete. Can be called through child chatroom controllers.
+   *
+   * @throws ApiProxyException if there is an error communicating with the API proxy
+   */
+  public void displayInteractionDialogue() {
+    // Set current speaker to gpt to prevent user input during interaction dialogue
+    currentSpeaker = "gpt";
+
+    // Get the interaction dialogue for the target
+    String interactionDialogue = ChatHistoryManager.getInstance().getInteractionDialogue(target);
+
+    // If there is interaction dialogue, display it
+    if (!interactionDialogue.isEmpty()) {
+      // Hide input controls during interaction dialogue
+      txtInput.setVisible(false);
+      imgInput.setVisible(false);
+      btnSend.setVisible(false);
+
+      // Add interaction dialogue to history and display it
+      ChatHistoryManager.getInstance()
+          .addMessage(target, new ChatMessage("assistant", interactionDialogue));
+      chatCompletionRequest.addMessage(new ChatMessage("assistant", interactionDialogue));
+      btnReturn.setDisable(true);
+      displayTextWithTypewriterEffect(txtaChat, interactionDialogue, 50, true, true, target);
     }
   }
 
@@ -337,6 +329,7 @@ public class ChatController extends Controller {
       // GPT message typewriter finished - show input controls
       btnSend.setVisible(true);
       txtInput.setVisible(true);
+      imgInput.setVisible(true);
       btnReturn.setDisable(false);
       currentSpeaker = ""; // Reset speaker
     }
@@ -353,15 +346,18 @@ public class ChatController extends Controller {
   private void onSendMessage(ActionEvent event) throws ApiProxyException, IOException {
     String message = txtInput.getText().trim();
     if (message.isEmpty()) {
+      audioPlayer.playSound("error", 0.5);
       return;
     }
 
-    forceStopAudio();
+    // Play button sound
+    audioPlayer.playSound("sendMessage", 0.5);
 
     // Clear input and disable controls to prevent multiple requests
     txtInput.clear();
     btnSend.setVisible(false);
     txtInput.setVisible(false);
+    imgInput.setVisible(false);
     btnReturn.setDisable(true);
 
     // Reset timing variables
@@ -374,12 +370,19 @@ public class ChatController extends Controller {
     ChatMessage msg = new ChatMessage("user", message);
 
     // Add message to history
-    chatHistory.get(target).add(msg);
-    chatHistoryText += "You: " + msg.getContent() + "\n"; // Update chat history text
+    if (target != null && ChatHistoryManager.getInstance().hasTarget(target)) {
+      ChatHistoryManager.getInstance().addMessage(target, msg);
+    } else {
+      System.err.println("Error: target is null or not found in chatHistory: " + target);
+      return;
+    }
 
     chatCompletionRequest.addMessage(msg);
 
-    displayTextWithTypewriterEffect(txtaChat, message, 50, true, true);
+    displayTextWithTypewriterEffect(txtaChat, message, 50, true, true, "user");
+
+    // Mark that the player has spoken to this target
+    ChatHistoryManager.getInstance().markSpokenTo(target);
 
     // Create a background task to run GPT
     Task<ChatMessage> gptTask =
@@ -399,6 +402,7 @@ public class ChatController extends Controller {
                 // Re-enable controls even if the task failed
                 btnSend.setVisible(true);
                 txtInput.setVisible(true);
+                imgInput.setVisible(true);
                 txtInput.requestFocus();
                 waitingForGptResponse = false;
 
@@ -432,22 +436,10 @@ public class ChatController extends Controller {
       return;
     }
 
-    forceStopAudio();
+    // Play button click sound
+    audioPlayer.playSound("buttonClick", 0.5);
+
     fadeOut(event);
-  }
-
-  public void forceStopAudio() {
-    // Stop any ongoing TTS audio before leaving
-    if (storedTts != null) {
-      storedTts.close();
-      storedTts = null;
-    }
-
-    // Stop the TTS thread if it's still running
-    if (ttsThread != null && ttsThread.isAlive()) {
-      ttsThread.interrupt();
-      ttsThread = null;
-    }
   }
 
   /**
@@ -464,10 +456,17 @@ public class ChatController extends Controller {
       return;
     }
 
+    // Play button click sound
+    audioPlayer.playSound("buttonClick", 0.5);
+
     if (!historyView) {
       isAnimating = true; // Set flag to prevent further clicks
 
-      txtaHistory.setText(chatHistoryText); // Set chat history text
+      txtaHistory.setText(
+          ChatHistoryManager.getInstance().getChatHistoryText()); // Set chat history text
+
+      // Scroll to bottom
+      txtaHistory.setScrollTop(Double.MAX_VALUE);
 
       rectHistory.setVisible(true);
       // Fade rectHistory to 0.5 opacity
@@ -523,23 +522,16 @@ public class ChatController extends Controller {
   }
 
   /**
-   * Handles click on computer interactable
+   * Handles a click anywhere on the screen to skip text
    *
    * @param event the action event triggered by the go back button
    * @throws ApiProxyException if there is an error communicating with the API proxy
    * @throws IOException if there is an I/O error
    */
   @FXML
-  private void onComputerClick(MouseEvent event) throws ApiProxyException, IOException {
-    // Handle computer click event
-    if (currentSpeaker.equals("") && !isTyping()) {
-      txtInput.setText(
-          "Did INDUS-07 receive any messages before sending the command to the workers?");
-      onSendMessage(null);
-      imgComputer.setDisable(true);
-      imgComputer.setOpacity(0.3);
-      lblComputer.setVisible(false);
-      return;
+  private void onSkipText(MouseEvent event) throws ApiProxyException, IOException {
+    if (isTyping()) {
+      finishTypewriterEffectInstantly();
     }
   }
 
@@ -578,6 +570,18 @@ public class ChatController extends Controller {
    * @return the complete chat history as a string
    */
   public String getChatHistoryText() {
-    return chatHistoryText;
+    return ChatHistoryManager.getInstance().getChatHistoryText();
+  }
+
+  public ChatCompletionRequest getChatCompletionRequest() {
+    return chatCompletionRequest;
+  }
+
+  public String getTarget() {
+    return target;
+  }
+
+  public String getCurrentSpeaker() {
+    return currentSpeaker;
   }
 }

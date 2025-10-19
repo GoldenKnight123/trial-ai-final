@@ -1,10 +1,11 @@
 package nz.ac.auckland.se206.controllers;
 
+import java.util.Random;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.control.TextArea;
-import javafx.scene.media.AudioClip;
 import javafx.util.Duration;
+import nz.ac.auckland.se206.AudioPlayer;
 
 /**
  * Abstract base class for all controllers. Provides common functionality including typewriter
@@ -16,8 +17,13 @@ public abstract class Controller {
   private boolean isTyping = false;
   private String currentFullText = ""; // Store the full text being displayed
   private TextArea currentTextArea = null; // Store the current TextArea being used
-  private AudioClip userTalkSound =
-      new AudioClip(getClass().getResource("/sounds/userTalk.wav").toString());
+  private Random random = new Random();
+  private AudioPlayer audioPlayer;
+
+  public Controller() {
+    // Get the universal audio player instance
+    audioPlayer = AudioPlayer.getInstance();
+  }
 
   /**
    * Creates a typewriter effect for displaying text in a TextArea.
@@ -27,13 +33,15 @@ public abstract class Controller {
    * @param delayPerCharacter delay between each character in milliseconds
    * @param clearFirst whether to clear the TextArea before starting the effect
    * @param addSound whether to play the user talk sound effect
+   * @param speaker the current speaker (for sound effect control)
    */
   protected void displayTextWithTypewriterEffect(
       TextArea textArea,
       String textToDisplay,
       double delayPerCharacter,
       boolean clearFirst,
-      boolean addSound) {
+      boolean addSound,
+      String speaker) {
     // Stop any existing typewriter animation
     if (typewriterTimeline != null) {
       typewriterTimeline.stop();
@@ -67,13 +75,16 @@ public abstract class Controller {
                   textArea.setText(existingText + textToDisplay.substring(0, charIndex));
                 }
 
-                // Play user talk sound if enabled
-                if (addSound) {
-                  userTalkSound.play();
-                }
-
                 // Auto-scroll to bottom after each character is added
                 textArea.setScrollTop(Double.MAX_VALUE);
+
+                // Play sound for non-space characters
+                if (addSound && charIndex > 0 && charIndex <= textToDisplay.length()) {
+                  char currentChar = textToDisplay.charAt(charIndex - 1);
+                  if (!Character.isWhitespace(currentChar)) {
+                    playTalkingSound(speaker);
+                  }
+                }
 
                 // Check if this is the last character being displayed
                 if (charIndex == textToDisplay.length()) {
@@ -88,6 +99,41 @@ public abstract class Controller {
   }
 
   /**
+   * Plays the appropriate talking sound for the given speaker.
+   *
+   * @param speaker the current speaker
+   */
+  private void playTalkingSound(String speaker) {
+    float randomRate = random.nextFloat() * 0.2f + 0.9f;
+    audioPlayer.setRate("playerTalk", randomRate);
+    double volume = 0.5;
+
+    switch (speaker) {
+      case "user":
+        audioPlayer.playSound("playerTalk", volume);
+        break;
+      case "LOGOS-09":
+        audioPlayer.playSound("logos09Talk", volume);
+        break;
+      case "INDUS-07":
+        audioPlayer.playSound("indus07Talk", volume);
+        break;
+      case "Evan":
+        audioPlayer.playSound("evanTalk", volume);
+        break;
+      case "computer":
+        audioPlayer.playSound("computerTalk", volume);
+        break;
+      case "computer2":
+        audioPlayer.playSound("computerTalk2", volume);
+        break;
+      default:
+        // No sound for empty or unrecognized speaker
+        break;
+    }
+  }
+
+  /**
    * Creates a typewriter effect for displaying text in a TextArea, clearing it first.
    *
    * @param textArea the TextArea to display text in
@@ -96,7 +142,7 @@ public abstract class Controller {
    */
   protected void displayTextWithTypewriterEffect(
       TextArea textArea, String textToDisplay, double delayPerCharacter) {
-    displayTextWithTypewriterEffect(textArea, textToDisplay, delayPerCharacter, true, false);
+    displayTextWithTypewriterEffect(textArea, textToDisplay, delayPerCharacter, true, false, "");
   }
 
   /**
@@ -107,7 +153,7 @@ public abstract class Controller {
    * @param textToDisplay the text to display with typewriter effect
    */
   protected void displayTextWithTypewriterEffect(TextArea textArea, String textToDisplay) {
-    displayTextWithTypewriterEffect(textArea, textToDisplay, 50, true, false);
+    displayTextWithTypewriterEffect(textArea, textToDisplay, 50, true, false, "");
   }
 
   /**
@@ -119,7 +165,7 @@ public abstract class Controller {
    */
   protected void appendTextWithTypewriterEffect(
       TextArea textArea, String textToAppend, double delayPerCharacter) {
-    displayTextWithTypewriterEffect(textArea, textToAppend, delayPerCharacter, false, false);
+    displayTextWithTypewriterEffect(textArea, textToAppend, delayPerCharacter, false, false, "");
   }
 
   /**

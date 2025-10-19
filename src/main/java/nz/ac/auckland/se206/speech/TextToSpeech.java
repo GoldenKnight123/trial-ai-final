@@ -24,10 +24,15 @@ public class TextToSpeech {
    * @throws IllegalArgumentException if the text is null or empty
    */
   public static Player speak(String text, Provider provider, Voice voice) throws ApiProxyException {
+    // Initialize the player to null
     Player player = null;
+
+    // Validate input text
     if (text == null || text.isEmpty()) {
       throw new IllegalArgumentException("Text should not be null or empty");
     }
+
+    // Create and execute the TTS request
     try {
       ApiProxyConfig config = ApiProxyConfig.readConfig();
 

@@ -32,9 +32,11 @@ public class GameTimer {
   }
 
   private Timeline timeline;
-  private int secondsLeft = 120;
-  private int maxTime = 120;
+  private int secondsLeft = 300;
+  private int maxTime = 300;
   private boolean isRunning = false;
+  // Guard to ensure the expired callback only fires once per timer run
+  private boolean expiredFired = false;
   private List<Label> timerLabels = new ArrayList<>();
   private List<Arc> timerArcs = new ArrayList<>();
   private TimerExpiredCallback expiredCallback;
@@ -55,8 +57,9 @@ public class GameTimer {
                   updateTimerDisplay();
                   if (secondsLeft <= 0) {
                     stop();
-                    // Call the callback when timer expires
-                    if (expiredCallback != null) {
+                    // Call the callback when timer expires, but only once per run
+                    if (expiredCallback != null && !expiredFired) {
+                      expiredFired = true;
                       Platform.runLater(() -> expiredCallback.onTimerExpired());
                     }
                   }
@@ -68,6 +71,8 @@ public class GameTimer {
   public void start() {
     if (!isRunning) {
       timeline.play();
+      // Allow expiry callback to be fired again for this run
+      expiredFired = false;
       isRunning = true;
     }
   }
@@ -83,6 +88,32 @@ public class GameTimer {
   /** Get the time left */
   public int getTimeLeft() {
     return secondsLeft;
+  }
+
+  /**
+   * Sets the time left on the timer. If seconds is 0 or less this will invoke the same expiry
+   * behaviour as the natural countdown (stop timeline, update UI, and invoke the expired callback).
+   *
+   * @param seconds the number of seconds to set as remaining time
+   */
+  public void setTimeLeft(int seconds) {
+    this.secondsLeft = Math.max(0, seconds);
+    // Update UI immediately
+    updateTimerDisplay();
+
+    if (this.secondsLeft <= 0) {
+      // Stop the timeline if running
+      if (timeline != null && isRunning) {
+        timeline.stop();
+        isRunning = false;
+      }
+
+      // Trigger expiry callback on JavaFX thread, but only once per run
+      if (expiredCallback != null && !expiredFired) {
+        expiredFired = true;
+        Platform.runLater(() -> expiredCallback.onTimerExpired());
+      }
+    }
   }
 
   /** Get the maximum time */
@@ -111,7 +142,7 @@ public class GameTimer {
     if (!timerLabels.contains(label)) {
       timerLabels.add(label);
       // Update the label immediately with current time (formatted with fixed width)
-      Platform.runLater(() -> label.setText(String.format("%3d", secondsLeft)));
+      Platform.runLater(() -> label.setText(formatTime(secondsLeft)));
     }
   }
 
@@ -129,17 +160,33 @@ public class GameTimer {
     }
   }
 
-  /** Updates all registered timer labels with the current time. */
+  /* Updates all registered timer labels within each scene with the current time. */
   public void updateTimerDisplay() {
-    String timeString = String.format("%3d", secondsLeft);
+    // Update all registered labels and arcs on the JavaFX Application Thread
     Platform.runLater(
         () -> {
+          // Update each label with formatted time
           for (Label label : timerLabels) {
-            label.setText(timeString);
+            label.setText(formatTime(secondsLeft));
           }
+          // Update each arc to reflect remaining time
           for (Arc arc : timerArcs) {
             arc.setLength(360.0 * secondsLeft / maxTime);
           }
         });
+  }
+
+  /* Resets the timer to the maximum time and updates displays. */
+  public void reset() {
+    stop();
+    maxTime = 300;
+    secondsLeft = maxTime;
+    updateTimerDisplay();
+  }
+
+  private String formatTime(int totalSeconds) {
+    int minutes = totalSeconds / 60;
+    int seconds = totalSeconds % 60;
+    return String.format("%01d:%02d", minutes, seconds);
   }
 }
