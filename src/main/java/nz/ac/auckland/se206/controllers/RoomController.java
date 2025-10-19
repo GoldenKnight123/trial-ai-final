@@ -356,6 +356,8 @@ public class RoomController extends Controller {
             } else {
               // If not, mark it as viewed and open the flashback
               flashbackMap.put(target, true);
+              // Transition to flashback music when going to flashback
+              AudioPlayer.getInstance().transitionToFlashbackMusic();
               App.openFlashback(event, target);
             }
 
@@ -485,7 +487,7 @@ public class RoomController extends Controller {
               });
 
       // Play background music
-      audioPlayer.playSound("background", 0.25);
+      audioPlayer.startBackgroundMusic();
 
       // Reset flashback map
       flashbackMap.put("LOGOS-09", false);

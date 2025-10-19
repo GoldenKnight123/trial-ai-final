@@ -1,6 +1,5 @@
 package nz.ac.auckland.se206.controllers;
 
-import java.io.File;
 import java.io.IOException;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
@@ -12,8 +11,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
@@ -42,10 +39,6 @@ public class StartMenuController extends Controller {
 
   private AudioPlayer audioPlayer = AudioPlayer.getInstance();
 
-  File startFile = new File("src/main/resources/sounds/startButtonAppear.wav");
-  Media startMedia = new Media(startFile.toURI().toString());
-  MediaPlayer startPlayer = new MediaPlayer(startMedia);
-
   @FXML
   public void initialize() throws ApiProxyException {
     // Load font at the size you're using in CSS
@@ -61,6 +54,8 @@ public class StartMenuController extends Controller {
     if (introFinished) {
       return; // Already at end state
     }
+
+    audioPlayer.playSound("startButtonAppear", 0.5);
 
     // Stop all running animations
     stopAllAnimations();
@@ -84,7 +79,6 @@ public class StartMenuController extends Controller {
     // Stop any typewriter effect and mark as finished
     stopTypewriterEffect();
 
-    startPlayer.play();
     introFinished = true;
     isFading = false;
   }
@@ -140,7 +134,7 @@ public class StartMenuController extends Controller {
                       Duration.millis(1500),
                       ev -> {
                         txtaStart.setVisible(true);
-                        startPlayer.play();
+                        audioPlayer.playSound("startButtonAppear", 0.5);
                         introFinished = true;
                       }));
           currentDelayTimeline.play();

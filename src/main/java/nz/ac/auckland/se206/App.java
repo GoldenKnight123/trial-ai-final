@@ -349,6 +349,8 @@ public class App extends Application {
         ChatController chatController = (ChatController) pair.getController();
         chatController.fadeOut(null);
       } else if (currentId.equals("flashback")) {
+        // Transition back to background music when leaving flashback due to timer
+        AudioPlayer.getInstance().transitionToBackgroundMusic();
         FlashbackController flashbackController = (FlashbackController) pair.getController();
         flashbackController.fadeOut(null);
       } else {
