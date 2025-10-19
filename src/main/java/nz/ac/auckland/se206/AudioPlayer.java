@@ -59,7 +59,9 @@ public class AudioPlayer {
       "src/main/resources/sounds/scan.wav",
       "src/main/resources/sounds/scanLong.wav",
       "src/main/resources/sounds/timesUp.wav",
-      "src/main/resources/sounds/hover.wav"
+      "src/main/resources/sounds/hover.wav",
+      "src/main/resources/sounds/passwordAccepted.mp3",
+      "src/main/resources/sounds/emailOpen.wav"
     };
 
     String[] soundKeys = {
@@ -86,7 +88,9 @@ public class AudioPlayer {
       "scan",
       "scanLong",
       "timesUp",
-      "hover"
+      "hover",
+      "passwordAccepted",
+      "emailOpen"
     };
 
     for (int i = 0; i < soundFiles.length; i++) {

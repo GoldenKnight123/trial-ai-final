@@ -13,6 +13,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import nz.ac.auckland.apiproxy.chat.openai.ChatMessage;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
+import nz.ac.auckland.se206.AudioPlayer;
 import nz.ac.auckland.se206.ChatHistoryManager;
 
 public class AiDefendantController extends ChatController {
@@ -31,17 +32,25 @@ public class AiDefendantController extends ChatController {
   @FXML private TextField txtFieldPassword;
   @FXML private Label lblEmailInstruct;
   @FXML private Label lblHint;
+  @FXML private ImageView imgUnread;
+  @FXML private ImageView imgUnread1;
+  @FXML private ImageView imgUnread2;
 
+  private AudioPlayer audioPlayer;
   private boolean interactableComplete = false;
   private int interactableCompleteCount = 0;
-  private boolean passwordScreenShown = false;
   private boolean passwordAccepted = false;
+  private boolean reactAiCoreViewed = false;
+  private boolean reactManagerViewed = false;
+  private boolean reactSystemViewed = false;
 
   // private boolean interactionDialoguePlayed = false;
 
   @Override
   public void initialize() throws ApiProxyException {
     super.initialize();
+
+    audioPlayer = AudioPlayer.getInstance();
 
     // Create a highlight effect for hover
     ColorAdjust highlight = new ColorAdjust();
@@ -71,12 +80,14 @@ public class AiDefendantController extends ChatController {
 
   @FXML
   private void onInteractable(MouseEvent event) {
+
+    audioPlayer.playSound("computerOpen", 0.5);
+
     // Only allow opening the interactable if the correct password has been entered.
     if (!passwordAccepted) {
       if (panePasswordScreen != null) {
         panePasswordScreen.setVisible(true);
       }
-      passwordScreenShown = true;
       return;
     }
 
@@ -86,6 +97,9 @@ public class AiDefendantController extends ChatController {
 
   @FXML
   private void onCloseInteraction(MouseEvent event) {
+
+    audioPlayer.playSound("computerClose", 0.5);
+
     // If password screen is visible, close it and do not trigger completion logic
     if (panePasswordScreen != null && panePasswordScreen.isVisible()) {
       panePasswordScreen.setVisible(false);
@@ -98,13 +112,16 @@ public class AiDefendantController extends ChatController {
 
   @FXML
   private void onRectClick(MouseEvent event) {
+    System.out.println("Rectangle clicked");
     Object source = event.getSource();
+    audioPlayer.playSound("emailOpen", 0.5);
 
     if (source instanceof Rectangle) {
       Rectangle rect = (Rectangle) source;
       String id = rect.getId();
       switch (id) {
         case "rectAiCore":
+          reactAiCoreViewed = markFirstView(reactAiCoreViewed, imgUnread);
           rect.setOpacity(1.0);
           lblRecipient.setText("From: AI Core");
           txtaEmail.setText(
@@ -114,6 +131,8 @@ public class AiDefendantController extends ChatController {
           interactableCompleteCount++;
           break;
         case "rectManager":
+          // Hide the unread icon the first time this email is viewed
+          reactManagerViewed = markFirstView(reactManagerViewed, imgUnread1);
           rect.setOpacity(1.0);
           lblRecipient.setText("From: Manager");
           txtaEmail.setText(
@@ -125,6 +144,8 @@ public class AiDefendantController extends ChatController {
           interactableCompleteCount++;
           break;
         case "rectSystem":
+          // Hide the unread icon the first time this email is viewed
+          reactSystemViewed = markFirstView(reactSystemViewed, imgUnread2);
           rect.setOpacity(1.0);
           lblRecipient.setText("From: System");
           txtaEmail.setText(
@@ -153,9 +174,9 @@ public class AiDefendantController extends ChatController {
 
     if (entered.equals(CORRECT)) {
       panePasswordScreen.setVisible(false);
-      passwordScreenShown = true;
       passwordAccepted = true;
       paneInteractable.setVisible(true);
+      audioPlayer.playSound("passwordAccepted", 0.5);
       if (lblEmailInstruct != null) {
         lblEmailInstruct.setText("Review the emails regarding the Helios Module deployment.");
       }
@@ -166,12 +187,34 @@ public class AiDefendantController extends ChatController {
       // Clear the field and show an explicit hint label so the user sees the error
       txtFieldPassword.clear();
       txtFieldPassword.setPromptText("Incorrect password — try again");
+      audioPlayer.playSound("error", 0.5);
 
       // Move focus away from the text field so the prompt text (if set) is visible
       if (panePasswordScreen != null) {
         panePasswordScreen.requestFocus();
       }
     }
+  }
+
+  /**
+   * Marks an item as viewed (hides unread icon) and returns the new viewed state.
+   *
+   * @param hasBeenViewed current viewed state
+   * @param unreadIcon icon to hide when first viewed
+   * @return true if the item is now considered viewed
+   */
+  private boolean markFirstView(boolean hasBeenViewed, ImageView unreadIcon) {
+    if (!hasBeenViewed) {
+      if (unreadIcon != null) {
+        try {
+          unreadIcon.setVisible(false);
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      }
+      return true;
+    }
+    return hasBeenViewed;
   }
 
   /** Called when the interactable has been completed (all emails viewed). */
