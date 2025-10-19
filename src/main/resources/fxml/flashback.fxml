@@ -1,55 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.shape.Arc?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="flashbackRoom" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleClick" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #CFFFE5;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.controllers.FlashbackController">
+<AnchorPane fx:id="flashbackRoom" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleClick" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #fff8e3;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="nz.ac.auckland.se206.controllers.FlashbackController">
    <children>
-        <StackPane fx:id="imgScene3" layoutX="248.0" layoutY="99.0" prefHeight="523.0" prefWidth="785.0">
-         <children>
-            <ImageView fx:id="imgView3" fitHeight="523.0" fitWidth="785.0" pickOnBounds="true" preserveRatio="true" />
-         </children>
-      </StackPane>
-
-      <StackPane fx:id="imgScene2" layoutX="248.0" layoutY="99.0" prefHeight="523.0" prefWidth="785.0">
-         <children>
-            <ImageView fx:id="imgView2" fitHeight="523.0" fitWidth="785.0" pickOnBounds="true" preserveRatio="true" />
-         </children>
-      </StackPane>
-
-      <StackPane fx:id="imgScene1" layoutX="248.0" layoutY="99.0" prefHeight="523.0" prefWidth="785.0">
-         <children>
-            <ImageView fx:id="imgView1" fitHeight="523.0" fitWidth="785.0" pickOnBounds="true" preserveRatio="true" />
-         </children>
-      </StackPane>
-      <ImageView fitHeight="720.0" fitWidth="1487.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="imgScene3" fitHeight="410.0" fitWidth="693.0" layoutX="293.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="imgScene2" fitHeight="410.0" fitWidth="693.0" layoutX="293.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="imgScene1" fitHeight="410.0" fitWidth="693.0" layoutX="293.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="imgContinueArrow" fitHeight="37.0" fitWidth="153.0" layoutX="1142.0" layoutY="644.0" preserveRatio="true" visible="false">
          <image>
-            <Image url="@../images/thinking-cloud.png" />
-         </image>
-      </ImageView>
-      <Label fx:id="lblInstruction" alignment="CENTER_RIGHT" layoutX="916.0" layoutY="684.0" stylesheets="@../css/memory.css" text="Click anywhere to continue. ">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <ImageView fx:id="botClouds" fitHeight="342.0" fitWidth="1280.0" layoutY="378.0" opacity="0.9" pickOnBounds="true" visible="false">
-         <image>
-            <Image url="@../images/Clouds.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="topClouds" fitHeight="301.0" fitWidth="1280.0" layoutY="-2.0" opacity="0.9" pickOnBounds="true" rotate="180.0" visible="false">
-         <image>
-            <Image url="@../images/Clouds.png" />
+            <Image url="@../images/continueArrow.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="85.0" fitWidth="135.0" layoutX="9.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/clock.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="720.0" fitWidth="1487.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@../images/thinking-cloud.png" />
          </image>
       </ImageView>
       <Arc fx:id="arcTimer" layoutX="52.0" layoutY="49.0" length="360.0" opacity="0.25" radiusX="34.0" radiusY="35.0" startAngle="90.0" stroke="BLACK" strokeType="INSIDE" type="ROUND" />
@@ -64,5 +40,21 @@
          </image>
       </ImageView>
       <Label fx:id="lblSceneName" layoutX="13.0" layoutY="106.0" prefHeight="28.0" prefWidth="264.0" stylesheets="@../css/room.css" text="Flashback: Name" />
+      <ImageView fitHeight="731.0" fitWidth="1295.0" layoutX="-15.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/textArea.png" />
+         </image>
+      </ImageView>
+      <TextArea fx:id="txtaChat" editable="false" focusTraversable="false" layoutX="45.0" layoutY="450.0" mouseTransparent="true" prefHeight="240.0" prefWidth="1189.0" style="-fx-background-color: transparent;" styleClass="text-area" stylesheets="@../css/memory.css" text="Text Here" wrapText="true" />
+      <Label fx:id="lblWhoSpeaking" alignment="CENTER" contentDisplay="CENTER" layoutX="49.0" layoutY="402.0" prefHeight="29.0" prefWidth="131.0" stylesheets="@../css/memory.css" text="You:" textAlignment="CENTER">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <ImageView fx:id="imgStatic" fitHeight="728.0" fitWidth="1304.0" layoutX="-7.0" layoutY="-4.0" mouseTransparent="true" opacity="0.05" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/static.gif" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>
