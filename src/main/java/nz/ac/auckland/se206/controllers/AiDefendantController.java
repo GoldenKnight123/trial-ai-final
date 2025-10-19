@@ -1,5 +1,6 @@
 package nz.ac.auckland.se206.controllers;
 
+import javafx.animation.PauseTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -14,6 +15,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
 import nz.ac.auckland.se206.AudioPlayer;
 import nz.ac.auckland.se206.ChatHistoryManager;
@@ -22,7 +24,6 @@ public class AiDefendantController extends ChatController {
 
   @FXML private Rectangle rectOverlay;
   @FXML private Pane paneInteractable;
-  @FXML private ImageView imgOverride;
   @FXML private TextArea txtaEmail;
   @FXML private Label lblRecipient;
   @FXML private Rectangle rectAiCore;
@@ -86,6 +87,7 @@ public class AiDefendantController extends ChatController {
           imgInteractable.setEffect(baseGlow);
         });
 
+    // Handle password submission when Enter is pressed or action triggered
     if (txtFieldPassword != null) {
       txtFieldPassword.setOnAction((ActionEvent e) -> handlePassword());
       txtFieldPassword.setOnKeyPressed(
@@ -125,8 +127,11 @@ public class AiDefendantController extends ChatController {
       return;
     }
 
+    // If the interaction is not yet complete, check for completion
+    if (!interactableComplete) {
+      completeInteraction();
+    }
     paneInteractable.setVisible(false);
-    completeInteraction();
   }
 
   @FXML
@@ -246,11 +251,11 @@ public class AiDefendantController extends ChatController {
       ChatHistoryManager.getInstance().markInteractableComplete("INDUS-07");
 
       paneInteractable.setVisible(false);
-      if (imgOverride != null) {
-        imgOverride.setVisible(false);
-      }
 
-      displayInteractionDialogue();
+      // Small delay to avoid the same user click triggering a skip on the typewriter
+      PauseTransition pause = new PauseTransition(Duration.millis(300));
+      pause.setOnFinished(e -> displayInteractionDialogue());
+      pause.play();
     }
   }
 }

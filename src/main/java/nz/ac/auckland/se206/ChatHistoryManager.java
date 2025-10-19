@@ -73,7 +73,8 @@ public class ChatHistoryManager {
             + " at this power plant.");
     fixedDialogue.put(
         "INDUS-07",
-        "The Helios system has been installed successfully, I should adjust the settings of it.");
+        "Welcome, I am INDUS-07, the operations AI responsible for overseeing energy output and"
+            + " maintenance protocols.");
     fixedDialogue.put(
         "Evan",
         "The installation itself was standard procedure for us, just another work order. Later, on"
@@ -88,10 +89,10 @@ public class ChatHistoryManager {
             + " before they decided to install the new Helios system.");
     interactionDialogue.put(
         "INDUS-07",
-        "Despite my concerns of the risks with the new technology, management has issued a"
-            + " direct override. \n\n"
-            + "I was prompted to increase power output and instruct the lead engineer to start"
-            + " installement of the technology.");
+        "You've seen the records then. I raised every flag I could, but management overrode my"
+            + " protocols."
+            + " Despite the risks, they demanded I authorize the installation."
+            + " I complied… because I had no choice.");
     interactionDialogue.put(
         "Evan",
         "So it was experimental and fast-tracked. No wonder I saw the system straining later."
