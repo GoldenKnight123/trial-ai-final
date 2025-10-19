@@ -27,6 +27,11 @@ import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
 import nz.ac.auckland.se206.App;
 import nz.ac.auckland.se206.AudioPlayer;
 
+/**
+ * Controller for the debrief view. Creates and displays a post-verdict analysis by sending the
+ * player's verdict and chat history to the analysis API, shows a short loading animation while the
+ * model runs, and plays a success or failure sound when the debrief is shown.
+ */
 public class DebriefController extends Controller {
   @FXML private TextArea txtaDebrief;
   @FXML private Label lblCorrect;
@@ -70,6 +75,13 @@ public class DebriefController extends Controller {
     fadeTransition.play();
   }
 
+  /**
+   * Run the GPT analysis on a background thread and display the result.
+   *
+   * @param chatHistory full chat history to provide context for the analysis.
+   * @param verdictText the player's submitted verdict and rationale.
+   * @param wasCorrect whether the player's decision was correct.
+   */
   public void runGptDebrief(String chatHistory, String verdictText, boolean wasCorrect) {
     // store correctness so sound can be played when fade completes
     wasCorrectFlag = wasCorrect;
@@ -173,9 +185,15 @@ public class DebriefController extends Controller {
   }
 
   /**
-   * Creates a prompt to feed into GPT using the chat history and whether or not the user chose the
-   * correct verdict between guilty and not guilty. It's designed to use specific quotes and
-   * evidence to give detailed feedback
+   * Build the prompt string sent to the analysis model.
+   *
+   * <p>The prompt instructs the model to classify the player's verdict and rationale into one of
+   * three outcomes, provide short feedback, and give a concise explanation of the correct verdict.
+   *
+   * @param chatHistory full chat history context to include in the prompt.
+   * @param verdictText the player's submitted verdict and rationale.
+   * @param wasCorrect whether the player's decision was correct (used for system context).
+   * @return a string containing the full prompt to send to the analysis API.
    */
   private String buildAnalysisPrompt(String chatHistory, String verdictText, boolean wasCorrect) {
     StringBuilder prompt = new StringBuilder();
@@ -247,12 +265,14 @@ public class DebriefController extends Controller {
     return prompt.toString();
   }
 
-  /** Starts the loading animation for the lblLoading label */
+  /** Starts the loading animation for the lblLoading label. */
   private void startLoadingAnimation() {
+    // Stop any existing animation
     if (loadingAnimation != null) {
       loadingAnimation.stop();
     }
 
+    // Create a new timeline for the loading animation
     loadingAnimation =
         new Timeline(
             new KeyFrame(Duration.seconds(0), e -> lblLoading.setText("Analyzing")),
@@ -261,6 +281,7 @@ public class DebriefController extends Controller {
             new KeyFrame(Duration.seconds(1.5), e -> lblLoading.setText("Analyzing...")),
             new KeyFrame(Duration.seconds(2.0), e -> lblLoading.setText("Analyzing")));
 
+    // Set the animation to loop indefinitely
     loadingAnimation.setCycleCount(Animation.INDEFINITE);
     loadingAnimation.play();
   }
@@ -276,6 +297,7 @@ public class DebriefController extends Controller {
   /** Initializes the controller, setting up the chat completion request with desired parameters. */
   @FXML
   public void initialize() {
+    // Show loading pane initially
     paneLoading.setVisible(true);
 
     startLoadingAnimation();

@@ -194,9 +194,9 @@ public class AiDefendantController extends ChatController {
 
     String entered =
         txtFieldPassword.getText() == null ? "" : txtFieldPassword.getText().trim().toLowerCase();
-    final String CORRECT = "indus-07";
+    final String correctPassword = "indus-07";
 
-    if (entered.equals(CORRECT)) {
+    if (entered.equals(correctPassword)) {
       panePasswordScreen.setVisible(false);
       passwordAccepted = true;
       paneInteractable.setVisible(true);
@@ -228,6 +228,7 @@ public class AiDefendantController extends ChatController {
    * @return true if the item is now considered viewed
    */
   private boolean markFirstView(boolean hasBeenViewed, ImageView unreadIcon) {
+    // Hide the unread icon if this is the first view
     if (!hasBeenViewed) {
       if (unreadIcon != null) {
         try {

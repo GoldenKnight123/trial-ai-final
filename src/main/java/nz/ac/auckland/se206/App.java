@@ -34,7 +34,7 @@ import nz.ac.auckland.se206.controllers.VerdictController;
  */
 public class App extends Application {
 
-  /** Inner class to hold both scene and controller together */
+  /** Inner class to hold both scene and controller together. */
   private static class SceneControllerPair {
     private final Scene scene;
     private final Object controller;
@@ -129,11 +129,11 @@ public class App extends Application {
   }
 
   /**
-   * Opens the chat view and sets the profession in the chat controller using cached scenes.
+   * Opens the flashback view and sets the target for the flashback controller using cached scenes.
    *
    * @param event the mouse event that triggered the method
-   * @param profession the profession to set in the chat controller
-   * @throws IOException if the FXMflashbackRoomL file is not found
+   * @param target the target to display in the flashback (for example a character id)
+   * @throws IOException if the FXML file is not found
    */
   public static void openFlashback(MouseEvent event, String target) throws IOException {
     // Load and cache the flashback scene
@@ -173,10 +173,11 @@ public class App extends Application {
   }
 
   /**
-   * Opens the chat view and sets the profession in the chat controller using cached scenes.
+   * Opens a memory scene for the specified target (AI or human) using cached scenes and fades it
+   * in.
    *
    * @param event the mouse event that triggered the method
-   * @param profession the profession to set in the chat controller
+   * @param target the target to set (for example: "LOGOS-09", "INDUS-07", "Evan")
    * @throws IOException if the FXML file is not found
    */
   public static void openChat(MouseEvent event, String target) throws IOException {
@@ -251,7 +252,6 @@ public class App extends Application {
    * Opens the verdict scene using cached scenes.
    *
    * @param event the mouse event that triggered the method
-   * @param sendDirectlyGameOver whether to send the game over state directly
    * @throws IOException if the FXML file is not found
    */
   public static void openVerdict(ActionEvent event) throws IOException {
@@ -278,14 +278,15 @@ public class App extends Application {
    * Opens the game over scene using cached scenes.
    *
    * @param event the mouse event that triggered the method
-   * @param sendDirectlyGameOver whether to send the game over state directly
+   * @param message the message to display on the game over screen
    * @throws IOException if the FXML file is not found
    */
   public static void openGameOver(ActionEvent event, String message) throws IOException {
-
+    // Load and cache the game over scene
     SceneControllerPair pair = loadAndCacheScene("gameOver");
     GameOverController gameOverController = (GameOverController) pair.getController();
     gameOverController.setGameOverMessage(message);
+    // Start fade in first, then set scene
     currentId = "gameOver";
     scene = pair.getScene();
     primaryStage.setScene(scene);

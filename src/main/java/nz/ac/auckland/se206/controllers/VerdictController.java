@@ -83,6 +83,7 @@ public class VerdictController extends Controller {
   }
 
   public void fadeIn() {
+    // Show and animate the fade rectangle
     rectFade.setVisible(true);
     TranslateTransition tt = new TranslateTransition();
     tt.setNode(rectFade);
@@ -98,6 +99,7 @@ public class VerdictController extends Controller {
     // Check if the player has asked each participant a question and has completed all interactables
     if (!ChatHistoryManager.getInstance().haveSpokenToAll()
         && !ChatHistoryManager.getInstance().interactablesComplete()) {
+      System.out.println("Cannot make verdict yet.");
     } else {
       String text = verdictTxt.getText() == null ? "" : verdictTxt.getText();
       boolean wasCorrect = false; // guilty means incorrect in current game wiring
@@ -118,6 +120,7 @@ public class VerdictController extends Controller {
     // Check if the player has asked each participant a question
     if (!ChatHistoryManager.getInstance().haveSpokenToAll()
         && !ChatHistoryManager.getInstance().interactablesComplete()) {
+      System.out.println("Cannot make verdict yet.");
     } else {
       String text = verdictTxt.getText() == null ? "" : verdictTxt.getText();
       boolean wasCorrect = true; // not guilty means correct in current game wiring
@@ -138,6 +141,7 @@ public class VerdictController extends Controller {
    * display an explicit message.
    */
   public void bindTimerExpired() {
+    // Set the timer expired callback
     GameTimer.getInstance()
         .setOnTimerExpired(
             () -> {

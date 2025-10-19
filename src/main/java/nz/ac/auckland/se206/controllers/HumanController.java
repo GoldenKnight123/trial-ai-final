@@ -47,8 +47,8 @@ public class HumanController extends ChatController {
 
   /** A small helper class to store the mouse's position relative to the image's top-left corner. */
   private static class DragContext {
-    double x;
-    double y;
+    double mousePosX;
+    double mousePosY;
   }
 
   @FXML
@@ -65,8 +65,6 @@ public class HumanController extends ChatController {
     audio.addSound("paper_pile_interact", "src/main/resources/sounds/paper_pile_interact.mp3");
     audio.addSound("paper_slide_human", "src/main/resources/sounds/paper_slide_human.mp3");
   }
-
-  /** Reflection helper: set superclass private field only if it's currently null. */
 
   /** Sets up the newspaper puzzle by scattering the pieces and making them interactive. */
   private void setupNewspaperPuzzle() {
@@ -126,8 +124,8 @@ public class HumanController extends ChatController {
           piece.toFront();
 
           // Record the starting mouse position relative to the piece's corner
-          dragContext.x = event.getSceneX() - piece.getLayoutX();
-          dragContext.y = event.getSceneY() - piece.getLayoutY();
+          dragContext.mousePosX = event.getSceneX() - piece.getLayoutX();
+          dragContext.mousePosY = event.getSceneY() - piece.getLayoutY();
         });
 
     // Event handler for when the mouse is dragged
@@ -135,8 +133,8 @@ public class HumanController extends ChatController {
         event -> {
           event.consume();
           // Update the piece's position based on mouse movement
-          piece.setLayoutX(event.getSceneX() - dragContext.x);
-          piece.setLayoutY(event.getSceneY() - dragContext.y);
+          piece.setLayoutX(event.getSceneX() - dragContext.mousePosX);
+          piece.setLayoutY(event.getSceneY() - dragContext.mousePosY);
         });
 
     // Event handler for when the mouse is clicked (for rotation)
@@ -269,6 +267,7 @@ public class HumanController extends ChatController {
   /** Sets up the hover and click handlers for the pile of newspapers. */
   @FXML
   private void pileEntered(MouseEvent event) {
+    // Only respond if no dialogue is active
     if (getCurrentSpeaker() == "") {
       System.out.println("Pile entered");
       if (pileInteractiveImg != null) {
@@ -289,14 +288,18 @@ public class HumanController extends ChatController {
 
   @FXML
   private void pileExited(MouseEvent event) {
+    // Only respond if no dialogue is active
     if (getCurrentSpeaker() == "") {
       System.out.println("Pile exited");
+      // Restore original pile image
       if (pileInteractiveImg != null) {
         pileInteractiveImg.setVisible(true);
       }
+      // Hide popup image
       if (pilePopUpImg != null) {
         pilePopUpImg.setVisible(false);
       }
+      // Consume the event to prevent further propagation
       if (event != null) {
         event.consume();
       }

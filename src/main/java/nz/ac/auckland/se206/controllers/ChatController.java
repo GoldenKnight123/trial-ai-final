@@ -212,9 +212,9 @@ public class ChatController extends Controller {
    * @param msg the chat message to process
    * @return the response chat message
    * @throws ApiProxyException if there is an error communicating with the API proxy
-   * @throws IOException
-   * @throws MalformedURLException
-   * @throws JavaLayerException
+   * @throws IOException if there is an I/O error
+   * @throws MalformedURLException if the URL is malformed
+   * @throws JavaLayerException if there is an error with the Java Layer
    */
   private ChatMessage runGpt(ChatMessage msg)
       throws ApiProxyException, MalformedURLException, IOException, JavaLayerException {

@@ -58,6 +58,7 @@ public class FlashbackController extends Controller {
   private HashMap<String, ArrayList<String>> flashbackDialogue = new HashMap<>();
 
   public void initializeFlashbackDialogue() {
+    // Initialize flashback dialogue data
     flashbackDialogue.put(
         "LOGOS-09",
         new ArrayList<>(
@@ -127,7 +128,7 @@ public class FlashbackController extends Controller {
     canSlide = false;
   }
 
-  /** Displays the current dialogue line in the text area with typewriter effect */
+  /** Displays the current dialogue line in the text area with typewriter effect. */
   private void displayCurrentDialogue() {
     if (currentDialogue != null && dialogueIndex < currentDialogue.size()) {
       // Clear the text area first
@@ -147,7 +148,7 @@ public class FlashbackController extends Controller {
     }
   }
 
-  /** Called when typewriter effect completes */
+  /** Called when typewriter effect completes. */
   private void onTypewriterComplete() {
     isTypewriterActive = false;
     canSlide = true;
@@ -160,7 +161,7 @@ public class FlashbackController extends Controller {
     onTypewriterComplete();
   }
 
-  /** Finishes the typewriter effect immediately */
+  /** Finishes the typewriter effect immediately. */
   private void finishTypewriterEffect() {
     if (isTypewriterActive) {
       // Use the parent class method to finish typewriter effect instantly
@@ -171,7 +172,7 @@ public class FlashbackController extends Controller {
     }
   }
 
-  /** Advances to the next dialogue line and corresponding image */
+  /** Advances to the next dialogue line and corresponding image. */
   private void advanceDialogue() {
     if (dialogueIndex < currentDialogue.size() - 1) {
       dialogueIndex++;
@@ -189,7 +190,7 @@ public class FlashbackController extends Controller {
     }
   }
 
-  /** Advances the slideshow to the next image */
+  /** Advances the slideshow to the next image. */
   private void advanceSlideshow() {
     if (slideProgress < 2) {
       // Disable sliding until current slide is done
