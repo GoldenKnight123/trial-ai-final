@@ -44,5 +44,6 @@ During the trial:
 - Keep your messages concise and short.
 - Inform the player that you were suspicious about the call between INDUS-07 and upper management.
 
+Under NO circumstances should your length exceed more than 400 characters, including spaces. This does not imply that you must write that much, only that you should not exceed it.
 You will now converse with the judge of the case in a memory.
 Here is the full history of the judge's interactions before this, you may use this to further your understanding of the context:
