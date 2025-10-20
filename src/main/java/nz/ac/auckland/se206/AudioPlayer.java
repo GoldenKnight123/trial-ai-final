@@ -364,9 +364,12 @@ public class AudioPlayer {
    * creates a smooth audio transition when entering flashbacks.
    */
   public void transitionToFlashbackMusic() {
+    // Ensure we run on the JavaFX Application Thread (media operations must run there)
     if (Platform.isFxApplicationThread()) {
+      // Crossfade args: (initialBackground, finalBackground, initialFlashback, finalFlashback)
       createCrossfadeTransition(backgroundMuted ? 0 : 0.25, 0.0, 0.0, backgroundMuted ? 0 : 0.25);
     } else {
+      // If called off the FX thread, schedule the crossfade on the FX thread
       Platform.runLater(
           () ->
               createCrossfadeTransition(
@@ -379,9 +382,12 @@ public class AudioPlayer {
    * This creates a smooth audio transition when exiting flashbacks.
    */
   public void transitionToBackgroundMusic() {
+    // Ensure we run on the JavaFX Application Thread (UI/media operations must run there)
     if (Platform.isFxApplicationThread()) {
+      // Crossfade args: (initialBackground, finalBackground, initialFlashback, finalFlashback)
       createCrossfadeTransition(0.0, backgroundMuted ? 0 : 0.25, backgroundMuted ? 0 : 0.25, 0.0);
     } else {
+      // If called off the FX thread, schedule the crossfade on the FX thread
       Platform.runLater(
           () ->
               createCrossfadeTransition(
