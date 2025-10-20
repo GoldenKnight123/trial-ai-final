@@ -37,12 +37,6 @@ public class DebriefController extends Controller {
   @FXML private Label lblLoading;
   @FXML private Button btnReturn;
 
-  // Tracks whether the decision was correct; set when runGptDebrief is invoked
-  private Boolean wasCorrectFlag = null;
-
-  // Whether the fade-in animation has finished
-  private boolean fadeCompleted = false;
-
   // Loading animation timeline
   private Timeline loadingAnimation;
 
@@ -57,12 +51,6 @@ public class DebriefController extends Controller {
     fadeTransition.setFromValue(0.0);
     fadeTransition.setToValue(1.0);
 
-    // When fade-in finishes, attempt to play the result sound if we already know correctness
-    fadeTransition.setOnFinished(
-        e -> {
-          fadeCompleted = true;
-        });
-
     fadeTransition.play();
   }
 
@@ -74,8 +62,6 @@ public class DebriefController extends Controller {
    * @param wasCorrect whether the player's decision was correct.
    */
   public void runGptDebrief(String chatHistory, String verdictText, boolean wasCorrect) {
-    // store correctness so sound can be played when fade completes
-    wasCorrectFlag = wasCorrect;
 
     // change background colour depending on user verdict
     if (!wasCorrect) {
@@ -100,8 +86,8 @@ public class DebriefController extends Controller {
             // Example 1 of user message including verdict and rationale
             String userText1 =
                 "Player's submitted verdict: Not Guilty\n"
-                    + " Player's submitted rationale:\n"
-                    + " they are not guilty because they were told to do it by higher ups";
+                    + "Player's submitted rationale:\n"
+                    + "they are not guilty because they were told to do it by higher ups";
             chatCompletionRequest.addMessage(new ChatMessage("user", userText1));
 
             // Example 1 of assistant message showing expected format
@@ -122,8 +108,8 @@ public class DebriefController extends Controller {
             // Example 2 of user message including verdict and rationale
             String userText2 =
                 "Player's submitted verdict: Guilty\n"
-                    + " Player's submitted rationale:\n"
-                    + " they are guilty because they were the ones who told the technology to be"
+                    + "Player's submitted rationale:\n"
+                    + "they are guilty because they were the ones who told the technology to be"
                     + " installed";
             chatCompletionRequest.addMessage(new ChatMessage("user", userText2));
 
@@ -144,7 +130,7 @@ public class DebriefController extends Controller {
             // Example 3 of user message including verdict and rationale
             String userText3 =
                 "Player's submitted verdict: Not Guilty\n"
-                    + " Player's submitted rationale:\n"
+                    + "Player's submitted rationale:\n"
                     + " they are not guilty because the fault actually lies in the manufacturers of"
                     + " the new technology who did not properly test it.";
             chatCompletionRequest.addMessage(new ChatMessage("user", userText3));
@@ -168,9 +154,11 @@ public class DebriefController extends Controller {
             String userText =
                 "Player's submitted verdict: "
                     + (wasCorrect ? "Not Guilty\n" : "Guilty\n")
-                    + " Player's submitted rationale:\n"
+                    + "Player's submitted rationale:\n"
                     + verdictText;
             chatCompletionRequest.addMessage(new ChatMessage("user", userText));
+
+            System.out.println(userText);
 
             try {
               ChatCompletionResult chatCompletionResult = chatCompletionRequest.execute();
