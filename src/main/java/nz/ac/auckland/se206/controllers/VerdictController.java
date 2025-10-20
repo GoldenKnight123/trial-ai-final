@@ -168,7 +168,7 @@ public class VerdictController extends Controller {
   }
 
   @FXML
-  void onConfirmRationale(ActionEvent event) throws IOException {
+  private void onConfirmRationale(ActionEvent event) throws IOException {
     // Stop the game timer
     GameTimer.getInstance().stop();
     lblTimer.setVisible(false);
