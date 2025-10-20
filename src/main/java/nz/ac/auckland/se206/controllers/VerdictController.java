@@ -91,7 +91,7 @@ public class VerdictController extends Controller {
     tt.setToY(740);
     tt.setDuration(javafx.util.Duration.seconds(2));
     tt.play();
-    audioPlayer.playSound("scan");
+    audioPlayer.playSound("scan", 0.5);
   }
 
   @FXML

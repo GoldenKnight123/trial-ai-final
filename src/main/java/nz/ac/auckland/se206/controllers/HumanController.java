@@ -153,7 +153,7 @@ public class HumanController extends ChatController {
         event -> {
           event.consume();
           // Play slide sound on piece release
-          AudioPlayer.getInstance().playSound("paper_slide_human");
+          AudioPlayer.getInstance().playSound("paper_slide_human", 0.5);
           // Check if the piece is in the correct final position
           checkPlacement(piece, targetX, targetY);
         });
