@@ -11,7 +11,6 @@ import javafx.scene.shape.Rectangle;
 import nz.ac.auckland.apiproxy.exceptions.ApiProxyException;
 import nz.ac.auckland.se206.App;
 import nz.ac.auckland.se206.AudioPlayer;
-import nz.ac.auckland.se206.ChatHistoryManager;
 import nz.ac.auckland.se206.GameTimer;
 
 /** Controller for the verdict input screen. */
@@ -20,28 +19,29 @@ public class VerdictController extends Controller {
   @FXML private TextArea verdictTxt;
   @FXML private Button btnNotGuilty;
   @FXML private Button btnGuilty;
+  @FXML private Button btnConfirm;
   @FXML private Label lblGameOverMessage;
   @FXML private Label lblTimer;
+  @FXML private Label lblInstruction;
   @FXML private Rectangle rectFade;
 
   private AudioPlayer audioPlayer = AudioPlayer.getInstance();
+  private boolean wasCorrect = false;
 
   @FXML
   public void initialize() throws ApiProxyException {
     // Register timer label with GameTimer
     GameTimer.getInstance().registerTimerLabel(lblTimer);
 
-    // Unfocus text area to avoid auto-focusing keyboard on scene load
-    lblTimer.requestFocus();
-
     lblTimer.setVisible(true);
 
-    // Disable verdict buttons until user enters non-whitespace text
-    if (btnGuilty != null) {
-      btnGuilty.setDisable(true);
-    }
-    if (btnNotGuilty != null) {
-      btnNotGuilty.setDisable(true);
+    // Hide verdict text and instruction label initially
+    verdictTxt.setVisible(false);
+    lblInstruction.setVisible(false);
+
+    // Disable confirm button until user enters non-whitespace text
+    if (btnConfirm != null) {
+      btnConfirm.setDisable(true);
     }
 
     // Listen for text changes and enable buttons only when there's non-whitespace content
@@ -51,11 +51,8 @@ public class VerdictController extends Controller {
           .addListener(
               (obs, oldText, newText) -> {
                 boolean hasText = newText != null && !newText.trim().isEmpty();
-                if (btnGuilty != null) {
-                  btnGuilty.setDisable(!hasText);
-                }
-                if (btnNotGuilty != null) {
-                  btnNotGuilty.setDisable(!hasText);
+                if (btnConfirm != null) {
+                  btnConfirm.setDisable(!hasText);
                 }
               });
     }
@@ -80,6 +77,16 @@ public class VerdictController extends Controller {
         event -> {
           btnNotGuilty.setText("Not Guilty");
         });
+
+    btnConfirm.setOnMouseEntered(
+        event -> {
+          btnConfirm.setText("> Confirm");
+          audioPlayer.playSound("computerTalk2", 0.5);
+        });
+    btnConfirm.setOnMouseExited(
+        event -> {
+          btnConfirm.setText("Confirm");
+        });
   }
 
   public void fadeIn() {
@@ -94,46 +101,39 @@ public class VerdictController extends Controller {
     audioPlayer.playSound("scan", 0.5);
   }
 
+  private void switchToRationale() {
+    audioPlayer.playSound("computerTalk", 0.5);
+
+    btnGuilty.setVisible(false);
+    btnNotGuilty.setVisible(false);
+    verdictTxt.setVisible(true);
+    lblInstruction.setVisible(true);
+    btnConfirm.setVisible(true);
+
+    // Change timer timeout actions to auto-confirm rationale
+    GameTimer.getInstance()
+        .setOnTimerExpired(
+            () -> {
+              try {
+                onConfirmRationale(null);
+              } catch (IOException e) {
+                e.printStackTrace();
+              }
+            });
+  }
+
   @FXML
   private void onSelectGuilty(ActionEvent event) throws IOException {
-    // Check if the player has asked each participant a question and has completed all interactables
-    if (!ChatHistoryManager.getInstance().haveSpokenToAll()
-        && !ChatHistoryManager.getInstance().interactablesComplete()) {
-      System.out.println("Cannot make verdict yet.");
-    } else {
-      String text = verdictTxt.getText() == null ? "" : verdictTxt.getText();
-      boolean wasCorrect = false; // guilty means incorrect in current game wiring
-      if (text.trim().isEmpty()) {
-        // default to incorrect if no rationale provided
-        wasCorrect = false;
-      }
+    wasCorrect = false; // guilty means incorrect in current game wiring
 
-      audioPlayer.playSound("computerTalk", 0.5);
-
-      GameTimer.getInstance().stop();
-      App.openDebrief(event, wasCorrect);
-    }
+    switchToRationale();
   }
 
   @FXML
   private void onSelectNotGuilty(ActionEvent event) throws IOException {
-    // Check if the player has asked each participant a question
-    if (!ChatHistoryManager.getInstance().haveSpokenToAll()
-        && !ChatHistoryManager.getInstance().interactablesComplete()) {
-      System.out.println("Cannot make verdict yet.");
-    } else {
-      String text = verdictTxt.getText() == null ? "" : verdictTxt.getText();
-      boolean wasCorrect = true; // not guilty means correct in current game wiring
-      if (text.trim().isEmpty()) {
-        // default to incorrect if no rationale provided
-        wasCorrect = false;
-      }
+    wasCorrect = true; // not guilty means correct in current game wiring
 
-      audioPlayer.playSound("computerTalk", 0.5);
-
-      GameTimer.getInstance().stop();
-      App.openDebrief(event, wasCorrect);
-    }
+    switchToRationale();
   }
 
   /**
@@ -165,5 +165,16 @@ public class VerdictController extends Controller {
   @FXML
   private void onKeyTyped() {
     audioPlayer.playRandomKeyboardSound(0.5);
+  }
+
+  @FXML
+  void onConfirmRationale(ActionEvent event) throws IOException {
+    // Stop the game timer
+    GameTimer.getInstance().stop();
+    lblTimer.setVisible(false);
+
+    audioPlayer.playSound("computerTalk2", 0.5);
+
+    App.openDebrief(event, wasCorrect);
   }
 }

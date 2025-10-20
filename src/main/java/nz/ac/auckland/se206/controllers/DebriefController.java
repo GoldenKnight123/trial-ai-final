@@ -106,6 +106,81 @@ public class DebriefController extends Controller {
             System.out.println(prompt);
             chatCompletionRequest.addMessage(new ChatMessage("system", prompt));
 
+            // Example 1 of user message including verdict and rationale
+            String userText1 =
+                "Player's submitted verdict: Not Guilty\n"
+                    + " Player's submitted rationale:\n"
+                    + " they are not guilty because they were told to do it by higher ups";
+            chatCompletionRequest.addMessage(new ChatMessage("user", userText1));
+
+            // Example 1 of assistant message showing expected format
+            String assistantText1 =
+                "OUTCOME: Correct verdict and correct rationale  \r\n"
+                    + //
+                    "FEEDBACK: The player's verdict of \"not guilty\" is correct, and their"
+                  + " rationale is also valid. They correctly identify the influence of higher-ups"
+                  + " in the defendant's actions, which makes INDUS-07 not at fault.  \r\n"
+                    + //
+                    "EXPLANATION: The correct verdict is \"not guilty\" because INDUS-07 was"
+                  + " pressured and manipulated by upper management to proceed with the"
+                  + " installation of the Helios Module without knowledge of the associated risks."
+                  + " The evidence shows that the defendant acted under duress and was not fully"
+                  + " informed, which absolves them of guilt in this situation.";
+            chatCompletionRequest.addMessage(new ChatMessage("assistant", assistantText1));
+
+            // Example 2 of user message including verdict and rationale
+            String userText2 =
+                "Player's submitted verdict: Guilty\n"
+                    + " Player's submitted rationale:\n"
+                    + " they are guilty because they were the ones who told the technology to be"
+                    + " installed";
+            chatCompletionRequest.addMessage(new ChatMessage("user", userText2));
+
+            // Example 2 of assistant message showing expected format
+            String assistantText2 =
+                "OUTCOME: Incorrect verdict \r\n"
+                    + //
+                    "FEEDBACK: The player's verdict of \"guilty\" is incorrect, they did not"
+                    + " identify that INDUS-07 was pressured by upper management.\r\n"
+                    + //
+                    "EXPLANATION: The correct verdict is \"not guilty\" because INDUS-07 was"
+                  + " pressured and manipulated by upper management to proceed with the"
+                  + " installation of the Helios Module without knowledge of the associated risks."
+                  + " The evidence shows that the defendant acted under duress and was not fully"
+                  + " informed, which absolves them of guilt in this situation.";
+            chatCompletionRequest.addMessage(new ChatMessage("assistant", assistantText2));
+
+            // Example 3 of user message including verdict and rationale
+            String userText3 =
+                "Player's submitted verdict: Not Guilty\n"
+                    + " Player's submitted rationale:\n"
+                    + " they are not guilty because the fault actually lies in the manufacturers of"
+                    + " the new technology who did not properly test it.";
+            chatCompletionRequest.addMessage(new ChatMessage("user", userText3));
+
+            // Example 3 of assistant message showing expected format
+            String assistantText3 =
+                "OUTCOME: Correct verdict but incorrect rationale \r\n"
+                    + //
+                    "FEEDBACK: The player's verdict of \"not guilty\" is correct, but their"
+                    + " rationale is incorrect because they did not identify the specific pressures"
+                    + " faced by INDUS-07.\r\n"
+                    + //
+                    "EXPLANATION: The correct verdict is \"not guilty\" because INDUS-07 was"
+                  + " pressured and manipulated by upper management to proceed with the"
+                  + " installation of the Helios Module without knowledge of the associated risks."
+                  + " The evidence shows that the defendant acted under duress and was not fully"
+                  + " informed, which absolves them of guilt in this situation.";
+            chatCompletionRequest.addMessage(new ChatMessage("assistant", assistantText3));
+
+            // The actual player submission to analyze
+            String userText =
+                "Player's submitted verdict: "
+                    + (wasCorrect ? "Not Guilty\n" : "Guilty\n")
+                    + " Player's submitted rationale:\n"
+                    + verdictText;
+            chatCompletionRequest.addMessage(new ChatMessage("user", userText));
+
             try {
               ChatCompletionResult chatCompletionResult = chatCompletionRequest.execute();
               Choice result = chatCompletionResult.getChoices().iterator().next();
@@ -208,15 +283,6 @@ public class DebriefController extends Controller {
             + " explanation (2-4 sentences) describing the correct verdict and the evidence that"
             + " supports it.\n\n");
 
-    // Include the player's verdict and rationale
-    prompt.append("Player's submitted verdict and rationale:\n").append(verdictText).append("\n\n");
-
-    // Include the chat history between the player and trial participants for additional context
-    prompt
-        .append("Chat history between the player and trial participants:\n")
-        .append(chatHistory)
-        .append("\n\n");
-
     // Provide structured guidelines for classification and response format
     prompt.append(
         "Guidelines:\n"
@@ -224,7 +290,7 @@ public class DebriefController extends Controller {
             + "    1. [Incorrect verdict]: The player's verdict (guilty/not guilty) does not match"
             + " the ground truth.\n"
             + "    2. [Correct verdict but incorrect rationale]: The verdict matches the ground"
-            + " truth, but the rationale either misses key evidence, misattributes causation, or"
+            + " truth, but the rationale they gave is very far off from the proper rationale, or"
             + " directly contradicts the verdict (e.g., verdict is 'not guilty' but rationale says"
             + " 'they are guilty', or vice versa).\n"
             + "    3. [Correct verdict with correct rationale]: Both verdict and rationale align"
@@ -241,26 +307,27 @@ public class DebriefController extends Controller {
             + "FEEDBACK: <1-2 sentences>\n"
             + "EXPLANATION: <2-4 sentences giving the correct verdict and key evidence>\n\n");
 
-    // Provide the correct verdict and rationale for reference
+    // Give context about the trial
     prompt.append(
-        "The correct verdict and rationale should be something along the lines of:\n"
-            + " The defendant is not guilty because they were manipulated and pressured by higher"
-            + " ups to install new technology which they did not know the risks of.\n\n");
-
-    prompt.append(
-        "As long as the user mentions the manipulation and pressure from higher ups, it should be"
-            + " considered a valid rationale.\n\n");
+        "Context about the trial:\n"
+            + " The defendant INDUS-07 is on trial for giving instructions to a new technology"
+            + " called the Helios Module. However, the truth is that the defendant was pressured"
+            + " and manipulated by upper management to proceed and not told about the risks. The"
+            + " correct verdict is that the defendant is not guilty because they were manipulated"
+            + " and pressured by higher ups to install new technology which they did not know the"
+            + " risks of. If the player mentions anything about upper management being involved in"
+            + " INDUS-07 making the decision they did, it is the correct rationale.\n\n");
+    // Include the chat history between the player and trial participants for additional context
+    prompt
+        .append("Chat history between the player and trial participants:\n")
+        .append(chatHistory)
+        .append("\n\n");
 
     // Specify the desired output format
     prompt.append("Please return the result in this format:\n");
     prompt.append("OUTCOME: <one of the three labels>\n");
     prompt.append("FEEDBACK: <1-2 sentences>\n");
     prompt.append("EXPLANATION: <2-4 sentences giving the correct verdict and key evidence>\n");
-
-    // Include whether the player was correct to help the model (keeps backwards compatibility)
-    prompt.append("(Note: the system was told that the decision was: ");
-    prompt.append(wasCorrect ? "CORRECT" : "INCORRECT");
-    prompt.append(").\n");
 
     return prompt.toString();
   }
