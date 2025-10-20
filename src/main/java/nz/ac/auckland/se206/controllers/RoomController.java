@@ -120,11 +120,6 @@ public class RoomController extends Controller {
   private Random random = new Random();
   private List<Line> rainDrops = new ArrayList<>();
 
-  // Idle animation timelines
-  private Timeline aiIdleTimeline;
-  private Timeline defendantIdleTimeline;
-  private Timeline humanIdleTimeline;
-
   private boolean isFading = false;
   private boolean isGuessing = false;
 
@@ -214,7 +209,7 @@ public class RoomController extends Controller {
       imgWitnessAiBody.setEffect(highlight);
       imgWitnessAiBody.setImage(new Image("images/logos-09-hover.png"));
       rectWitnessAi.setCursor(Cursor.HAND);
-      audioPlayer.playSound("hover");
+      audioPlayer.playSound("hover", 0.5);
     }
 
     if (rectDefendant.isHover() && canInteract && !isFading) {
@@ -224,7 +219,7 @@ public class RoomController extends Controller {
       imgDefendantBody.setEffect(highlight);
       imgDefendantBody.setImage(new Image("images/indus-07-hover.png"));
       rectDefendant.setCursor(Cursor.HAND);
-      audioPlayer.playSound("hover");
+      audioPlayer.playSound("hover", 0.5);
     }
 
     if (rectWitnessHuman.isHover() && canInteract && !isFading) {
@@ -234,7 +229,7 @@ public class RoomController extends Controller {
       imgWitnessHumanBody.setEffect(highlight);
       imgWitnessHumanBody.setImage(new Image("images/evan-hover.png"));
       rectWitnessHuman.setCursor(Cursor.HAND);
-      audioPlayer.playSound("hover");
+      audioPlayer.playSound("hover", 0.5);
     }
   }
 
@@ -376,9 +371,9 @@ public class RoomController extends Controller {
   public void initialize() {
     context.setRoomController(this); // Set reference to this controller
 
-    createIdleAnimation(aiIdleTimeline, imgWitnessAiBody);
-    createIdleAnimation(defendantIdleTimeline, imgDefendantBody);
-    createIdleAnimation(humanIdleTimeline, imgWitnessHumanBody);
+    createIdleAnimation(imgWitnessAiBody);
+    createIdleAnimation(imgDefendantBody);
+    createIdleAnimation(imgWitnessHumanBody);
 
     isGuessing = false;
 
@@ -400,7 +395,7 @@ public class RoomController extends Controller {
             imgWitnessAiBody.setEffect(highlight);
             imgWitnessAiBody.setImage(logos09Hover);
             rectWitnessAi.setCursor(Cursor.HAND);
-            audioPlayer.playSound("hover");
+            audioPlayer.playSound("hover", 0.5);
           }
         });
 
@@ -420,7 +415,7 @@ public class RoomController extends Controller {
             imgDefendantBody.setEffect(highlight);
             imgDefendantBody.setImage(indus07Hover);
             rectDefendant.setCursor(Cursor.HAND);
-            audioPlayer.playSound("hover");
+            audioPlayer.playSound("hover", 0.5);
           }
         });
 
@@ -440,7 +435,7 @@ public class RoomController extends Controller {
             imgWitnessHumanBody.setEffect(highlight);
             imgWitnessHumanBody.setImage(evanHover);
             rectWitnessHuman.setCursor(Cursor.HAND);
-            audioPlayer.playSound("hover");
+            audioPlayer.playSound("hover", 0.5);
           }
         });
 
@@ -691,8 +686,6 @@ public class RoomController extends Controller {
             } catch (IOException ioEx) {
               ioEx.printStackTrace();
             }
-            // Reset fading flag (this controller may be cached but should not accept input while
-            // faded)
             isFading = false;
           });
       fadeTransition.play();
@@ -722,7 +715,9 @@ public class RoomController extends Controller {
 
   @FXML
   private void onMute(MouseEvent event) throws ApiProxyException, IOException {
+    // Toggle mute state
     boolean muted = audioPlayer.toggleBackgroundMuted();
+    // Update mute icon
     if (muted) {
       imgMute.setImage(new Image(getClass().getResourceAsStream("/images/muteOn.png")));
     } else {
@@ -740,7 +735,7 @@ public class RoomController extends Controller {
     GameTimer.getInstance().setTimeLeft(0);
   }
 
-  /** Creates and starts the rain animation effect */
+  /** Creates and starts the rain animation effect. */
   private void createRainEffect() {
     // Clear any existing rain drops
     rainDrops.clear();
@@ -758,7 +753,7 @@ public class RoomController extends Controller {
     rainTimeline.play();
   }
 
-  /** Creates a single rain drop line */
+  /** Creates a single rain drop line. */
   private Line createRainDrop() {
     Line rainDrop = new Line();
 
@@ -800,9 +795,10 @@ public class RoomController extends Controller {
     }
   }
 
-  private void createIdleAnimation(Timeline idleTimeline, ImageView character) {
+  /** Creates idle animation timeline for the specified character. */
+  private void createIdleAnimation(ImageView character) {
     // Create a timeline that triggers animation changes every few seconds
-    idleTimeline =
+    Timeline idleTimeline =
         new Timeline(
             new KeyFrame(Duration.seconds(0), e -> startIdleMovement(character)),
             new KeyFrame(Duration.seconds(8), e -> startIdleMovement(character)),

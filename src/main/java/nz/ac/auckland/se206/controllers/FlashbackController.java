@@ -57,8 +57,11 @@ public class FlashbackController extends Controller {
 
   private HashMap<String, ArrayList<String>> flashbackDialogue = new HashMap<>();
 
+  // Initialize flashback dialogue data
   public void initializeFlashbackDialogue() {
-    // Initialize flashback dialogue data
+    // Initialize dialogue for LOGOS-09
+    // Each character has an array of dialogue lines for the flashback
+    // LOGOS-09 sees the call and notices suspicious activity
     flashbackDialogue.put(
         "LOGOS-09",
         new ArrayList<>(
@@ -70,6 +73,8 @@ public class FlashbackController extends Controller {
                 "These actions are quite suspicious, because the call is encrypted I shall flag it"
                     + " for further investigation.")));
 
+    // Initialize dialogue for INDUS-07
+    // INDUS-07 receives the call and sends instructions to Evan to install the module
     flashbackDialogue.put(
         "INDUS-07",
         new ArrayList<>(
@@ -80,6 +85,8 @@ public class FlashbackController extends Controller {
                 "I was concerned about the safety implications, but upper management assured me"
                     + " that there would be no issues.")));
 
+    // Initialize dialogue for Evan
+    // Evan installs the module as per INDUS-07's instructions
     flashbackDialogue.put(
         "Evan",
         new ArrayList<>(

@@ -20,7 +20,7 @@ public class TextToSpeech {
    * Converts the given text to speech and plays the audio.
    *
    * @param text the text to be converted to speech
-   * @throws ApiProxyException
+   * @throws ApiProxyException if there is an error with the API proxy
    * @throws IllegalArgumentException if the text is null or empty
    */
   public static Player speak(String text, Provider provider, Voice voice) throws ApiProxyException {

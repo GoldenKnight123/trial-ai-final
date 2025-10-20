@@ -170,15 +170,6 @@ public class AudioPlayer {
   }
 
   /**
-   * Plays a sound with default volume of 0.5.
-   *
-   * @param soundKey the key identifying the sound
-   */
-  public void playSound(String soundKey) {
-    playSound(soundKey, 0.5);
-  }
-
-  /**
    * Plays a random keyboard sound, ensuring it's different from the last one played.
    *
    * @param volume the volume level (0.0 to 1.0)
@@ -295,12 +286,6 @@ public class AudioPlayer {
     // Set background music volume
     setVolume("background", backgroundMuted ? 0 : 0.25);
 
-    // Also set flashback music volume if it's currently playing
-    MediaPlayer flashbackPlayer = soundCache.get("backgroundFlashback");
-    if (flashbackPlayer != null && flashbackPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
-      setVolume("backgroundFlashback", backgroundMuted ? 0 : 0.25);
-    }
-
     return backgroundMuted;
   }
 
@@ -325,39 +310,25 @@ public class AudioPlayer {
   }
 
   /**
-   * Transitions to flashback music by fading out background and fading in flashback music. This
-   * creates a smooth audio transition when entering flashbacks.
+   * Creates a crossfade transition between background and flashback music.
+   *
+   * @param initialBackgroundVolume the starting volume for background music
+   * @param finalBackgroundVolume the ending volume for background music
+   * @param initialFlashbackVolume the starting volume for flashback music
+   * @param finalFlashbackVolume the ending volume for flashback music
    */
-  public void transitionToFlashbackMusic() {
-    if (Platform.isFxApplicationThread()) {
-      transitionToFlashbackMusicInternal();
-    } else {
-      Platform.runLater(this::transitionToFlashbackMusicInternal);
-    }
-  }
-
-  private void transitionToFlashbackMusicInternal() {
-    // Stop any existing transition
-    if (audioTransitionTimeline != null) {
-      audioTransitionTimeline.stop();
-    }
-
-    // Ensure both tracks are playing (they should already be from startBackgroundMusic)
-    MediaPlayer backgroundPlayer = soundCache.get("background");
-    MediaPlayer flashbackPlayer = soundCache.get("backgroundFlashback");
-
-    if (backgroundPlayer != null && backgroundPlayer.getStatus() != MediaPlayer.Status.PLAYING) {
-      backgroundPlayer.play();
-    }
-    if (flashbackPlayer != null && flashbackPlayer.getStatus() != MediaPlayer.Status.PLAYING) {
-      flashbackPlayer.play();
-    }
-
-    // Create transition timeline - crossfade between the tracks
-    final double[] backgroundVolume = {backgroundMuted ? 0 : 0.25};
-    final double[] flashbackVolume = {0.0};
+  private void createCrossfadeTransition(
+      double initialBackgroundVolume,
+      double finalBackgroundVolume,
+      double initialFlashbackVolume,
+      double finalFlashbackVolume) {
+    final double[] backgroundVolume = {initialBackgroundVolume};
+    final double[] flashbackVolume = {initialFlashbackVolume};
     final int transitionSteps = 30; // Number of steps for smooth transition
-    final double volumeStep = 0.25 / transitionSteps; // Volume change per step
+    final double backgroundVolumeStep =
+        (finalBackgroundVolume - initialBackgroundVolume) / transitionSteps;
+    final double flashbackVolumeStep =
+        (finalFlashbackVolume - initialFlashbackVolume) / transitionSteps;
 
     audioTransitionTimeline = new Timeline();
 
@@ -368,12 +339,17 @@ public class AudioPlayer {
               Duration.millis(i * 50), // 50ms between steps = 1.5 second total transition
               e -> {
                 if (!backgroundMuted) {
-                  backgroundVolume[0] = Math.max(0, 0.25 - (step * volumeStep));
+                  backgroundVolume[0] =
+                      Math.max(
+                          0,
+                          Math.min(0.25, initialBackgroundVolume + (step * backgroundVolumeStep)));
                   setVolume("background", backgroundVolume[0]);
                 }
 
                 if (!backgroundMuted) {
-                  flashbackVolume[0] = Math.min(0.25, step * volumeStep);
+                  flashbackVolume[0] =
+                      Math.max(
+                          0, Math.min(0.25, initialFlashbackVolume + (step * flashbackVolumeStep)));
                   setVolume("backgroundFlashback", flashbackVolume[0]);
                 }
               });
@@ -384,61 +360,32 @@ public class AudioPlayer {
   }
 
   /**
+   * Transitions to flashback music by fading out background and fading in flashback music. This
+   * creates a smooth audio transition when entering flashbacks.
+   */
+  public void transitionToFlashbackMusic() {
+    if (Platform.isFxApplicationThread()) {
+      createCrossfadeTransition(backgroundMuted ? 0 : 0.25, 0.0, 0.0, backgroundMuted ? 0 : 0.25);
+    } else {
+      Platform.runLater(
+          () ->
+              createCrossfadeTransition(
+                  backgroundMuted ? 0 : 0.25, 0.0, 0.0, backgroundMuted ? 0 : 0.25));
+    }
+  }
+
+  /**
    * Transitions back to background music by fading out flashback and fading in background music.
    * This creates a smooth audio transition when exiting flashbacks.
    */
   public void transitionToBackgroundMusic() {
     if (Platform.isFxApplicationThread()) {
-      transitionToBackgroundMusicInternal();
+      createCrossfadeTransition(0.0, backgroundMuted ? 0 : 0.25, backgroundMuted ? 0 : 0.25, 0.0);
     } else {
-      Platform.runLater(this::transitionToBackgroundMusicInternal);
+      Platform.runLater(
+          () ->
+              createCrossfadeTransition(
+                  0.0, backgroundMuted ? 0 : 0.25, backgroundMuted ? 0 : 0.25, 0.0));
     }
-  }
-
-  private void transitionToBackgroundMusicInternal() {
-    // Stop any existing transition
-    if (audioTransitionTimeline != null) {
-      audioTransitionTimeline.stop();
-    }
-
-    // Ensure both tracks are playing (they should already be from startBackgroundMusic)
-    MediaPlayer backgroundPlayer = soundCache.get("background");
-    MediaPlayer flashbackPlayer = soundCache.get("backgroundFlashback");
-
-    if (backgroundPlayer != null && backgroundPlayer.getStatus() != MediaPlayer.Status.PLAYING) {
-      backgroundPlayer.play();
-    }
-    if (flashbackPlayer != null && flashbackPlayer.getStatus() != MediaPlayer.Status.PLAYING) {
-      flashbackPlayer.play();
-    }
-
-    // Create transition timeline - crossfade between the tracks
-    final double[] backgroundVolume = {0.0};
-    final double[] flashbackVolume = {backgroundMuted ? 0 : 0.25};
-    final int transitionSteps = 30; // Number of steps for smooth transition
-    final double volumeStep = 0.25 / transitionSteps; // Volume change per step
-
-    audioTransitionTimeline = new Timeline();
-
-    for (int i = 0; i <= transitionSteps; i++) {
-      final int step = i;
-      KeyFrame keyFrame =
-          new KeyFrame(
-              Duration.millis(i * 50), // 50ms between steps = 1.5 second total transition
-              e -> {
-                if (!backgroundMuted) {
-                  flashbackVolume[0] = Math.max(0, 0.25 - (step * volumeStep));
-                  setVolume("backgroundFlashback", flashbackVolume[0]);
-                }
-
-                if (!backgroundMuted) {
-                  backgroundVolume[0] = Math.min(0.25, step * volumeStep);
-                  setVolume("background", backgroundVolume[0]);
-                }
-              });
-      audioTransitionTimeline.getKeyFrames().add(keyFrame);
-    }
-
-    audioTransitionTimeline.play();
   }
 }

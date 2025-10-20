@@ -136,18 +136,6 @@ public abstract class Controller {
   }
 
   /**
-   * Creates a typewriter effect for displaying text in a TextArea, clearing it first.
-   *
-   * @param textArea the TextArea to display text in
-   * @param textToDisplay the text to display with typewriter effect
-   * @param delayPerCharacter delay between each character in milliseconds
-   */
-  protected void displayTextWithTypewriterEffect(
-      TextArea textArea, String textToDisplay, double delayPerCharacter) {
-    displayTextWithTypewriterEffect(textArea, textToDisplay, delayPerCharacter, true, false, "");
-  }
-
-  /**
    * Creates a typewriter effect for displaying text in a TextArea with default speed (50ms per
    * character).
    *
