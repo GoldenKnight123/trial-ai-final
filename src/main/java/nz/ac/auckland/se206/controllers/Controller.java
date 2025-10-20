@@ -104,10 +104,12 @@ public abstract class Controller {
    * @param speaker the current speaker
    */
   private void playTalkingSound(String speaker) {
+    // Randomize the playback rate slightly for variation
     float randomRate = random.nextFloat() * 0.2f + 0.9f;
     audioPlayer.setRate("playerTalk", randomRate);
     double volume = 0.5;
 
+    // Play sound based on speaker
     switch (speaker) {
       case "user":
         audioPlayer.playSound("playerTalk", volume);

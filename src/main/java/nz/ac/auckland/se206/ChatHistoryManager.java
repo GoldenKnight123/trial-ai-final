@@ -290,11 +290,7 @@ public class ChatHistoryManager {
     return true;
   }
 
-  /**
-   * Stores that participant to map once interactable has been completed.
-   *
-   * @return true if every target has at least one user-sent message
-   */
+  /** Stores that participant to map once interactable has been completed. */
   public void markInteractableComplete(String target) {
     // Set to true when interactable is completed
     interactablesMap.put(target, true);

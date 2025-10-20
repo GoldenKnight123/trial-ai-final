@@ -724,7 +724,9 @@ public class RoomController extends Controller {
 
   @FXML
   private void onMute(MouseEvent event) throws ApiProxyException, IOException {
+    // Toggle mute state
     boolean muted = audioPlayer.toggleBackgroundMuted();
+    // Update mute icon
     if (muted) {
       imgMute.setImage(new Image(getClass().getResourceAsStream("/images/muteOn.png")));
     } else {
@@ -742,7 +744,7 @@ public class RoomController extends Controller {
     GameTimer.getInstance().setTimeLeft(0);
   }
 
-  /** Creates and starts the rain animation effect */
+  /** Creates and starts the rain animation effect. */
   private void createRainEffect() {
     // Clear any existing rain drops
     rainDrops.clear();
@@ -760,7 +762,7 @@ public class RoomController extends Controller {
     rainTimeline.play();
   }
 
-  /** Creates a single rain drop line */
+  /** Creates a single rain drop line. */
   private Line createRainDrop() {
     Line rainDrop = new Line();
 
@@ -780,7 +782,7 @@ public class RoomController extends Controller {
     return rainDrop;
   }
 
-  /** Updates all rain drops positions and recycles them when they fall off screen */
+  /** Updates all rain drops positions and recycles them when they fall off screen. */
   private void updateRain() {
     for (Line rainDrop : rainDrops) {
       // Move rain drop downwards
@@ -802,6 +804,7 @@ public class RoomController extends Controller {
     }
   }
 
+  /** Creates idle animation timeline for the specified character. */
   private void createIdleAnimation(Timeline idleTimeline, ImageView character) {
     // Create a timeline that triggers animation changes every few seconds
     idleTimeline =
@@ -814,7 +817,7 @@ public class RoomController extends Controller {
     idleTimeline.play();
   }
 
-  /** Creates a subtle movement animation for the specified character */
+  /** Creates a subtle movement animation for the specified character. */
   private void startIdleMovement(ImageView character) {
     // Random subtle movements - slightly different for each character
     double translateX = -5 + Math.random() * 10; // Random value between -5 and 5

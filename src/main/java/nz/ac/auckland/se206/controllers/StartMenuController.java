@@ -84,6 +84,7 @@ public class StartMenuController extends Controller {
   }
 
   private void stopAllAnimations() {
+    // Stop any ongoing animations
     if (currentFadeTransition != null) {
       currentFadeTransition.stop();
     }

@@ -16,7 +16,7 @@ public class AudioPlayer {
   private Map<String, MediaPlayer> soundCache;
   private Random random;
   private int lastKeyboardSoundIndex = -1;
-  private final int MAX_KEYBOARD_SOUNDS = 5;
+  private final int maxKeyboardSounds = 5;
   private boolean backgroundMuted = false;
   private Timeline audioTransitionTimeline;
 
@@ -40,6 +40,7 @@ public class AudioPlayer {
 
   /** Initializes all sound files into the cache. */
   private void initializeSounds() {
+    // List of sound files and their corresponding keys
     String[] soundFiles = {
       "src/main/resources/sounds/keyboard1.wav",
       "src/main/resources/sounds/keyboard2.wav",
@@ -69,6 +70,7 @@ public class AudioPlayer {
       "src/main/resources/sounds/emailOpen.wav"
     };
 
+    // Corresponding sound keys
     String[] soundKeys = {
       "keyboard1",
       "keyboard2",
@@ -183,7 +185,7 @@ public class AudioPlayer {
   public void playRandomKeyboardSound(double volume) {
     int soundIndex;
     do {
-      soundIndex = random.nextInt(MAX_KEYBOARD_SOUNDS);
+      soundIndex = random.nextInt(maxKeyboardSounds);
     } while (soundIndex == lastKeyboardSoundIndex);
 
     lastKeyboardSoundIndex = soundIndex;
@@ -225,6 +227,7 @@ public class AudioPlayer {
 
   /** Stops all currently playing sounds. */
   public void stopAllSounds() {
+    // Stop any ongoing audio transitions
     for (MediaPlayer player : soundCache.values()) {
       if (player != null) {
         try {
@@ -238,6 +241,7 @@ public class AudioPlayer {
 
   /** Disposes of all MediaPlayer resources. */
   public void dispose() {
+    // Dispose all MediaPlayers to free resources
     for (MediaPlayer player : soundCache.values()) {
       if (player != null) {
         try {

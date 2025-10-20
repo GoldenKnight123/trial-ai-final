@@ -41,7 +41,7 @@ public class GameTimer {
   private List<Arc> timerArcs = new ArrayList<>();
   private TimerExpiredCallback expiredCallback;
 
-  /** Private constructor for singleton pattern */
+  /** Private constructor for singleton pattern. */
   private GameTimer() {
     initializeTimer();
   }
@@ -85,7 +85,7 @@ public class GameTimer {
     }
   }
 
-  /** Get the time left */
+  /** Get the time left. */
   public int getTimeLeft() {
     return secondsLeft;
   }
@@ -116,7 +116,7 @@ public class GameTimer {
     }
   }
 
-  /** Get the maximum time */
+  /** Get the maximum time. */
   public int setMaxTime(int maxTime) {
     this.maxTime = maxTime;
     secondsLeft = maxTime;
@@ -150,7 +150,7 @@ public class GameTimer {
    * Registers a Label to display the timer. Multiple labels can be registered to show the timer in
    * different scenes.
    *
-   * @param label the Label to display the timer
+   * @param arc the Arc to display the timer
    */
   public void registerTimerArc(Arc arc) {
     if (!timerArcs.contains(arc)) {
