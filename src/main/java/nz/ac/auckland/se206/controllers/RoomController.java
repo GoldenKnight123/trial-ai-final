@@ -773,7 +773,7 @@ public class RoomController extends Controller {
     return rainDrop;
   }
 
-  /** Updates all rain drops positions and recycles them when they fall off screen */
+  /** Updates all rain drops positions and recycles them when they fall off screen. */
   private void updateRain() {
     for (Line rainDrop : rainDrops) {
       // Move rain drop downwards
@@ -808,7 +808,7 @@ public class RoomController extends Controller {
     idleTimeline.play();
   }
 
-  /** Creates a subtle movement animation for the specified character */
+  /** Creates a subtle movement animation for the specified character. */
   private void startIdleMovement(ImageView character) {
     // Random subtle movements - slightly different for each character
     double translateX = -5 + Math.random() * 10; // Random value between -5 and 5
