@@ -107,8 +107,8 @@ public class AiWitnessController extends ChatController {
           "Message Received at 6/7/2055 12:36PM\n"
               + "[Status: Viewable]\n"
               + "--------------------------------------------\n"
-              + "Manager (sent to INDUS-07): \"Remember to install the new Helios system before the"
-              + " end of the week.\"");
+              + "Manager (sent to INDUS-07): \"Remember to install the new Helios system as soon as"
+              + " possible, this is top priority.\"");
     }
 
     // Closes the overlay when clicked
@@ -133,16 +133,16 @@ public class AiWitnessController extends ChatController {
               new ChatMessage(
                   "system",
                   "The judge uses the terminal to decrypt a message. It states: Manager (sent to"
-                      + " INDUS-07): \"Remember to install the new Helios system before the end of"
-                      + " the week.\""));
+                      + " INDUS-07): \"Remember to install the new Helios system as soon as"
+                      + " possible, this is top priority.\""));
       ChatHistoryManager.getInstance()
           .addMessage(
               getTarget(),
               new ChatMessage(
                   "system",
                   "The judge uses the terminal to decrypt a message. It states: Manager (sent to"
-                      + " INDUS-07): \"Remember to install the new Helios system before the end of"
-                      + " the week.\""));
+                      + " INDUS-07): \"Remember to install the new Helios system as soon as"
+                      + " possible, this is top priority.\""));
 
       // Display interaction dialogue and mark as played
       displayInteractionDialogue();
@@ -173,8 +173,8 @@ public class AiWitnessController extends ChatController {
                 + "--------------------------------------------\n");
         displayTextWithTypewriterEffect(
             txtaTerminalFixed,
-            "Manager (sent to INDUS-07): \"Remember to install the new Helios system before the end"
-                + " of the week.\"",
+            "Manager (sent to INDUS-07): \"Remember to install the new Helios system as soon as"
+                + " possible, this is top priority.\"",
             50,
             false,
             true,

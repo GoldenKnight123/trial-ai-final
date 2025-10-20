@@ -85,7 +85,7 @@
                   <Image url="@../images/lock-icon.png" />
                </image></ImageView>
             <Label fx:id="lblHint" alignment="CENTER" layoutX="0.0" layoutY="425.0" prefWidth="1280.0" stylesheets="@../css/interactable.css" text="Hint: Use my name (letters + number)." textAlignment="CENTER" />
-            <TextField fx:id="txtFieldPassword" alignment="CENTER" layoutX="440.0" layoutY="455.0" maxHeight="-Infinity" maxWidth="-Infinity" pickOnBounds="false" prefHeight="34.0" prefWidth="400.0" promptText="Enter Password" styleClass="text-field" stylesheets="@../css/interactable.css" />
+            <TextField fx:id="txtFieldPassword" alignment="CENTER" layoutX="440.0" layoutY="455.0" maxHeight="-Infinity" maxWidth="-Infinity" onKeyTyped="#onKeyboardType" pickOnBounds="false" prefHeight="34.0" prefWidth="400.0" promptText="Enter Password" styleClass="text-field" stylesheets="@../css/interactable.css" />
             <ImageView fx:id="imgClose1" fitHeight="127.0" fitWidth="60.0" layoutX="1162.0" layoutY="85.0" onMouseClicked="#onCloseInteraction" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/close-interaction.png" />

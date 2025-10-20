@@ -31,11 +31,6 @@
             <Image url="@../images/static.gif" />
          </image>
       </ImageView>
-      <TextArea fx:id="txtaStart" layoutX="393.0" layoutY="452.0" mouseTransparent="true" prefHeight="302.0" prefWidth="830.0" text="&gt;Start" visible="false">
-         <stylesheets>
-            <URL value="@../css/memoryAiWitness.css" />
-            <URL value="@../css/start.css" />
-         </stylesheets>
-      </TextArea>
+      <TextArea fx:id="txtaStart" layoutX="432.0" layoutY="452.0" mouseTransparent="true" prefHeight="302.0" prefWidth="830.0" stylesheets="@../css/start.css" text="&gt;Start" visible="false" />
    </children>
 </Pane>
