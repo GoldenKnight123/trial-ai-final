@@ -1,7 +1,6 @@
 package nz.ac.auckland.se206.controllers;
 
 import java.io.IOException;
-import java.net.URL;
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
@@ -14,8 +13,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.Pane;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 import nz.ac.auckland.apiproxy.chat.openai.ChatCompletionRequest;
 import nz.ac.auckland.apiproxy.chat.openai.ChatCompletionRequest.Model;
@@ -46,9 +43,6 @@ public class DebriefController extends Controller {
   // Whether the fade-in animation has finished
   private boolean fadeCompleted = false;
 
-  // MediaPlayer used to play the result sound; keep a reference so we can stop/dispose
-  private MediaPlayer resultPlayer = null;
-
   // Loading animation timeline
   private Timeline loadingAnimation;
 
@@ -67,9 +61,6 @@ public class DebriefController extends Controller {
     fadeTransition.setOnFinished(
         e -> {
           fadeCompleted = true;
-          if (wasCorrectFlag != null) {
-            playResultSound(wasCorrectFlag);
-          }
         });
 
     fadeTransition.play();
@@ -203,6 +194,11 @@ public class DebriefController extends Controller {
                 paneLoading.setVisible(false);
                 audioPlayer.stopSound("scanLong");
                 stopLoadingAnimation();
+                if (wasCorrect) {
+                  audioPlayer.playSound("correct", 0.5);
+                } else {
+                  audioPlayer.playSound("incorrect", 0.5);
+                }
                 displayTextWithTypewriterEffect(txtaDebrief, analysis, 10, true, false, "");
               });
         });
@@ -220,43 +216,6 @@ public class DebriefController extends Controller {
     Thread gptThread = new Thread(gptTask);
     gptThread.setDaemon(true);
     gptThread.start();
-
-    // If fade already finished, play the result sound immediately
-    if (fadeCompleted) {
-      playResultSound(wasCorrectFlag);
-    }
-  }
-
-  /**
-   * Play the result sound (correct/incorrect) located in resources/sounds. Uses JavaFX MediaPlayer
-   * and stops any existing player first.
-   */
-  private void playResultSound(boolean wasCorrect) {
-    // Stop previous player if playing
-    try {
-      if (resultPlayer != null) {
-        resultPlayer.stop();
-        resultPlayer.dispose();
-        resultPlayer = null;
-      }
-
-      String fileName = wasCorrect ? "correct.mp3" : "incorrect.mp3";
-
-      // Load from resources (classpath) under /sounds/
-      URL resource = App.class.getResource("/sounds/" + fileName);
-      if (resource == null) {
-        System.err.println("Result sound not found: /sounds/" + fileName);
-        return;
-      }
-
-      Media media = new Media(resource.toString());
-      resultPlayer = new MediaPlayer(media);
-      resultPlayer.setVolume(0.8);
-      resultPlayer.play();
-    } catch (Exception ex) {
-      // Non-fatal: log and continue
-      ex.printStackTrace();
-    }
   }
 
   /**
