@@ -47,8 +47,6 @@ public class AiDefendantController extends ChatController {
   private boolean reactManagerViewed = false;
   private boolean reactSystemViewed = false;
 
-  // private boolean interactionDialoguePlayed = false;
-
   @Override
   public void initialize() throws ApiProxyException {
     super.initialize();

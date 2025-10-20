@@ -128,7 +128,7 @@ public class DebriefController extends Controller {
                 paneLoading.setVisible(false);
                 audioPlayer.stopSound("scanLong");
                 stopLoadingAnimation();
-                displayTextWithTypewriterEffect(txtaDebrief, analysis, 10);
+                displayTextWithTypewriterEffect(txtaDebrief, analysis, 10, true, false, "");
               });
         });
 
@@ -286,7 +286,7 @@ public class DebriefController extends Controller {
     loadingAnimation.play();
   }
 
-  /** Stops the loading animation */
+  /** Stops the loading animation. */
   private void stopLoadingAnimation() {
     if (loadingAnimation != null) {
       loadingAnimation.stop();
