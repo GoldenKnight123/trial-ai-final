@@ -348,11 +348,15 @@ public class App extends Application {
 
       if (roomIds.contains(currentId)) {
         ChatController chatController = (ChatController) pair.getController();
+        // Stop any ongoing typewriter effects before fading out
+        chatController.stopAnyTypewriterEffect();
         chatController.fadeOut(null);
       } else if (currentId.equals("flashback")) {
         // Transition back to background music when leaving flashback due to timer
         AudioPlayer.getInstance().transitionToBackgroundMusic();
         FlashbackController flashbackController = (FlashbackController) pair.getController();
+        // Stop any ongoing typewriter effects before fading out
+        flashbackController.stopAnyTypewriterEffect();
         flashbackController.fadeOut(null);
       } else {
         System.out.println("Unknown scene, returning to room directly");

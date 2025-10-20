@@ -129,6 +129,9 @@ public class ChatController extends Controller {
 
     isFading = true; // Set flag to prevent further fade operations
 
+    // Stop any ongoing typewriter effects before fading out
+    stopAnyTypewriterEffect();
+
     FadeTransition fadeTransition = new FadeTransition();
     fadeTransition.setDuration(Duration.millis(1000));
     fadeTransition.setNode(chatRoom);

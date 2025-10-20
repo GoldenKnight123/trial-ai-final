@@ -154,6 +154,12 @@ public abstract class Controller {
     }
   }
 
+  /** Public method to stop any running typewriter effect from external classes. */
+  public void stopAnyTypewriterEffect() {
+    stopTypewriterEffect();
+    isTyping = false;
+  }
+
   /** Instantly finishes the current typewriter effect by displaying the full text. */
   protected void finishTypewriterEffectInstantly() {
     if (isTyping && currentTextArea != null && currentFullText != null) {
