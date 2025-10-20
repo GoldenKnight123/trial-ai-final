@@ -13,18 +13,6 @@ import javafx.util.Duration;
 
 public class AudioPlayer {
   private static AudioPlayer instance;
-  private Map<String, MediaPlayer> soundCache;
-  private Random random;
-  private int lastKeyboardSoundIndex = -1;
-  private final int maxKeyboardSounds = 5;
-  private boolean backgroundMuted = false;
-  private Timeline audioTransitionTimeline;
-
-  private AudioPlayer() {
-    soundCache = new HashMap<>();
-    random = new Random();
-    initializeSounds();
-  }
 
   /**
    * Gets the singleton instance of AudioPlayer.
@@ -36,6 +24,19 @@ public class AudioPlayer {
       instance = new AudioPlayer();
     }
     return instance;
+  }
+
+  private Map<String, MediaPlayer> soundCache;
+  private Random random;
+  private int lastKeyboardSoundIndex = -1;
+  private final int maxKeyboardSounds = 5;
+  private boolean backgroundMuted = false;
+  private Timeline audioTransitionTimeline;
+
+  private AudioPlayer() {
+    soundCache = new HashMap<>();
+    random = new Random();
+    initializeSounds();
   }
 
   /** Initializes all sound files into the cache. */

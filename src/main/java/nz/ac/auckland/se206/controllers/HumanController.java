@@ -14,16 +14,11 @@ import nz.ac.auckland.se206.ChatHistoryManager;
 
 public class HumanController extends ChatController {
 
-  // Newspaper jigsaw pieces from the FXML
-  @FXML private ImageView newsPaperGuide;
-  @FXML private ImageView topLeftNewsPaper;
-  @FXML private ImageView topRightNewsPaper;
-  @FXML private ImageView bottomLeftNewspaper;
-  @FXML private ImageView bottomRightNewsPaper;
-  @FXML private Rectangle rectOverlay;
-  @FXML private Pane interactablePane;
-  @FXML private ImageView pileInteractiveImg;
-  @FXML private ImageView pilePopUpImg;
+  /** A small helper class to store the mouse's position relative to the image's top-left corner. */
+  private static class DragContext {
+    private double mousePosX;
+    private double mousePosY;
+  }
 
   // --- Puzzle Logic ---
 
@@ -41,15 +36,20 @@ public class HumanController extends ChatController {
   // A tolerance for how close the piece must be to snap into place.
   private static final double SNAP_TOLERANCE = 35.0;
 
+  // Newspaper jigsaw pieces from the FXML
+  @FXML private ImageView newsPaperGuide;
+  @FXML private ImageView topLeftNewsPaper;
+  @FXML private ImageView topRightNewsPaper;
+  @FXML private ImageView bottomLeftNewspaper;
+  @FXML private ImageView bottomRightNewsPaper;
+  @FXML private Rectangle rectOverlay;
+  @FXML private Pane interactablePane;
+  @FXML private ImageView pileInteractiveImg;
+  @FXML private ImageView pilePopUpImg;
+
   // Ensure we only notify AI once when puzzle is solved
   private boolean puzzleSolvedNotified = false;
   private boolean interactionDialoguePlayed = false;
-
-  /** A small helper class to store the mouse's position relative to the image's top-left corner. */
-  private static class DragContext {
-    double mousePosX;
-    double mousePosY;
-  }
 
   @FXML
   @Override
@@ -153,11 +153,7 @@ public class HumanController extends ChatController {
         event -> {
           event.consume();
           // Play slide sound on piece release
-          try {
-            AudioPlayer.getInstance().playSound("paper_slide_human");
-          } catch (Exception ignored) {
-            // Don't let audio failures break puzzle logic
-          }
+          AudioPlayer.getInstance().playSound("paper_slide_human");
           // Check if the piece is in the correct final position
           checkPlacement(piece, targetX, targetY);
         });
@@ -276,10 +272,7 @@ public class HumanController extends ChatController {
       if (pilePopUpImg != null) {
         pilePopUpImg.setVisible(true);
       }
-      try {
-        AudioPlayer.getInstance().playSound("paper_pile_interact", 0.3);
-      } catch (Exception ignored) {
-      }
+      AudioPlayer.getInstance().playSound("paper_pile_interact", 0.3);
       if (event != null) {
         event.consume();
       }
@@ -310,10 +303,7 @@ public class HumanController extends ChatController {
   private void pileClicked(MouseEvent event) {
     if (getCurrentSpeaker() == "") {
       System.out.println("Pile clicked");
-      try {
-        AudioPlayer.getInstance().playSound("paper_pile_interact", 0.6);
-      } catch (Exception ignored) {
-      }
+      AudioPlayer.getInstance().playSound("paper_pile_interact", 0.6);
       // Enable the interactable pane when the pile is clicked
       if (interactablePane != null) {
         interactablePane.setVisible(true);
