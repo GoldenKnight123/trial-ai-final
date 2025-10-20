@@ -47,6 +47,7 @@ public class FlashbackController extends Controller {
   @FXML private TextArea txtaChat; // Add this FXML field for your dialogue text area
 
   private boolean isFading = false; // Flag to track if a fade operation is in progress
+  private boolean isSliding = false; // Flag to track if a slide animation is in progress
   private int slideProgress = 0;
   private int dialogueIndex = 0; // Track current dialogue line
   private boolean canSlide = false;
@@ -105,6 +106,7 @@ public class FlashbackController extends Controller {
     canExit = false;
     dialogueIndex = 0; // Reset dialogue index
     isTypewriterActive = false; // Reset typewriter state
+    isSliding = false; // Reset sliding state
 
     // Get dialogue for current target
     currentDialogue = flashbackDialogue.get(target);
@@ -142,6 +144,7 @@ public class FlashbackController extends Controller {
       txtaChat.clear();
       isTypewriterActive = true;
       canSlide = false;
+      // Hide arrow while typewriter is active
       imgContinueArrow.setVisible(false);
 
       // Use the typewriter effect from parent Controller class
@@ -159,7 +162,10 @@ public class FlashbackController extends Controller {
   private void onTypewriterComplete() {
     isTypewriterActive = false;
     canSlide = true;
-    imgContinueArrow.setVisible(true);
+    // Only show arrow if we're not currently sliding and can proceed
+    if (!isSliding) {
+      imgContinueArrow.setVisible(true);
+    }
   }
 
   @Override
@@ -199,9 +205,10 @@ public class FlashbackController extends Controller {
 
   /** Advances the slideshow to the next image. */
   private void advanceSlideshow() {
-    if (slideProgress < 2) {
+    if (slideProgress < 2 && !isSliding) {
       // Disable sliding until current slide is done
       canSlide = false;
+      isSliding = true;
       imgContinueArrow.setVisible(false);
 
       // slide image scenes to left with animation
@@ -311,8 +318,9 @@ public class FlashbackController extends Controller {
       return;
     }
 
-    // If typewriter is complete and we can slide, advance to next dialogue
-    if (canSlide) {
+    // If typewriter is complete and we can slide and no slide animation is in progress, advance to
+    // next dialogue
+    if (canSlide && !isSliding) {
       advanceDialogue();
     }
   }
@@ -336,8 +344,22 @@ public class FlashbackController extends Controller {
     sceneSlideBack.setToX(scene.getTranslateX() - 1280); // Final target position
     sceneSlideBack.setInterpolator(Interpolator.EASE_BOTH); // Add easing
 
-    // Chain the animations
-    sceneSlide.setOnFinished(e -> sceneSlideBack.play());
+    // Chain the animations and reset sliding flag when the last scene completes
+    sceneSlide.setOnFinished(
+        e -> {
+          sceneSlideBack.play();
+          // Reset sliding flag only for the last scene (scene3) to avoid race conditions
+          if (scene == imgScene3) {
+            sceneSlideBack.setOnFinished(
+                event -> {
+                  isSliding = false;
+                  // Show arrow if we can proceed and typewriter is not active
+                  if (canSlide && !isTypewriterActive) {
+                    imgContinueArrow.setVisible(true);
+                  }
+                });
+          }
+        });
     sceneSlide.play();
   }
 }

@@ -3,6 +3,7 @@ package nz.ac.auckland.se206.controllers;
 import javafx.animation.PauseTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -58,31 +59,25 @@ public class AiDefendantController extends ChatController {
     tint.setBrightness(0.04);
     tint.setSaturation(0.12);
 
-    // Base (always-on) glow
-    DropShadow baseGlow =
-        new DropShadow(BlurType.GAUSSIAN, Color.web("#ff6b6b", 0.55), 10, 0.15, 0, 0);
-    baseGlow.setInput(tint);
-
     // Hover (intensified) glow
     DropShadow hoverGlow =
         new DropShadow(BlurType.GAUSSIAN, Color.web("#ff6b6b", 0.85), 26, 0.45, 0, 0);
     hoverGlow.setInput(tint);
-
-    // Apply the base glow by default so it always appears
-    imgInteractable.setEffect(baseGlow);
 
     // Intensify glow on hover, but only if there's no current speaker (typing)
     imgInteractable.setOnMouseEntered(
         event -> {
           if (getCurrentSpeaker().isEmpty()) {
             imgInteractable.setEffect(hoverGlow);
+            imgInteractable.setCursor(Cursor.HAND);
           }
         });
 
-    // Restore base glow when mouse leaves
+    // Remove glow on mouse exit
     imgInteractable.setOnMouseExited(
         event -> {
-          imgInteractable.setEffect(baseGlow);
+          imgInteractable.setEffect(null);
+          imgInteractable.setCursor(Cursor.DEFAULT);
         });
 
     // Handle password submission when Enter is pressed or action triggered
@@ -256,5 +251,11 @@ public class AiDefendantController extends ChatController {
       pause.setOnFinished(e -> displayInteractionDialogue());
       pause.play();
     }
+  }
+
+  // Play keyboard typing sound when user types in the terminal
+  @FXML
+  private void onKeyboardType() {
+    audioPlayer.playRandomKeyboardSound(0.5);
   }
 }
