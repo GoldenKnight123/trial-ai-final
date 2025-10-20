@@ -1,23 +1,6 @@
-#btnGuilty {
-  font-family: "Consolas";
-  -fx-font-family: "Consolas";
-  background-color: transparent;
-  -fx-background-color: transparent;
-  -fx-background-radius: 10px;
-  -fx-background-insets: 0;
-  border-color: transparent;
-  -fx-border-color: transparent;
-  border-radius: 10px;
-  -fx-border-radius: 10px;
-  -fx-border-insets: 0;
-  border-width: 3px;
-  -fx-border-width: 3px;
-  -fx-text-fill: rgb(136, 255, 0);
-  font-size: 40px;
-  -fx-font-size: 40px;
-}
-
-#btnNotGuilty {
+#btnGuilty,
+#btnNotGuilty,
+#btnConfirm {
   font-family: "Consolas";
   -fx-font-family: "Consolas";
   background-color: transparent;

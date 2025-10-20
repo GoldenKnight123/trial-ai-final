@@ -68,7 +68,9 @@ public class AudioPlayer {
       "src/main/resources/sounds/timesUp.wav",
       "src/main/resources/sounds/hover.wav",
       "src/main/resources/sounds/passwordAccepted.mp3",
-      "src/main/resources/sounds/emailOpen.wav"
+      "src/main/resources/sounds/emailOpen.wav",
+      "src/main/resources/sounds/correct.mp3",
+      "src/main/resources/sounds/incorrect.mp3"
     };
 
     // Corresponding sound keys
@@ -98,7 +100,9 @@ public class AudioPlayer {
       "timesUp",
       "hover",
       "passwordAccepted",
-      "emailOpen"
+      "emailOpen",
+      "correct",
+      "incorrect"
     };
 
     for (int i = 0; i < soundFiles.length; i++) {
