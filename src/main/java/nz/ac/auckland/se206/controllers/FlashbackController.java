@@ -250,6 +250,9 @@ public class FlashbackController extends Controller {
 
     isFading = true; // Set flag to prevent further fade operations
 
+    // Stop any ongoing typewriter effects before fading out
+    stopAnyTypewriterEffect();
+
     // Transition back to background music when leaving flashback
     AudioPlayer.getInstance().transitionToBackgroundMusic();
 
