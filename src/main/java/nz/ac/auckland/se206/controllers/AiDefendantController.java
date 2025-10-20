@@ -47,8 +47,6 @@ public class AiDefendantController extends ChatController {
   private boolean reactManagerViewed = false;
   private boolean reactSystemViewed = false;
 
-  // private boolean interactionDialoguePlayed = false;
-
   @Override
   public void initialize() throws ApiProxyException {
     super.initialize();
@@ -194,9 +192,9 @@ public class AiDefendantController extends ChatController {
 
     String entered =
         txtFieldPassword.getText() == null ? "" : txtFieldPassword.getText().trim().toLowerCase();
-    final String correctPassword = "indus-07";
+    final String CORRECT = "indus-07";
 
-    if (entered.equals(correctPassword)) {
+    if (entered.equals(CORRECT)) {
       panePasswordScreen.setVisible(false);
       passwordAccepted = true;
       paneInteractable.setVisible(true);
@@ -228,7 +226,6 @@ public class AiDefendantController extends ChatController {
    * @return true if the item is now considered viewed
    */
   private boolean markFirstView(boolean hasBeenViewed, ImageView unreadIcon) {
-    // Hide the unread icon if this is the first view
     if (!hasBeenViewed) {
       if (unreadIcon != null) {
         try {
